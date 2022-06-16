@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import router from 'next/router';
 import { styled } from '@mui/material/styles';
@@ -29,7 +29,11 @@ const MainStyle = styled('div')(({ theme }) => ({
   },
 }));
 
-const DashboardLayout = function DashboardLayout({ children }) {
+interface DashboardLayoutProps {
+  children?: any;
+}
+
+const DashboardLayout: FC<DashboardLayoutProps> = function DashboardLayout({ children }) {
   const loggedIn = useSelector((state) => state.authentication.loggedIn);
   const authenticating = useSelector((state) => state.authentication.authenticating);
   const [open, setOpen] = useState(false);

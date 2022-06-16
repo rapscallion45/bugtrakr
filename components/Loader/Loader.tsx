@@ -26,7 +26,7 @@ interface LoaderProps {
   dataLoaded: boolean;
   loadingText?: string;
   errorText?: string;
-  children?: Node;
+  children?: any;
 }
 
 const Loader: FC<LoaderProps> = function Loader({

@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
 import NavBar from '../../components/NavBar/NavBar';
@@ -25,12 +26,16 @@ const MainStyle = styled('div')(({ theme }) => ({
   },
 }));
 
-const Layout = function Layout({ children }) {
+interface LayoutProps {
+  children?: any;
+}
+
+const Layout: FC<LayoutProps> = function Layout({ children }) {
   useNotifier();
 
   return (
     <RootStyle>
-      <NavBar showLogo fullWidth />
+      <NavBar onOpenSidebar={() => null} showLogo fullWidth />
       <MainStyle>
         <Grid container spacing={3}>
           <Grid item xs={12}>

@@ -1,6 +1,5 @@
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { useSelector } from 'react-redux';
-import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -23,7 +22,17 @@ const TabStyle = styled(Tab)({
   minHeight: '60px',
 });
 
-const MyAccountTabPanel = function MyAccountTabPanel({ children, value, index }) {
+interface MyAccountTabPanelProps {
+  children?: any;
+  value?: number;
+  index?: number;
+}
+
+const MyAccountTabPanel: FC<MyAccountTabPanelProps> = function MyAccountTabPanel({
+  children,
+  value,
+  index,
+}) {
   return (
     <div
       role="tabpanel"
@@ -34,12 +43,6 @@ const MyAccountTabPanel = function MyAccountTabPanel({ children, value, index })
       {value === index && <Box sx={{ paddingBottom: '30px' }}>{children}</Box>}
     </div>
   );
-};
-
-MyAccountTabPanel.propTypes = {
-  children: PropTypes.node.isRequired,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
 };
 
 const MyAccount = function MyAccount() {

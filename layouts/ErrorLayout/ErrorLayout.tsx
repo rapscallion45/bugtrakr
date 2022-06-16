@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import { FC } from 'react';
 import { styled } from '@mui/material/styles';
 import Page from '../../components/Page/Page';
 import Link from '../../components/Link/Link';
@@ -29,7 +29,11 @@ const HeaderStyle = styled('header')(({ theme }) => ({
   },
 }));
 
-const ErrorLayout = function ErrorLayout({ children }) {
+interface ErrorLayoutProps {
+  children?: any;
+}
+
+const ErrorLayout: FC<ErrorLayoutProps> = function ErrorLayout({ children }) {
   useNotifier();
 
   return (
@@ -42,10 +46,6 @@ const ErrorLayout = function ErrorLayout({ children }) {
       {children}
     </RootStyle>
   );
-};
-
-ErrorLayout.propTypes = {
-  children: PropTypes.node,
 };
 
 export default ErrorLayout;
