@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Error Dialogue Renders correctly enzyme 1`] = `
+<div
+  class="ForwardRef(Box)-root-1 MuiBox-root css-0"
+>
+  <div
+    class="ForwardRef(Box)-root-2 MuiBox-root css-0"
+  >
+    <svg
+      aria-hidden="true"
+      class="MuiSvgIcon-root MuiSvgIcon-colorError MuiSvgIcon-fontSizeLarge css-1dp2k9f-MuiSvgIcon-root"
+      data-testid="WarningIcon"
+      focusable="false"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"
+      />
+    </svg>
+    <h6
+      class="MuiTypography-root MuiTypography-h6 MuiTypography-alignCenter css-1kgxqm0-MuiTypography-root"
+    >
+      This is the test error message.
+    </h6>
+  </div>
+</div>
+`;
