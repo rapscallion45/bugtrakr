@@ -24,7 +24,7 @@ const MENU_OPTIONS_LOGGED_IN = [
   {
     label: 'My Account',
     icon: AccountCircleIcon,
-    linkTo: '/dashboard/my-accounts',
+    linkTo: '/dashboard/my-account',
   },
 ];
 
@@ -43,7 +43,7 @@ const MENU_OPTIONS_LOGGED_OUT = [
 
 const AccountPopover: FC = function AccountPopover() {
   const anchorRef = useRef(null);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
   const userAuth = useSelector((state) => state.authentication?.user);
   const loggedIn = useSelector((state) => state.authentication?.loggedIn);
   const user = useSelector((state) => state.account?.user);

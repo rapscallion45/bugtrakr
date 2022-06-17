@@ -21,7 +21,7 @@ interface NavBarProps {
 
 const NavBar: FC<NavBarProps> = function NavBar({
   onOpenSidebar,
-  showLogo = true,
+  showLogo = false,
   fullWidth = true,
 }) {
   const loggedIn = useSelector((state) => state.authentication?.loggedIn);

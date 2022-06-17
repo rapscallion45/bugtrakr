@@ -5,7 +5,7 @@ import Link from '../Link/Link';
 // import { useSelector } from 'react-redux';
 // import { ProjectState } from '../../redux/types';
 // import { selectAuthState } from '../../redux/slices/authSlice';
-// import ProjectsMenu from './ProjectsMenu';
+import ActionsPopover from './ActionsPopover/ActionsPopover';
 import { formatDateTime, truncateString } from '../../utils';
 
 const tableHeaders = ['Name', 'Bugs', 'Members', 'Admin', 'Added', 'Actions'];
@@ -41,14 +41,15 @@ const ProjectsTable: FC<ProjectsTableProps> = function ProjectsTable({ projects 
               <TableCell align="center">{p.members.length}</TableCell>
               <TableCell align="center">{p.createdBy.username}</TableCell>
               <TableCell align="center">{formatDateTime(p.createdAt)}</TableCell>
-              {/* <TableCell align="center">
-                <ProjectsMenu
+              <TableCell align="center">
+                <ActionsPopover
                   projectId={p.id}
                   currentName={p.name}
-                  currentMembers={p.members.map((m) => m.member.id)}
-                  isAdmin={p.createdBy.id === user?.id}
+                  currentMembers={p.members.map((m) => m.id)}
+                  // isAdmin={p.createdBy.id === user?.id}
+                  isAdmin
                 />
-              </TableCell> */}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
