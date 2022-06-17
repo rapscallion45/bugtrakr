@@ -25,5 +25,5 @@ export default async function logout(req: NextApiRequest, res: NextApiResponse) 
   ]);
 
   /* Cookies removed ok */
-  res.status(200).json({ message: 'Token cookies removed ok' });
+  return res.status(200).json({ message: 'Token cookies removed ok' });
 }
