@@ -1,11 +1,13 @@
+import { useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Page from '../../components/Page/Page';
 import DashboardLayout from '../../layouts/DashboardLayout/DashboardLayout';
 import Loader from '../../components/Loader/Loader';
 import ProjectsTable from '../../components/ProjectsTable/ProjectsTable';
+import ProjectsTableMobile from '../../components/ProjectsTable/ProjectsTableMobile';
 
 const projectData = [
   {
@@ -15,7 +17,7 @@ const projectData = [
     members: [{ name: 'testuser1', id: 1 }],
     admin: 'test',
     createdAt: Date.now(),
-    createdBy: 'testuser1',
+    createdBy: { username: 'testuser1' },
   },
   {
     id: 2,
@@ -24,7 +26,7 @@ const projectData = [
     members: [{ name: 'testuser1', id: 1 }],
     admin: 'test',
     createdAt: Date.now(),
-    createdBy: 'testuser2',
+    createdBy: { username: 'testuser2' },
   },
   {
     id: 3,
@@ -33,20 +35,23 @@ const projectData = [
     members: [{ name: 'testuser1', id: 1 }],
     admin: 'test',
     createdAt: Date.now(),
-    createdBy: 'testuser3',
+    createdBy: { username: 'testuser3' },
   },
   {
     id: 4,
     name: 'Test4',
-    bugs: ['bug1'],
+    bugs: ['bug1', 'bug2'],
     members: [{ name: 'testuser1', id: 1 }],
     admin: 'test',
     createdAt: Date.now(),
-    createdBy: 'testuser4',
+    createdBy: { username: 'testuser4' },
   },
 ];
 
 const Dashboard = function Dashboard() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
     <Page title="Dashboard | Overview">
       <Container maxWidth="xl">
@@ -60,9 +65,8 @@ const Dashboard = function Dashboard() {
           loadingText="Fetching your FPL data..."
           errorText="Failed to load your FPL data. Try re-syncing your team from the My Account page."
         >
-          <Grid container spacing={3}>
-            <ProjectsTable projects={projectData} />
-          </Grid>
+          {!isMobile && <ProjectsTable projects={projectData} />}
+          {isMobile && <ProjectsTableMobile projects={projectData} />}
         </Loader>
       </Container>
     </Page>
