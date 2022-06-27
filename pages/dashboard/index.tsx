@@ -12,7 +12,7 @@ import ProjectsTableMobile from '../../components/ProjectsTable/ProjectsTableMob
 const projectData = [
   {
     id: 1,
-    name: 'Test1',
+    name: 'Dribble Project',
     bugs: ['bug1'],
     members: [{ name: 'testuser1', id: 1 }],
     admin: 'test',
@@ -21,7 +21,7 @@ const projectData = [
   },
   {
     id: 2,
-    name: 'Test2',
+    name: 'My New Project',
     bugs: ['bug1'],
     members: [{ name: 'testuser1', id: 1 }],
     admin: 'test',
@@ -30,7 +30,7 @@ const projectData = [
   },
   {
     id: 3,
-    name: 'Test3',
+    name: 'FPL Analysis Tools',
     bugs: ['bug1'],
     members: [{ name: 'testuser1', id: 1 }],
     admin: 'test',
@@ -39,7 +39,7 @@ const projectData = [
   },
   {
     id: 4,
-    name: 'Test4',
+    name: 'This is a really long title Test Project',
     bugs: ['bug1', 'bug2'],
     members: [{ name: 'testuser1', id: 1 }],
     admin: 'test',
@@ -53,7 +53,7 @@ const Dashboard = function Dashboard() {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
-    <Page title="Dashboard | Overview">
+    <Page title="Dashboard | All Projects">
       <Container maxWidth="xl">
         <Box sx={{ pb: 5 }}>
           <Typography variant="h4">All Projects</Typography>
@@ -62,8 +62,8 @@ const Dashboard = function Dashboard() {
           dataLoading={false}
           dataError={false}
           dataLoaded
-          loadingText="Fetching your FPL data..."
-          errorText="Failed to load your FPL data. Try re-syncing your team from the My Account page."
+          loadingText="Fetching project data..."
+          errorText="Failed to load project data."
         >
           {!isMobile && <ProjectsTable projects={projectData} />}
           {isMobile && <ProjectsTableMobile projects={projectData} />}

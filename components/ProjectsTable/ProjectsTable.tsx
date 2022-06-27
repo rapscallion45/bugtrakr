@@ -29,7 +29,7 @@ const TableStyle = styled(Table)(({ theme }) => ({
 
 const TableRowStyle = styled(TableRow)(({ theme }) => ({
   '&:hover': {
-    backgroundColor: `${theme.palette.primary.main  }20`,
+    backgroundColor: `${theme.palette.primary.main}20`,
     cursor: 'pointer',
   },
 }));
@@ -80,6 +80,7 @@ const ProjectsTable: FC<ProjectsTableProps> = function ProjectsTable({ projects 
                   currentMembers={p.members.map((m) => m.id)}
                   // isAdmin={p.createdBy.id === user?.id}
                   isAdmin
+                  isMobile={false}
                 />
               </TableCell>
             </TableRowStyle>

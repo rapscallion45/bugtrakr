@@ -41,6 +41,14 @@ const UserProfile: FC = function UserProfile() {
               <Typography variant="h4" component="h4" sx={{ textAlign: 'center' }}>
                 {formik.values.firstName} {formik.values.lastName}
               </Typography>
+              <Typography
+                variant="body2"
+                component="h4"
+                color="text.secondary"
+                sx={{ textAlign: 'center' }}
+              >
+                {formik.values.email}
+              </Typography>
             </Box>
           </Card>
         </Grid>

@@ -21,7 +21,7 @@ exports[`Bottom Nav Bar Renders correctly enzyme 1`] = `
       />
     </svg>
     <span
-      class="MuiBottomNavigationAction-label css-sl1ru5-MuiBottomNavigationAction-label"
+      class="MuiBottomNavigationAction-label css-1n23l01-MuiBottomNavigationAction-label"
     >
       My Bugs
     </span>
@@ -42,7 +42,7 @@ exports[`Bottom Nav Bar Renders correctly enzyme 1`] = `
       />
     </svg>
     <span
-      class="MuiBottomNavigationAction-label css-sl1ru5-MuiBottomNavigationAction-label"
+      class="MuiBottomNavigationAction-label css-1n23l01-MuiBottomNavigationAction-label"
     >
       All Projects
     </span>
@@ -63,7 +63,7 @@ exports[`Bottom Nav Bar Renders correctly enzyme 1`] = `
       />
     </svg>
     <span
-      class="MuiBottomNavigationAction-label css-sl1ru5-MuiBottomNavigationAction-label"
+      class="MuiBottomNavigationAction-label css-1n23l01-MuiBottomNavigationAction-label"
     >
       My Account
     </span>

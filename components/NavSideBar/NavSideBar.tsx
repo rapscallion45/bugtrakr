@@ -72,10 +72,10 @@ const DashboardSideBar: FC<DashboardSideBarProps> = function DashboardSideBar({
             </MuiLink>
           )}
           <Box sx={{ ml: 2 }}>
-            <Typography variant="h6" sx={{ color: 'text.primary' }}>
+            <Typography variant="h4" sx={{ color: 'text.primary' }}>
               {loggedIn && !isDemo
                 ? `Hi, ${userAuth?.firstName}! 👋`
-                : `Welcome to ${process.env.APP_NAME}! 👋`}
+                : `Hi! Welcome to ${process.env.APP_NAME}! 👋`}
             </Typography>
           </Box>
         </AccountStyle>
@@ -106,7 +106,7 @@ const DashboardSideBar: FC<DashboardSideBarProps> = function DashboardSideBar({
                 Want more?
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                Upgrade your membership plan to gain access to more FPL analysis tools!
+                Upgrade your membership plan to gain access to more analysis tools!
               </Typography>
             </Box>
           )}
@@ -116,7 +116,7 @@ const DashboardSideBar: FC<DashboardSideBarProps> = function DashboardSideBar({
                 Sign Up
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                Create an account to gain access to our FPL analysis tools!
+                Create an account to begin tracking your projects!
               </Typography>
             </Box>
           )}

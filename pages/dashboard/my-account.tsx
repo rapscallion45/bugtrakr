@@ -13,6 +13,8 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import Page from '../../components/Page/Page';
 import DashboardLayout from '../../layouts/DashboardLayout/DashboardLayout';
 import UserProfileForm from '../../components/UserProfileForm/UserProfileForm';
+import UserMembershipForm from '../../components/UserMembershipForm/UserMembershipForm';
+import UserBillingForm from '../../components/UserBillingForm/UserBillingForm';
 import ChangePasswordRequestForm from '../../components/ChangePasswordRequestForm/ChangePasswordRequestForm';
 import Loader from '../../components/Loader/Loader';
 
@@ -100,10 +102,10 @@ const MyAccount = function MyAccount() {
         <UserProfileForm />
       </MyAccountTabPanel>
       <MyAccountTabPanel value={tabValue} index={1}>
-        <UserProfileForm />
+        <UserMembershipForm />
       </MyAccountTabPanel>
       <MyAccountTabPanel value={tabValue} index={2}>
-        <UserProfileForm />
+        <UserBillingForm />
       </MyAccountTabPanel>
       <MyAccountTabPanel value={tabValue} index={3}>
         <ChangePasswordRequestForm />

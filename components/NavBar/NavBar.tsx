@@ -66,7 +66,7 @@ const NavBar: FC<NavBarProps> = function NavBar({
         <Box sx={{ flexGrow: 1 }} />
 
         <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
-          <MHidden width="smDown">
+          <MHidden width="xsDown">
             <Box>{loggedIn && <NotificationsPopover />}</Box>
           </MHidden>
           {loggedIn && <AccountPopover />}

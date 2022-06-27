@@ -4,6 +4,7 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { alpha } from '@mui/material/styles';
 import { Button, Box, Divider, MenuItem, IconButton, Typography } from '@mui/material';
 import MenuPopover from '../../MenuPopover/MenuPopover';
@@ -14,6 +15,7 @@ interface ProjectsMenuProps {
   currentName: string;
   currentMembers?: string[];
   isAdmin: boolean;
+  isMobile: boolean;
   iconSize?: 'small' | 'default' | 'large';
 }
 
@@ -22,6 +24,7 @@ const ActionsPopover: FC<ProjectsMenuProps> = function ActionsPopover({
   currentName,
   currentMembers = [],
   isAdmin,
+  isMobile,
   iconSize,
 }) {
   const anchorRef = useRef(null);
@@ -61,7 +64,8 @@ const ActionsPopover: FC<ProjectsMenuProps> = function ActionsPopover({
           }),
         }}
       >
-        <MoreHorizIcon color="primary" fontSize={iconSize || 'medium'} />
+        {!isMobile && <MoreHorizIcon color="primary" fontSize={iconSize || 'medium'} />}
+        {isMobile && <MoreVertIcon fontSize={iconSize || 'medium'} />}
       </IconButton>
       <MenuPopover
         open={open}
