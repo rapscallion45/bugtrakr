@@ -56,21 +56,21 @@ const ProjectsTable: FC<ProjectsTableProps> = function ProjectsTable({ projects 
         <TableBody>
           {projects.map((p) => (
             <TableRowStyle key={p.id}>
-              <TableCell onClick={() => router.push(`/projects/${p.id}`)} align="center">
+              <TableCell onClick={() => router.push(`/dashboard/projects/${p.id}`)} align="center">
                 <Box color="secondary">
                   <Typography variant="h6"> {truncateString(p.name, 30)}</Typography>
                 </Box>
               </TableCell>
-              <TableCell onClick={() => router.push(`/projects/${p.id}`)} align="center">
+              <TableCell onClick={() => router.push(`/dashboard/projects/${p.id}`)} align="center">
                 {p.bugs.length}
               </TableCell>
-              <TableCell onClick={() => router.push(`/projects/${p.id}`)} align="center">
+              <TableCell onClick={() => router.push(`/dashboard/projects/${p.id}`)} align="center">
                 {p.members.length}
               </TableCell>
-              <TableCell onClick={() => router.push(`/projects/${p.id}`)} align="center">
+              <TableCell onClick={() => router.push(`/dashboard/projects/${p.id}`)} align="center">
                 {p.createdBy.username}
               </TableCell>
-              <TableCell onClick={() => router.push(`/projects/${p.id}`)} align="center">
+              <TableCell onClick={() => router.push(`/dashboard/projects/${p.id}`)} align="center">
                 {formatDateTime(p.createdAt)}
               </TableCell>
               <TableCell align="center">

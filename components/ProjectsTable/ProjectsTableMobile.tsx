@@ -26,7 +26,7 @@ const ProjectsTableMobile: FC<ProjectsTableMobileProps> = function ProjectsTable
             <Box display="flex" alignItems="center">
               <Box
                 component={Link}
-                href={`/projects/${p.id}`}
+                href={`/dashboard/projects/${p.id}`}
                 sx={{ flexGrow: 1, textDecoration: 'none' }}
               >
                 <Typography variant="h4" color="text.primary">

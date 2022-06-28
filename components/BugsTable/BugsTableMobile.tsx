@@ -23,7 +23,7 @@ const BugsTableMobile: FC<BugsTableMobileProps> = function BugsTableMobile({ bug
             <Box display="flex" alignItems="center">
               <Box
                 component={Link}
-                href={`/bugs/${b.id}`}
+                href={`/dashboard/bugs/${b.id}`}
                 sx={{ flexGrow: 1, textDecoration: 'none' }}
               >
                 <Typography variant="h4" color="text.primary">

@@ -56,26 +56,26 @@ const BugsTable: FC<BugsTableProps> = function ProjectsTable({ bugs }) {
         <TableBody>
           {bugs.map((b) => (
             <TableRowStyle key={b.id}>
-              <TableCell onClick={() => router.push(`/bugs/${b.id}`)} align="center">
+              <TableCell onClick={() => router.push(`/dashboard/bugs/${b.id}`)} align="center">
                 <Box color="secondary">
                   <Typography variant="h6"> {truncateString(b.title, 30)}</Typography>
                 </Box>
               </TableCell>
-              <TableCell onClick={() => router.push(`/bugs/${b.id}`)} align="center">
+              <TableCell onClick={() => router.push(`/dashboard/bugs/${b.id}`)} align="center">
                 {b.priority}
               </TableCell>
-              <TableCell onClick={() => router.push(`/bugs/${b.id}`)} align="center">
+              <TableCell onClick={() => router.push(`/dashboard/bugs/${b.id}`)} align="center">
                 {b.isResolved ? 'Closed' : 'Open'}
               </TableCell>
-              <TableCell onClick={() => router.push(`/bugs/${b.id}`)} align="center">
+              <TableCell onClick={() => router.push(`/dashboard/bugs/${b.id}`)} align="center">
                 {formatDateTime(b.createdAt)} ~ {b.createdBy.username}
               </TableCell>
-              <TableCell onClick={() => router.push(`/bugs/${b.id}`)} align="center">
+              <TableCell onClick={() => router.push(`/dashboard/bugs/${b.id}`)} align="center">
                 {!b.updatedAt || !b.updatedBy
                   ? 'n/a'
                   : `${formatDateTime(b.updatedAt)} ~ ${b.updatedBy.username}`}
               </TableCell>
-              <TableCell onClick={() => router.push(`/bugs/${b.id}`)} align="center">
+              <TableCell onClick={() => router.push(`/dashboard/bugs/${b.id}`)} align="center">
                 {b.notes.length}
               </TableCell>
               <TableCell align="center">
