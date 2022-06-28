@@ -17,11 +17,14 @@ function projects(state: ProjectState = {}, action: ProjectAction) {
       };
     case projectConstants.DELETE_REQUEST:
       return {
+        ...state,
         deleting: true,
       };
     case projectConstants.DELETE_SUCCESS:
       return {
-        data: state.projects.map((p: ProjectState) => (p.id === action.id ? null : p)),
+        ...state,
+        deleting: false,
+        data: state.data.filter((p: ProjectState) => p.id !== action.projectId),
       };
     case projectConstants.DELETE_FAILURE:
       return {

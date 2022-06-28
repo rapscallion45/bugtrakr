@@ -85,7 +85,7 @@ const ActionsPopover: FC<BugsMenuProps> = function ActionsPopover({
         <Divider />
         <MenuItem
           component={Link}
-          href={`/bugs/${bugId}`}
+          href={`/dashboard/bugs/${bugId}`}
           onClick={handleClose}
           sx={{ typography: 'body2', py: 1, px: 2.5 }}
         >

@@ -38,8 +38,30 @@ function deleteProject(id: string) {
     dispatch(request(id));
 
     projectService.deleteProject(id).then(
-      () => dispatch(success(id)),
-      (error) => dispatch(failure(id, error.toString()))
+      () => {
+        dispatch(success(id));
+        dispatch(
+          alertActions.enqueueSnackbar({
+            message: 'Project deleted successfully.',
+            options: {
+              key: new Date().getTime() + Math.random(),
+              variant: 'success',
+            },
+          })
+        );
+      },
+      (error) => {
+        dispatch(failure(id, error.toString()));
+        dispatch(
+          alertActions.enqueueSnackbar({
+            message: error.toString(),
+            options: {
+              key: new Date().getTime() + Math.random(),
+              variant: 'error',
+            },
+          })
+        );
+      }
     );
   };
 }
@@ -59,8 +81,30 @@ function createProject(projectData: any) {
     dispatch(request());
 
     projectService.createProject(projectData).then(
-      (data) => dispatch(success(data)),
-      (error) => dispatch(failure(error.toString()))
+      (data) => {
+        dispatch(success(data));
+        dispatch(
+          alertActions.enqueueSnackbar({
+            message: `${data.name} created successfully.`,
+            options: {
+              key: new Date().getTime() + Math.random(),
+              variant: 'success',
+            },
+          })
+        );
+      },
+      (error) => {
+        dispatch(failure(error.toString()));
+        dispatch(
+          alertActions.enqueueSnackbar({
+            message: error.toString(),
+            options: {
+              key: new Date().getTime() + Math.random(),
+              variant: 'error',
+            },
+          })
+        );
+      }
     );
   };
 }
@@ -84,7 +128,7 @@ function updateProject(id: string, newName: string) {
         dispatch(success(userData));
         dispatch(
           alertActions.enqueueSnackbar({
-            message: 'Project updated successfully.',
+            message: `Project renamed ${newName}.`,
             options: {
               key: new Date().getTime() + Math.random(),
               variant: 'success',

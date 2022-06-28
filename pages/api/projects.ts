@@ -34,16 +34,16 @@ export default async function projects(req, res) {
           /* no account id provided, return error */
           return res
             .status(422)
-            .json({ message: 'Unproccesable request, please provide the required fields.' });
+            .json({ message: 'Unproccesable request, no project ID provided.' });
         }
 
-        const data = await deleteProject(authToken, id);
+        const response = await deleteProject(authToken, id);
 
         /* send back server response */
-        if (data?.user) {
-          return res.status(200).json(data?.user);
+        if (response.status === 204) {
+          return res.status(200).json({ message: 'Project deleted.' });
         }
-        return res.status(400).json({ message: 'Request failed.' });
+        return res.status(400).json({ message: 'Failed to delete project.' });
       } catch (error) {
         return res.status(501).json({
           message: 'Oops, something went wrong with the request.',

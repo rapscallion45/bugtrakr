@@ -68,3 +68,32 @@ export async function getProjects(token) {
 
   return fetch(`${API_REST_URL}/projects`, requestOptions);
 }
+
+export async function deleteProject(token, id) {
+  const requestOptions = {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+  };
+
+  return fetch(`${API_REST_URL}/projects/${id}`, requestOptions);
+}
+
+export async function createProject(token, body) {
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+    body: JSON.stringify(body),
+  };
+
+  return fetch(`${API_REST_URL}/projects`, requestOptions);
+}
+
+export async function updateProject(token, name) {
+  const requestOptions = {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+    body: JSON.stringify({ name }),
+  };
+
+  return fetch(`${API_REST_URL}/projects`, requestOptions);
+}

@@ -1,4 +1,5 @@
 import { FC, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import InfoIcon from '@mui/icons-material/Info';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
@@ -9,6 +10,7 @@ import { alpha } from '@mui/material/styles';
 import { Button, Box, Divider, MenuItem, IconButton, Typography } from '@mui/material';
 import MenuPopover from '../../MenuPopover/MenuPopover';
 import Link from '../../Link/Link';
+import { projectActions } from '../../../redux/actions';
 
 interface ProjectsMenuProps {
   projectId: string;
@@ -27,6 +29,7 @@ const ActionsPopover: FC<ProjectsMenuProps> = function ActionsPopover({
   isMobile,
   iconSize,
 }) {
+  const dispatch = useDispatch();
   const anchorRef = useRef(null);
   const [open, setOpen] = useState<boolean>(false);
 
@@ -47,6 +50,7 @@ const ActionsPopover: FC<ProjectsMenuProps> = function ActionsPopover({
   };
 
   const handleDelete = () => {
+    dispatch(projectActions.deleteProject(projectId));
     handleClose();
   };
 
@@ -81,7 +85,7 @@ const ActionsPopover: FC<ProjectsMenuProps> = function ActionsPopover({
         <Divider />
         <MenuItem
           component={Link}
-          href={`/projects/${projectId}`}
+          href={`/dashboard/projects/${projectId}`}
           onClick={handleClose}
           sx={{ typography: 'body2', py: 1, px: 2.5 }}
         >

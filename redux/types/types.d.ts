@@ -139,7 +139,7 @@ interface ProjectState {
 
 type ProjectAction = {
   type?: string;
-  id?: String;
+  projectId?: String;
   projectsData?: ProjectState[];
   error?: string;
 };
