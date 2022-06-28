@@ -128,16 +128,18 @@ interface IProjectMember {
 }
 
 interface ProjectState {
-  id: string;
-  name: string;
-  members: IProjectMember[];
-  bugs: Array<{ id: string }>;
-  createdBy: User;
-  createdAt: Date;
-  updatedAt: Date;
+  id?: string;
+  name?: string;
+  members?: IProjectMember[];
+  bugs?: Array<{ id: string }>;
+  createdBy?: User;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 type ProjectAction = {
-  type: string;
-  project: IProject;
+  type?: string;
+  id?: String;
+  projectsData?: ProjectState[];
+  error?: string;
 };

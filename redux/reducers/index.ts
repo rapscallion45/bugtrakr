@@ -9,6 +9,7 @@ import resetPassword from './resetPassword.reducer';
 import validateResetToken from './validateResetToken.reducer';
 import account from './account.reducer';
 import alert from './alert.reducer';
+import projects from './projects.reducer';
 
 const rootReducer = combineReducers({
   account,
@@ -20,5 +21,6 @@ const rootReducer = combineReducers({
   resetPassword,
   validateResetToken,
   alert,
+  projects,
 });
 export default rootReducer;

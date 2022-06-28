@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import cookie from 'cookie';
 import { loginUser } from '../../lib/api';
 
 const { DEMO_LOGIN_USERNAME, DEMO_LOGIN_PASSWORD } = process.env;
@@ -10,6 +11,20 @@ export default async function demoLogin(req: NextApiRequest, res: NextApiRespons
       password: DEMO_LOGIN_PASSWORD,
     });
     const data = await response.json();
+
+    /**
+     * Set secure false when running on local host (http), and set
+     * httpOnly cookie to prevent clientside javascript from accessing it
+     */
+    res.setHeader('Set-Cookie', [
+      cookie.serialize('bugTrakrAuth', String(data?.token ?? ''), {
+        httpOnly: true,
+        secure: process.env.NODE_ENV !== 'development',
+        path: '/',
+        maxAge: 60 * 60 * 24 * 2 /* 48 hours for auth token */,
+        sameSite: 'strict',
+      }),
+    ]);
 
     /* Only send back message with successful or not - don't send JWT to client! */
     if (response.status === 201) {

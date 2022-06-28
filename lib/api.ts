@@ -59,3 +59,12 @@ export async function validatePasswordReset(body) {
 
   return fetch(`${API_REST_URL}/users/validate-reset-token`, requestOptions);
 }
+
+export async function getProjects(token) {
+  const requestOptions = {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+  };
+
+  return fetch(`${API_REST_URL}/projects`, requestOptions);
+}

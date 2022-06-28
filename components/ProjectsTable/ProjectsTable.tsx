@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { useSelector } from 'react-redux';
 import router from 'next/router';
 import { styled } from '@mui/material/styles';
 import {
@@ -11,9 +12,6 @@ import {
   Paper,
   Typography,
 } from '@mui/material';
-// import { useSelector } from 'react-redux';
-// import { ProjectState } from '../../redux/types';
-// import { selectAuthState } from '../../redux/slices/authSlice';
 import ActionsPopover from './ActionsPopover/ActionsPopover';
 import { formatDateTime, truncateString } from '../../utils';
 
@@ -38,7 +36,7 @@ interface ProjectsTableProps {
 }
 
 const ProjectsTable: FC<ProjectsTableProps> = function ProjectsTable({ projects }) {
-  //   const { user } = useSelector(selectAuthState);
+  const { user } = useSelector((state) => state.authentication);
 
   return (
     <Paper>
@@ -77,8 +75,7 @@ const ProjectsTable: FC<ProjectsTableProps> = function ProjectsTable({ projects 
                   projectId={p.id}
                   currentName={p.name}
                   currentMembers={p.members.map((m) => m.id)}
-                  // isAdmin={p.createdBy.id === user?.id}
-                  isAdmin
+                  isAdmin={p.createdBy.id === user?.id}
                   isMobile={false}
                 />
               </TableCell>
