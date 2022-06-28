@@ -46,7 +46,7 @@ const Register = function Register() {
       <MHidden width="mdDown">
         <SectionStyle>
           <Typography variant="h3" sx={{ px: 10, mt: 10, mb: 5 }}>
-            Sign up to gain access to free FPL analysis tools and more!
+            Sign up to gain access to FREE bug tracking tools!
           </Typography>
         </SectionStyle>
       </MHidden>

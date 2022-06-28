@@ -19,10 +19,11 @@ const Index = function Index() {
               </Box>
 
               <Typography variant="h2" align="center" paragraph>
-                The Let&apos;s Talk FPL App is here!
+                BugTrakR - Simple Issue and Bug Tracking!
               </Typography>
               <Typography variant="h5" align="center" paragraph color="text.secondary">
-                Sync your FPL squad with FPL analysis tools and gain access to exclusive content!
+                A FREE and easy to use bug and issue tracking system built by a developer for
+                developers!
               </Typography>
               <Stack sx={{ pt: 4 }} direction="row" spacing={2} justifyContent="center">
                 <Button variant="contained" component={Link} href="/register">

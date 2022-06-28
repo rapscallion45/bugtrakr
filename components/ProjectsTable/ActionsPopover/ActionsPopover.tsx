@@ -1,4 +1,4 @@
-import { FC, useRef, useState } from 'react';
+import { FC, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import InfoIcon from '@mui/icons-material/Info';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
@@ -10,6 +10,7 @@ import { alpha } from '@mui/material/styles';
 import { Button, Box, Divider, MenuItem, IconButton, Typography } from '@mui/material';
 import MenuPopover from '../../MenuPopover/MenuPopover';
 import Link from '../../Link/Link';
+import ConfirmDialog from '../../ConfirmDialog/ConfirmDialog';
 import { projectActions } from '../../../redux/actions';
 
 interface ProjectsMenuProps {
@@ -30,14 +31,14 @@ const ActionsPopover: FC<ProjectsMenuProps> = function ActionsPopover({
   iconSize,
 }) {
   const dispatch = useDispatch();
-  const anchorRef = useRef(null);
-  const [open, setOpen] = useState<boolean>(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const handleOpen = () => {
-    setOpen(true);
+  const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
-    setOpen(false);
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
   };
 
   const handleEdit = () => {
@@ -49,20 +50,18 @@ const ActionsPopover: FC<ProjectsMenuProps> = function ActionsPopover({
     handleClose();
   };
 
-  const handleDelete = () => {
-    dispatch(projectActions.deleteProject(projectId));
-    handleClose();
+  const handleDelete = (id) => {
+    dispatch(projectActions.deleteProject(id));
   };
 
   return (
     <>
       <IconButton
-        ref={anchorRef}
         size="large"
-        color={open ? 'primary' : 'default'}
-        onClick={handleOpen}
+        color={anchorEl ? 'primary' : 'default'}
+        onClick={handleOpenMenu}
         sx={{
-          ...(open && {
+          ...(Boolean(anchorEl) && {
             bgcolor: (theme) =>
               alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
           }),
@@ -72,9 +71,10 @@ const ActionsPopover: FC<ProjectsMenuProps> = function ActionsPopover({
         {isMobile && <MoreVertIcon fontSize={iconSize || 'medium'} />}
       </IconButton>
       <MenuPopover
-        open={open}
-        onClose={handleClose}
-        anchorEl={anchorRef.current}
+        open={Boolean(anchorEl)}
+        onClose={handleCloseMenu}
+        keepMounted
+        anchorEl={anchorEl}
         sx={{ width: 220 }}
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
@@ -86,7 +86,7 @@ const ActionsPopover: FC<ProjectsMenuProps> = function ActionsPopover({
         <MenuItem
           component={Link}
           href={`/dashboard/projects/${projectId}`}
-          onClick={handleClose}
+          onClick={handleCloseMenu}
           sx={{ typography: 'body2', py: 1, px: 2.5 }}
         >
           <InfoIcon sx={{ marginRight: '10px' }} />
@@ -102,15 +102,25 @@ const ActionsPopover: FC<ProjectsMenuProps> = function ActionsPopover({
               <PersonAddIcon sx={{ marginRight: '10px' }} />
               Add Users
             </MenuItem>
-            <MenuItem onClick={handleDelete} sx={{ typography: 'body2', py: 1, px: 2.5 }}>
-              <DeleteOutlineIcon sx={{ marginRight: '10px' }} />
-              Delete
-            </MenuItem>
+            <ConfirmDialog
+              title="Confirm Delete Project"
+              contentText={`Are you sure you want to permanently delete project "${currentName}"?`}
+              actionBtnText="Delete"
+              triggerBtn={{
+                type: 'menu',
+                text: 'Delete Project',
+                icon: DeleteOutlineIcon,
+                iconStyle: { marginRight: '10px' },
+                closeMenu: handleCloseMenu,
+                color: 'error',
+              }}
+              actionFunc={() => handleDelete(projectId)}
+            />
           </>
         )}
 
         <Box sx={{ p: 2, pt: 1.5 }}>
-          <Button fullWidth color="inherit" variant="outlined" onClick={handleClose}>
+          <Button fullWidth color="inherit" variant="outlined" onClick={handleCloseMenu}>
             Close
           </Button>
         </Box>

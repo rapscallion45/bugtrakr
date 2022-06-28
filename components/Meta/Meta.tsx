@@ -8,13 +8,13 @@ const Meta: FC = function Meta() {
       <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
       <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />
       <link rel="manifest" href="/favicon/site.webmanifest" />
-      <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#009EE3" />
+      <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#FFC900" />
       <link rel="icon" href="/favicon/favicon.ico" />
-      <meta name="msapplication-TileColor" content="#009EE3" />
+      <meta name="msapplication-TileColor" content="#FFC900" />
       <meta name="msapplication-config" content="/favicon/browserconfig.xml" />
       <meta name="apple-mobile-web-app-title" content={process.env.APP_NAME} />
       <meta name="application-name" content={process.env.APP_NAME} />
-      <meta name="theme-color" content="#009EE3" />
+      <meta name="theme-color" content="#FFC900" />
       <link rel="alternate" type="application/rss+xml" href="/feed.xml" />
       <link
         rel="stylesheet"
