@@ -46,6 +46,7 @@ const AccountPopover: FC = function AccountPopover() {
   const [open, setOpen] = useState<boolean>(false);
   const userAuth = useSelector((state) => state.authentication?.user);
   const loggedIn = useSelector((state) => state.authentication?.loggedIn);
+  const demo = useSelector((state) => state.authentication?.demo);
   const user = useSelector((state) => state.account?.user);
 
   const handleOpen = () => {
@@ -86,12 +87,14 @@ const AccountPopover: FC = function AccountPopover() {
         sx={{ width: 220 }}
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
-          <Typography variant="subtitle1" noWrap>
-            {loggedIn ? `${userAuth?.firstName} ${userAuth?.lastName}` : 'Sign In'}
-          </Typography>
-          {loggedIn && (
-            <Typography variant="body2" sx={{ fontSize: '0.8rem', color: 'text.secondary' }} noWrap>
-              {userAuth?.email}
+          {!demo && (
+            <Typography variant="subtitle1" noWrap>
+              {loggedIn ? `${userAuth?.username}` : 'Sign In'}
+            </Typography>
+          )}
+          {demo && (
+            <Typography variant="subtitle1" noWrap>
+              Demo Mode
             </Typography>
           )}
         </Box>
