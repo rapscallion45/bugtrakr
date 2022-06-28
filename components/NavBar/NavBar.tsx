@@ -50,7 +50,7 @@ const NavBar: FC<NavBarProps> = function NavBar({
         {!showLogo && (
           <MHidden width="lgUp">
             <IconButton onClick={onOpenSidebar} sx={{ mr: 1, color: 'text.primary' }}>
-              <MenuIcon color="primary" />
+              <MenuIcon htmlColor="black" />
             </IconButton>
             <Link href="/">
               <Logo />

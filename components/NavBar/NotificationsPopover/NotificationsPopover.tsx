@@ -206,7 +206,7 @@ const NotificationsPopover: FC = function NotificationsPopover() {
         }}
       >
         <Badge badgeContent={totalUnRead} color="error">
-          <NotificationsIcon color="primary" />
+          <NotificationsIcon htmlColor="black" />
         </Badge>
       </IconButton>
 
