@@ -6,7 +6,7 @@ exports[`Bottom Nav Bar Renders correctly enzyme 1`] = `
   style="visibility:hidden"
 >
   <a
-    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiBottomNavigationAction-root css-1onwxme-MuiTypography-root-MuiLink-root-MuiButtonBase-root-MuiBottomNavigationAction-root"
+    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiBottomNavigationAction-root css-1s1hvrg-MuiTypography-root-MuiLink-root-MuiButtonBase-root-MuiBottomNavigationAction-root"
     tabindex="0"
   >
     <svg
@@ -27,7 +27,7 @@ exports[`Bottom Nav Bar Renders correctly enzyme 1`] = `
     </span>
   </a>
   <a
-    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiBottomNavigationAction-root css-1onwxme-MuiTypography-root-MuiLink-root-MuiButtonBase-root-MuiBottomNavigationAction-root"
+    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiBottomNavigationAction-root css-1s1hvrg-MuiTypography-root-MuiLink-root-MuiButtonBase-root-MuiBottomNavigationAction-root"
     tabindex="0"
   >
     <svg
@@ -48,7 +48,7 @@ exports[`Bottom Nav Bar Renders correctly enzyme 1`] = `
     </span>
   </a>
   <a
-    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiBottomNavigationAction-root css-1onwxme-MuiTypography-root-MuiLink-root-MuiButtonBase-root-MuiBottomNavigationAction-root"
+    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiBottomNavigationAction-root css-1s1hvrg-MuiTypography-root-MuiLink-root-MuiButtonBase-root-MuiBottomNavigationAction-root"
     tabindex="0"
   >
     <svg

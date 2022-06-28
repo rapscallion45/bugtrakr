@@ -20,8 +20,7 @@ export default function Button(theme) {
         },
         containedPrimary: {
           '&:hover': {
-            color: theme.palette.success.main,
-            backgroundColor: theme.palette.primary.main,
+            backgroundColor: theme.palette.primary.light,
           },
         },
         containedSecondary: {

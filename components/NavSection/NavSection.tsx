@@ -84,7 +84,7 @@ const NavItem: FC<NavItemProps> = function NavItem({ item, active }) {
   };
 
   const activeRootStyle = {
-    color: 'primary.main',
+    color: 'black',
     fontWeight: 'fontWeightMedium',
     bgcolor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
     '&:before': { display: 'block' },

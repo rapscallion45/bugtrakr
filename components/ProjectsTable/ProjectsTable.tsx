@@ -22,8 +22,7 @@ const tableHeaders = ['Name', 'Bugs', 'Members', 'Admin', 'Added', 'Actions'];
 const TableStyle = styled(Table)(({ theme }) => ({
   '& thead th': {
     fontWeight: '600',
-    color: theme.palette.secondary.main,
-    backgroundColor: theme.palette.primary.light,
+    backgroundColor: theme.palette.primary.main,
   },
 }));
 
