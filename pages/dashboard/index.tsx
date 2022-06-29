@@ -1,11 +1,14 @@
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import { useEffect } from 'react';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
 import Page from '../../components/Page/Page';
+import MHidden from '../../components/@MUI-Extended/MHidden';
 import DashboardLayout from '../../layouts/DashboardLayout/DashboardLayout';
 import Loader from '../../components/Loader/Loader';
 import ProjectsTable from '../../components/ProjectsTable/ProjectsTable';
@@ -25,8 +28,18 @@ const Dashboard = function Dashboard() {
   return (
     <Page title="Dashboard | All Projects">
       <Container maxWidth="xl">
-        <Box sx={{ pb: 5 }}>
-          <Typography variant="h4">All Projects</Typography>
+        <Box display="flex" sx={{ pb: 5 }}>
+          <Box>
+            <Typography variant="h4">All Projects</Typography>
+            <Typography variant="body1">List of all projects created and joined by you</Typography>
+          </Box>
+          <MHidden width="smDown">
+            <Box display="flex" justifyContent="end" sx={{ flexGrow: 1 }}>
+              <Button variant="contained" startIcon={<AddIcon />}>
+                Create New Project
+              </Button>
+            </Box>
+          </MHidden>
         </Box>
         <Loader
           dataLoading={loading}

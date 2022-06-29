@@ -1,12 +1,12 @@
 import { FC } from 'react';
-// import { useSelector } from 'react-redux';
-// import { selectAuthState } from '../../redux/slices/authSlice';
-import { Box, Divider, Typography } from '@mui/material';
-// import { useMainPageStyles } from '../../styles/muiStyles';
+import { useSelector } from 'react-redux';
+import { Box, Divider, Button, Typography } from '@mui/material';
 import BugReportIcon from '@mui/icons-material/BugReport';
 import GroupIcon from '@mui/icons-material/Group';
+import AddIcon from '@mui/icons-material/Add';
 import { formatDateTime, truncateString } from '../../utils';
 import ActionsPopover from './ActionsPopover/ActionsPopover';
+import HideOnScroll from '../HideOnScroll/HideOnScroll';
 import Link from '../Link/Link';
 
 interface ProjectsTableMobileProps {
@@ -16,66 +16,84 @@ interface ProjectsTableMobileProps {
 const ProjectsTableMobile: FC<ProjectsTableMobileProps> = function ProjectsTableMobile({
   projects,
 }) {
-  //   const { user } = useSelector(selectAuthState);
-  return (
-    <div>
-      <Divider />
-      {projects.map((p, i) => (
-        <div key={p.id} style={{ paddingBottom: i + 1 === projects.length ? '2em' : 0 }}>
-          <Box sx={{ padding: '0.4em 0.3em' }}>
-            <Box display="flex" alignItems="center">
-              <Box
-                component={Link}
-                href={`/dashboard/projects/${p.id}`}
-                sx={{ flexGrow: 1, textDecoration: 'none' }}
-              >
-                <Typography variant="h4" color="text.primary">
-                  {truncateString(p.name, 30)}
-                </Typography>
-              </Box>
-              <ActionsPopover
-                projectId={p.id}
-                currentName={p.name}
-                currentMembers={p.members.map((m) => m.id)}
-                // isAdmin={p.createdBy.id === user?.id}
-                isAdmin
-                isMobile
-                iconSize="default"
-              />
-            </Box>
-            <Typography variant="body2" color="text.primary">
-              Admin: <strong>{p.createdBy.username}</strong>
-            </Typography>
-            <Typography variant="body2" color="text.primary">
-              Created: <strong>{formatDateTime(p.createdAt)}</strong>
-            </Typography>
+  const { user } = useSelector((state) => state.authentication);
 
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              sx={{ width: '100%', marginTop: '0.3em' }}
-            >
-              <Box display="flex" justifyContent="space-between" sx={{ width: '100px' }}>
-                <Box display="inline-flex" sx={{ verticalAlign: 'middle' }}>
-                  <BugReportIcon color="text.primary" />
-                  <Typography variant="subtitle1" color="text.primary">
-                    : {p.bugs.length}
+  return (
+    <Box pb={14}>
+      <Divider />
+      {projects.length !== 0 &&
+        projects.map((p, i) => (
+          <div key={p.id} style={{ paddingBottom: i + 1 === projects.length ? '2em' : 0 }}>
+            <Box sx={{ padding: '0.4em 0.3em' }}>
+              <Box display="flex" alignItems="center">
+                <Box
+                  component={Link}
+                  href={`/dashboard/projects/${p.id}`}
+                  sx={{ flexGrow: 1, textDecoration: 'none' }}
+                >
+                  <Typography variant="h4" color="text.primary">
+                    {truncateString(p.name, 30)}
                   </Typography>
                 </Box>
-                <Box display="inline-flex" sx={{ verticalAlign: 'middle' }}>
-                  <GroupIcon color="text.primary" />{' '}
-                  <Typography variant="subtitle1" color="text.primary">
-                    : {p.members.length}
-                  </Typography>
+                <ActionsPopover
+                  projectId={p.id}
+                  currentName={p.name}
+                  currentMembers={p.members.map((m) => m.id)}
+                  isAdmin={p.createdBy.id === user?.id}
+                  isMobile
+                  iconSize="default"
+                />
+              </Box>
+              <Typography variant="body2" color="text.primary">
+                Admin: <strong>{p.createdBy.username}</strong>
+              </Typography>
+              <Typography variant="body2" color="text.primary">
+                Created: <strong>{formatDateTime(p.createdAt)}</strong>
+              </Typography>
+
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                sx={{ width: '100%', marginTop: '0.3em' }}
+              >
+                <Box display="flex" justifyContent="space-between" sx={{ width: '100px' }}>
+                  <Box display="inline-flex" sx={{ verticalAlign: 'middle' }}>
+                    <BugReportIcon color="text.primary" />
+                    <Typography variant="subtitle1" color="text.primary">
+                      : {p.bugs.length}
+                    </Typography>
+                  </Box>
+                  <Box display="inline-flex" sx={{ verticalAlign: 'middle' }}>
+                    <GroupIcon color="text.primary" />{' '}
+                    <Typography variant="subtitle1" color="text.primary">
+                      : {p.members.length}
+                    </Typography>
+                  </Box>
                 </Box>
               </Box>
             </Box>
-          </Box>
-          <Divider />
-        </div>
-      ))}
-    </div>
+            <Divider />
+          </div>
+        ))}
+      {!projects.length && (
+        <Box display="flex" alignItems="center" flexDirection="column" py={5}>
+          <Typography pb={1} variant="h6">
+            No projects to show.
+          </Typography>
+          <Button variant="contained" startIcon={<AddIcon />}>
+            Create New Project
+          </Button>
+        </Box>
+      )}
+      <HideOnScroll>
+        <Box position="fixed" sx={{ bottom: '100px', right: '25px', maxWidth: '170px' }}>
+          <Button variant="contained" startIcon={<AddIcon />}>
+            Create New Project
+          </Button>
+        </Box>
+      </HideOnScroll>
+    </Box>
   );
 };
 export default ProjectsTableMobile;
