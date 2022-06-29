@@ -64,6 +64,7 @@ function projects(state: ProjectState = {}, action: ProjectAction) {
               ...p,
               name: action.data.name ? action.data.name : p.name,
               members: action.data.members ? action.data.members : p.members,
+              updatedAt: action.data.updatedAt,
             };
           }
           return p;
