@@ -18,10 +18,8 @@ const usePrjectFormController = (editMode, projectId, currentName, closeDialog) 
   const handleSubmit = (name: string) => {
     switch (editMode) {
       case 'name':
-        dispatch(projectActions.updateProject(projectId, name, closeDialog));
-        break;
       case 'members':
-        dispatch(projectActions.updateProject(projectId, name, closeDialog)); // , selectedMembers));
+        dispatch(projectActions.updateProject(projectId, name, selectedMembers, closeDialog));
         break;
       default:
         dispatch(projectActions.createProject(name, selectedMembers, closeDialog));

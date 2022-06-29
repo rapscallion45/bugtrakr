@@ -112,26 +112,26 @@ function createProject(name: string, members: string[], closeDialog: () => void)
 }
 
 function updateProject(id: string, name: string, members: string[], closeDialog: () => void) {
-  function request(newName: string) {
-    return { type: projectConstants.UPDATE_REQUEST, newName };
+  function request() {
+    return { type: projectConstants.UPDATE_REQUEST };
   }
-  function success(newName: string) {
-    return { type: projectConstants.UPDATE_SUCCESS, newName };
+  function success(data: any) {
+    return { type: projectConstants.UPDATE_SUCCESS, data };
   }
-  function failure(newName: string, error: string) {
-    return { type: projectConstants.UPDATE_FAILURE, newName, error };
+  function failure(error: string) {
+    return { type: projectConstants.UPDATE_FAILURE, error };
   }
 
   return (dispatch) => {
-    dispatch(request(name));
+    dispatch(request());
 
     projectService.updateProject(id, name, members).then(
-      (userData) => {
-        dispatch(success(userData));
+      (data) => {
+        dispatch(success(data));
         if (closeDialog) closeDialog();
         dispatch(
           alertActions.enqueueSnackbar({
-            message: `Project renamed ${name}.`,
+            message: `Project renamed to "${name}".`,
             options: {
               key: new Date().getTime() + Math.random(),
               variant: 'success',
@@ -140,7 +140,7 @@ function updateProject(id: string, name: string, members: string[], closeDialog:
         );
       },
       (error) => {
-        dispatch(failure(name, error.toString()));
+        dispatch(failure(error.toString()));
         dispatch(
           alertActions.enqueueSnackbar({
             message: error.toString(),

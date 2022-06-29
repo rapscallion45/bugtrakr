@@ -49,6 +49,32 @@ function projects(state: ProjectState = {}, action: ProjectAction) {
         creating: false,
         error: action.error,
       };
+    case projectConstants.UPDATE_REQUEST:
+      return {
+        ...state,
+        updating: true,
+      };
+    case projectConstants.UPDATE_SUCCESS:
+      return {
+        ...state,
+        updating: false,
+        data: state.data.map((p) => {
+          if (p.id === action.data.id) {
+            return {
+              ...p,
+              name: action.data.name ? action.data.name : p.name,
+              members: action.data.members ? action.data.members : p.members,
+            };
+          }
+          return p;
+        }),
+      };
+    case projectConstants.UPDATE_FAILURE:
+      return {
+        ...state,
+        updating: false,
+        error: action.error,
+      };
     default:
       return state;
   }

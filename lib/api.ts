@@ -95,5 +95,5 @@ export async function updateProject(token, body) {
     body: JSON.stringify(body),
   };
 
-  return fetch(`${API_REST_URL}/projects`, requestOptions);
+  return fetch(`${API_REST_URL}/projects/${body.id}`, requestOptions);
 }
