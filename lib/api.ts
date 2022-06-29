@@ -88,11 +88,11 @@ export async function createProject(token, body) {
   return fetch(`${API_REST_URL}/projects`, requestOptions);
 }
 
-export async function updateProject(token, name) {
+export async function updateProject(token, body) {
   const requestOptions = {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
-    body: JSON.stringify({ name }),
+    body: JSON.stringify(body),
   };
 
   return fetch(`${API_REST_URL}/projects`, requestOptions);

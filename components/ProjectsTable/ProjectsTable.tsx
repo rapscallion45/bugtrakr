@@ -11,10 +11,11 @@ import {
   Box,
   Paper,
   Typography,
-  Button,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import ActionsPopover from './ActionsPopover/ActionsPopover';
+import FormDialog from '../FormDialog/FormDialog';
+import ProjectForm from '../ProjectForm/ProjectForm';
 import { formatDateTime, truncateString } from '../../utils';
 
 const tableHeaders = ['Name', 'Bugs', 'Members', 'Admin', 'Added', 'Actions'];
@@ -107,9 +108,16 @@ const ProjectsTable: FC<ProjectsTableProps> = function ProjectsTable({ projects 
           <Typography pb={1} variant="h6">
             No projects to show.
           </Typography>
-          <Button variant="contained" startIcon={<AddIcon />}>
-            Create New Project
-          </Button>
+          <FormDialog
+            triggerBtn={{
+              type: 'normal',
+              icon: AddIcon,
+              text: 'Create New Project',
+            }}
+            title="Create New Project"
+          >
+            <ProjectForm editMode={null} />
+          </FormDialog>
         </Box>
       )}
     </Paper>

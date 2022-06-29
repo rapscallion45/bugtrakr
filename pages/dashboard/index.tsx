@@ -5,7 +5,6 @@ import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import Page from '../../components/Page/Page';
 import MHidden from '../../components/@MUI-Extended/MHidden';
@@ -13,6 +12,8 @@ import DashboardLayout from '../../layouts/DashboardLayout/DashboardLayout';
 import Loader from '../../components/Loader/Loader';
 import ProjectsTable from '../../components/ProjectsTable/ProjectsTable';
 import ProjectsTableMobile from '../../components/ProjectsTable/ProjectsTableMobile';
+import FormDialog from '../../components/FormDialog/FormDialog';
+import ProjectForm from '../../components/ProjectForm/ProjectForm';
 import { projectActions } from '../../redux/actions';
 
 const Dashboard = function Dashboard() {
@@ -35,9 +36,16 @@ const Dashboard = function Dashboard() {
           </Box>
           <MHidden width="smDown">
             <Box display="flex" justifyContent="end" sx={{ flexGrow: 1 }}>
-              <Button variant="contained" startIcon={<AddIcon />}>
-                Create New Project
-              </Button>
+              <FormDialog
+                triggerBtn={{
+                  type: 'normal',
+                  icon: AddIcon,
+                  text: 'Create New Project',
+                }}
+                title="Create New Project"
+              >
+                <ProjectForm />
+              </FormDialog>
             </Box>
           </MHidden>
         </Box>

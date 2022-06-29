@@ -23,7 +23,7 @@ function getProjects() {
   };
 }
 
-function deleteProject(id: string) {
+function deleteProject(id: string, closeDialog: () => void) {
   function request(projectId: string) {
     return { type: projectConstants.DELETE_REQUEST, projectId };
   }
@@ -40,6 +40,7 @@ function deleteProject(id: string) {
     projectService.deleteProject(id).then(
       () => {
         dispatch(success(id));
+        if (closeDialog) closeDialog();
         dispatch(
           alertActions.enqueueSnackbar({
             message: 'Project deleted successfully.',
@@ -66,7 +67,7 @@ function deleteProject(id: string) {
   };
 }
 
-function createProject(projectData: any) {
+function createProject(name: string, members: string[], closeDialog: () => void) {
   function request() {
     return { type: projectConstants.CREATE_REQUEST };
   }
@@ -80,12 +81,13 @@ function createProject(projectData: any) {
   return (dispatch) => {
     dispatch(request());
 
-    projectService.createProject(projectData).then(
+    projectService.createProject(name, members).then(
       (data) => {
         dispatch(success(data));
+        if (closeDialog) closeDialog();
         dispatch(
           alertActions.enqueueSnackbar({
-            message: `${data.name} created successfully.`,
+            message: `Project "${data.name}" created successfully.`,
             options: {
               key: new Date().getTime() + Math.random(),
               variant: 'success',
@@ -109,26 +111,27 @@ function createProject(projectData: any) {
   };
 }
 
-function updateProject(id: string, newName: string) {
-  function request(name: string) {
-    return { type: projectConstants.UPDATE_REQUEST, name };
+function updateProject(id: string, name: string, members: string[], closeDialog: () => void) {
+  function request(newName: string) {
+    return { type: projectConstants.UPDATE_REQUEST, newName };
   }
-  function success(name: string) {
-    return { type: projectConstants.UPDATE_SUCCESS, name };
+  function success(newName: string) {
+    return { type: projectConstants.UPDATE_SUCCESS, newName };
   }
-  function failure(name: string, error: string) {
-    return { type: projectConstants.UPDATE_FAILURE, name, error };
+  function failure(newName: string, error: string) {
+    return { type: projectConstants.UPDATE_FAILURE, newName, error };
   }
 
   return (dispatch) => {
-    dispatch(request(newName));
+    dispatch(request(name));
 
-    projectService.updateProject(id, newName).then(
+    projectService.updateProject(id, name, members).then(
       (userData) => {
         dispatch(success(userData));
+        if (closeDialog) closeDialog();
         dispatch(
           alertActions.enqueueSnackbar({
-            message: `Project renamed ${newName}.`,
+            message: `Project renamed ${name}.`,
             options: {
               key: new Date().getTime() + Math.random(),
               variant: 'success',
@@ -137,7 +140,7 @@ function updateProject(id: string, newName: string) {
         );
       },
       (error) => {
-        dispatch(failure(newName, error.toString()));
+        dispatch(failure(name, error.toString()));
         dispatch(
           alertActions.enqueueSnackbar({
             message: error.toString(),

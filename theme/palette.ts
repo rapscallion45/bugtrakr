@@ -50,12 +50,12 @@ const INFO = {
   contrastText: '#fff',
 };
 const SUCCESS = {
-  lightest: '#E4FFF2',
+  lightest: '#e6ffe6',
   lighter: '#C3FFE3',
-  light: '#68FFB8',
-  main: '#00FF87',
-  dark: '#00C569',
-  darker: '#008C4A',
+  light: '#99ff99',
+  main: '#00FF00',
+  dark: '#00b300',
+  darker: '#006600',
   contrastText: GREY[800],
 };
 const WARNING = {

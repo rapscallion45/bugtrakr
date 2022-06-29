@@ -19,21 +19,21 @@ function deleteProject(id: string) {
   return fetch(`/api/projects`, requestOptions).then(handleResponse);
 }
 
-function createProject(projectData: any) {
+function createProject(name: string, members: string[]) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(projectData),
+    body: JSON.stringify({ name, members }),
   };
 
   return fetch(`/api/projects`, requestOptions).then(handleResponse);
 }
 
-function updateProject(id: string, newName: string) {
+function updateProject(id: string, name: string, members: string[]) {
   const requestOptions = {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ id, newName }),
+    body: JSON.stringify({ id, name, members }),
   };
 
   return fetch(`/api/projects`, requestOptions).then(handleResponse);

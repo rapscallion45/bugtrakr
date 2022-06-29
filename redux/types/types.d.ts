@@ -115,6 +115,11 @@ type VerifyEmailAction = {
 
 type BugPriority = 'low' | 'medium' | 'high';
 
+export interface User {
+  id: string;
+  username: string;
+}
+
 interface IProject {
   id: number;
   title: string;

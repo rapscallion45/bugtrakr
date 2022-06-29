@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import InfoIcon from '@mui/icons-material/Info';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
@@ -31,6 +31,7 @@ const ActionsPopover: FC<ProjectsMenuProps> = function ActionsPopover({
   iconSize,
 }) {
   const dispatch = useDispatch();
+  const { deleting } = useSelector((state) => state.projects);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -42,16 +43,16 @@ const ActionsPopover: FC<ProjectsMenuProps> = function ActionsPopover({
   };
 
   const handleEdit = () => {
-    handleClose();
+    handleCloseMenu();
   };
 
   const handleAddUser = () => {
-    if (currentMembers.length) handleClose();
-    handleClose();
+    if (currentMembers.length) handleCloseMenu();
+    handleCloseMenu();
   };
 
-  const handleDelete = (id) => {
-    dispatch(projectActions.deleteProject(id));
+  const handleDelete = (id, closeDialog) => {
+    dispatch(projectActions.deleteProject(id, closeDialog));
   };
 
   return (
@@ -114,7 +115,8 @@ const ActionsPopover: FC<ProjectsMenuProps> = function ActionsPopover({
                 closeMenu: handleCloseMenu,
                 color: 'error',
               }}
-              actionFunc={() => handleDelete(projectId)}
+              processing={deleting}
+              actionFunc={(closeDialog) => handleDelete(projectId, closeDialog)}
             />
           </>
         )}

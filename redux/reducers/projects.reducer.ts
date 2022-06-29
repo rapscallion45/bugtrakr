@@ -32,6 +32,23 @@ function projects(state: ProjectState = {}, action: ProjectAction) {
         deleting: false,
         error: action.error,
       };
+    case projectConstants.CREATE_REQUEST:
+      return {
+        ...state,
+        creating: true,
+      };
+    case projectConstants.CREATE_SUCCESS:
+      return {
+        ...state,
+        creating: false,
+        data: state.data.concat(action.data),
+      };
+    case projectConstants.CREATE_FAILURE:
+      return {
+        ...state,
+        creating: false,
+        error: action.error,
+      };
     default:
       return state;
   }

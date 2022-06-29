@@ -6,7 +6,6 @@ export default async function projects(req, res) {
   const { body, method } = req;
   const cookies = cookie.parse(req.headers.cookie);
   const authToken = cookies?.bugTrakrAuth || '';
-  const { id, newName, projectData } = body;
 
   /* determine which request type this is */
   switch (method) {
@@ -30,14 +29,14 @@ export default async function projects(req, res) {
     case 'DELETE':
       /* call api */
       try {
-        if (!id) {
+        if (!body.id) {
           /* no account id provided, return error */
           return res
             .status(422)
             .json({ message: 'Unproccesable request, no project ID provided.' });
         }
 
-        const response = await deleteProject(authToken, id);
+        const response = await deleteProject(authToken, body.id);
 
         /* send back server response */
         if (response.status === 204) {
@@ -53,13 +52,21 @@ export default async function projects(req, res) {
     case 'POST':
       /* call api */
       try {
-        const data = await createProject(authToken, projectData);
+        if (!body.name) {
+          /* no project name provided, return error */
+          return res
+            .status(422)
+            .json({ message: 'Unproccesable request, project must have a name.' });
+        }
+
+        const response = await createProject(authToken, body);
+        const data = await response.json();
 
         /* send back server response */
-        if (data?.updateUser?.user) {
-          return res.status(200).json(data?.updateUser?.user);
+        if (response.status === 201) {
+          return res.status(200).json(data);
         }
-        return res.status(400).json({ message: 'Failed to update profile.' });
+        return res.status(400).json({ message: data.message });
       } catch (error) {
         return res.status(501).json({
           message: 'Oops, something went wrong with the request.',
@@ -69,21 +76,21 @@ export default async function projects(req, res) {
     case 'PUT':
       /* call api */
       try {
-        if (!id) {
-          /* no account id provided, return error */
+        if (!body.id || !body.name) {
+          /* no project name or ID provided, return error */
           return res
             .status(422)
-            .json({ message: 'Unproccesable request, please provide the required fields.' });
+            .json({ message: 'Unproccesable request, project name and ID not provided.' });
         }
 
-        const response = await updateProject(authToken, id, newName);
+        const response = await updateProject(authToken, body);
         const data = await response.json();
 
         /* send back server response */
         if (response.status === 200) {
-          return res.status(200).json(data?.updateUser?.user);
+          return res.status(200).json(data);
         }
-        return res.status(400).json({ message: 'Failed to update project.' });
+        return res.status(400).json({ message: data.message });
       } catch (error) {
         return res.status(501).json({
           message: 'Oops, something went wrong with the request.',

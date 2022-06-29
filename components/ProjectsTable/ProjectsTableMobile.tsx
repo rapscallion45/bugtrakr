@@ -7,7 +7,9 @@ import AddIcon from '@mui/icons-material/Add';
 import { formatDateTime, truncateString } from '../../utils';
 import ActionsPopover from './ActionsPopover/ActionsPopover';
 import HideOnScroll from '../HideOnScroll/HideOnScroll';
+import FormDialog from '../FormDialog/FormDialog';
 import Link from '../Link/Link';
+import ProjectForm from '../ProjectForm/ProjectForm';
 
 interface ProjectsTableMobileProps {
   projects: any[];
@@ -88,9 +90,16 @@ const ProjectsTableMobile: FC<ProjectsTableMobileProps> = function ProjectsTable
       )}
       <HideOnScroll>
         <Box position="fixed" sx={{ bottom: '100px', right: '25px', maxWidth: '170px' }}>
-          <Button variant="contained" startIcon={<AddIcon />}>
-            Create New Project
-          </Button>
+          <FormDialog
+            triggerBtn={{
+              type: 'normal',
+              icon: AddIcon,
+              text: 'Create New Project',
+            }}
+            title="Create New Project"
+          >
+            <ProjectForm editMode={null} />
+          </FormDialog>
         </Box>
       </HideOnScroll>
     </Box>

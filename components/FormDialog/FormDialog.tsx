@@ -1,34 +1,14 @@
-import { useState } from 'react';
-import {
-  Button,
-  IconButton,
-  MenuItem,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Typography,
-  Fab,
-  CircularProgress,
-} from '@mui/material';
+import React, { useState } from 'react';
+import { Dialog, DialogContent, Button, IconButton, MenuItem, Fab } from '@mui/material';
+import { DialogTitle } from './CustomDialogTitle/CustomDialogTitle';
 import HideOnScroll from '../HideOnScroll/HideOnScroll';
 import { TriggerButtonTypes } from '../types';
 
-const ConfirmDialog: React.FC<{
+const FormDialog: React.FC<{
   title: string;
-  contentText: string;
-  actionBtnText: string;
   triggerBtn: TriggerButtonTypes;
-  processing: boolean;
-  actionFunc: (closeDialog: () => void) => void;
-}> = function ConfirmDialog({
-  title,
-  contentText,
-  actionBtnText,
-  triggerBtn,
-  processing,
-  actionFunc,
-}) {
+  children: React.ReactNode;
+}> = function FormDialog({ triggerBtn, children, title }) {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleDialogClose = () => {
@@ -38,10 +18,6 @@ const ConfirmDialog: React.FC<{
   const handleDialogOpen = () => {
     setDialogOpen(true);
     if (triggerBtn.type === 'menu' && triggerBtn.closeMenu) triggerBtn.closeMenu();
-  };
-
-  const handleConfirmedAction = () => {
-    actionFunc(handleDialogClose);
   };
 
   const triggerButton = () => {
@@ -71,11 +47,15 @@ const ConfirmDialog: React.FC<{
         <HideOnScroll>
           <Fab
             variant={triggerBtn.variant || 'round'}
-            size={triggerBtn.size || 'medium'}
+            size={triggerBtn.size || 'large'}
             color={triggerBtn.color || 'primary'}
             onClick={handleDialogOpen}
           >
-            <triggerBtn.icon />
+            <triggerBtn.icon
+              style={{
+                marginRight: triggerBtn.variant === 'extended' ? '0.3em' : 0,
+              }}
+            />
             {triggerBtn.variant === 'extended' && triggerBtn.text}
           </Fab>
         </HideOnScroll>
@@ -102,48 +82,28 @@ const ConfirmDialog: React.FC<{
         startIcon={<triggerBtn.icon />}
         onClick={handleDialogOpen}
         style={triggerBtn.style}
+        className={triggerBtn.className}
       >
         {triggerBtn.text}
       </Button>
     );
   };
 
+  const proppedChildren = React.isValidElement(children)
+    ? React.cloneElement(children, {
+        closeDialog: handleDialogClose,
+      })
+    : children;
+
   return (
     <div style={{ display: 'inline' }}>
       {triggerButton()}
-      <Dialog open={dialogOpen} onClose={handleDialogOpen}>
-        <DialogTitle>
-          <Typography color="text.primary" variant="h6">
-            {title}
-          </Typography>
-        </DialogTitle>
-        <DialogContent dividers sx={{ p: 3 }}>
-          <Typography>{contentText}</Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={handleDialogClose}
-            color="secondary"
-            variant="contained"
-            size="small"
-            disabled={processing}
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={handleConfirmedAction}
-            color="primary"
-            variant="contained"
-            size="small"
-            disabled={processing}
-          >
-            {!processing && actionBtnText}
-            {processing && <CircularProgress size={22} color="inherit" />}
-          </Button>
-        </DialogActions>
+      <Dialog open={dialogOpen} onClose={handleDialogClose} maxWidth="xs" fullWidth>
+        <DialogTitle onClose={handleDialogClose}>{title}</DialogTitle>
+        <DialogContent>{proppedChildren}</DialogContent>
       </Dialog>
     </div>
   );
 };
 
-export default ConfirmDialog;
+export default FormDialog;
