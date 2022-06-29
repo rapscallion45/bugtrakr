@@ -11,6 +11,8 @@ import { Button, Box, Divider, MenuItem, IconButton, Typography } from '@mui/mat
 import MenuPopover from '../../MenuPopover/MenuPopover';
 import Link from '../../Link/Link';
 import ConfirmDialog from '../../ConfirmDialog/ConfirmDialog';
+import FormDialog from '../../FormDialog/FormDialog';
+import ProjectForm from '../../ProjectForm/ProjectForm';
 import { projectActions } from '../../../redux/actions';
 
 interface ProjectsMenuProps {
@@ -40,15 +42,6 @@ const ActionsPopover: FC<ProjectsMenuProps> = function ActionsPopover({
 
   const handleCloseMenu = () => {
     setAnchorEl(null);
-  };
-
-  const handleEdit = () => {
-    handleCloseMenu();
-  };
-
-  const handleAddUser = () => {
-    if (currentMembers.length) handleCloseMenu();
-    handleCloseMenu();
   };
 
   const handleDelete = (id, closeDialog) => {
@@ -88,21 +81,41 @@ const ActionsPopover: FC<ProjectsMenuProps> = function ActionsPopover({
           component={Link}
           href={`/dashboard/projects/${projectId}`}
           onClick={handleCloseMenu}
-          sx={{ typography: 'body2', py: 1, px: 2.5 }}
+          sx={{ typography: 'body', py: 1, px: 2 }}
         >
           <InfoIcon sx={{ marginRight: '10px' }} />
           Project Details
         </MenuItem>
         {isAdmin && (
           <>
-            <MenuItem onClick={handleEdit} sx={{ typography: 'body2', py: 1, px: 2.5 }}>
-              <EditOutlinedIcon sx={{ marginRight: '10px' }} />
-              Edit Name
-            </MenuItem>
-            <MenuItem onClick={handleAddUser} sx={{ typography: 'body2', py: 1, px: 2.5 }}>
-              <PersonAddIcon sx={{ marginRight: '10px' }} />
-              Add Users
-            </MenuItem>
+            <FormDialog
+              triggerBtn={{
+                type: 'menu',
+                icon: EditOutlinedIcon,
+                iconStyle: { marginRight: '10px' },
+                text: 'Edit Name',
+                closeMenu: handleCloseMenu,
+              }}
+              title={`Edit Name of Project "${currentName}"`}
+            >
+              <ProjectForm editMode="name" projectId={projectId} currentName={currentName} />
+            </FormDialog>
+            <FormDialog
+              triggerBtn={{
+                type: 'menu',
+                icon: PersonAddIcon,
+                iconStyle: { marginRight: '10px' },
+                text: 'Add Users',
+                closeMenu: handleCloseMenu,
+              }}
+              title={`Add Users to "${currentName}"`}
+            >
+              <ProjectForm
+                editMode="members"
+                projectId={projectId}
+                currentMembers={currentMembers}
+              />
+            </FormDialog>
             <ConfirmDialog
               title="Confirm Delete Project"
               contentText={`Are you sure you want to permanently delete project "${currentName}"?`}

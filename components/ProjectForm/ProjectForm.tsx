@@ -98,7 +98,7 @@ const ProjectForm: React.FC<ProjectFormProps> = function ProjectForm({
       )}
       {editMode !== 'name' && (
         <Autocomplete
-          style={{ marginTop: editMode !== 'members' ? '1.5em' : 0 }}
+          style={{ marginTop: '1.5em' }}
           multiple
           filterSelectedOptions
           onChange={selectMembersOnChange}
