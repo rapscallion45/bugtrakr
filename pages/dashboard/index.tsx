@@ -44,7 +44,7 @@ const Dashboard = function Dashboard() {
                 }}
                 title="Create New Project"
               >
-                <ProjectForm />
+                <ProjectForm editMode={null} />
               </FormDialog>
             </Box>
           </MHidden>

@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { useSelector } from 'react-redux';
-import { Box, Divider, Button, Typography } from '@mui/material';
+import { Box, Divider, Typography } from '@mui/material';
 import BugReportIcon from '@mui/icons-material/BugReport';
 import GroupIcon from '@mui/icons-material/Group';
 import AddIcon from '@mui/icons-material/Add';
@@ -83,18 +83,24 @@ const ProjectsTableMobile: FC<ProjectsTableMobileProps> = function ProjectsTable
           <Typography pb={1} variant="h6">
             No projects to show.
           </Typography>
-          <Button variant="contained" startIcon={<AddIcon />}>
-            Create New Project
-          </Button>
+          <FormDialog
+            triggerBtn={{
+              type: 'normal',
+              icon: AddIcon,
+              text: 'Create New Project',
+            }}
+            title="Create New Project"
+          >
+            <ProjectForm editMode={null} />
+          </FormDialog>
         </Box>
       )}
       <HideOnScroll>
         <Box position="fixed" sx={{ bottom: '100px', right: '25px', maxWidth: '170px' }}>
           <FormDialog
             triggerBtn={{
-              type: 'normal',
+              type: 'fab',
               icon: AddIcon,
-              text: 'Create New Project',
             }}
             title="Create New Project"
           >
