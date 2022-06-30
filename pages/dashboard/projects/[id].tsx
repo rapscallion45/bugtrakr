@@ -65,20 +65,6 @@ const ProjectDetails = function ProjectDetails() {
         </Breadcrumbs>
         <Box display="flex" sx={{ pt: 2, pb: 5 }}>
           <Typography variant="h3">{projectData?.name}</Typography>
-          <MHidden width="smDown">
-            <Box display="flex" justifyContent="end" sx={{ flexGrow: 1 }}>
-              <FormDialog
-                triggerBtn={{
-                  type: 'normal',
-                  icon: AddIcon,
-                  text: 'Create New Bug',
-                }}
-                title="Create New Bug"
-              >
-                {/* <ProjectForm editMode={null} /> */}
-              </FormDialog>
-            </Box>
-          </MHidden>
         </Box>
         <Loader
           dataLoading={projectsLoading || bugsLoading}
@@ -87,6 +73,23 @@ const ProjectDetails = function ProjectDetails() {
           loadingText="Fetching bug data..."
           errorText="Failed to load project details."
         >
+          <Box display="flex" sx={{ pt: 2, pb: 5 }}>
+            <Typography variant="h4">Bug List</Typography>
+            <MHidden width="smDown">
+              <Box display="flex" justifyContent="end" sx={{ flexGrow: 1 }}>
+                <FormDialog
+                  triggerBtn={{
+                    type: 'normal',
+                    icon: AddIcon,
+                    text: 'Create New Bug',
+                  }}
+                  title="Create New Bug"
+                >
+                  {/* <ProjectForm editMode={null} /> */}
+                </FormDialog>
+              </Box>
+            </MHidden>
+          </Box>
           {!isMobile && <BugsTable bugs={bugs} />}
           {isMobile && <BugsTableMobile bugs={bugs} />}
         </Loader>
