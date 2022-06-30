@@ -97,7 +97,7 @@ const ProjectForm: React.FC<ProjectFormProps> = function ProjectForm({
               {...params}
               variant="outlined"
               required={editMode === 'members'}
-              label="Select Members"
+              label="Select Users"
               InputProps={{
                 ...params.InputProps,
                 startAdornment: (
