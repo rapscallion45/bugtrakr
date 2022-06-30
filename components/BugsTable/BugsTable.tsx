@@ -10,11 +10,12 @@ import {
   Box,
   Paper,
   Typography,
+  Chip,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import ActionsPopover from './ActionsPopover/ActionsPopover';
 import FormDialog from '../FormDialog/FormDialog';
-import { formatDateTime, truncateString } from '../../utils';
+import { formatDateTime, getBugPriorityColor, truncateString } from '../../utils';
 
 const tableHeaders = ['Name', 'Priority', 'Status', 'Added', 'Updated', 'Notes', 'Actions'];
 
@@ -58,10 +59,17 @@ const BugsTable: FC<BugsTableProps> = function ProjectsTable({ bugs }) {
                 </Box>
               </TableCell>
               <TableCell onClick={() => router.push(`/dashboard/bugs/${b.id}`)} align="center">
-                {b.priority}
+                <Chip
+                  label={b.priority.toUpperCase()}
+                  color={getBugPriorityColor(b.priority)}
+                  sx={{ fontWeight: 'bold' }}
+                />
               </TableCell>
               <TableCell onClick={() => router.push(`/dashboard/bugs/${b.id}`)} align="center">
-                {b.isResolved ? 'Closed' : 'Open'}
+                <Chip
+                  label={b.isResolved ? 'Closed' : 'Open'}
+                  color={b.isResolved ? 'secondary' : 'info'}
+                />
               </TableCell>
               <TableCell onClick={() => router.push(`/dashboard/bugs/${b.id}`)} align="center">
                 {formatDateTime(b.createdAt)} ~ {b.createdBy.username}

@@ -1,12 +1,12 @@
 import { FC } from 'react';
-import { Box, Divider, Typography } from '@mui/material';
+import { Box, Divider, Typography, Chip } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import StickyNote2Icon from '@mui/icons-material/StickyNote2';
-import { formatDateTime, truncateString } from '../../utils';
 import ActionsPopover from './ActionsPopover/ActionsPopover';
 import HideOnScroll from '../HideOnScroll/HideOnScroll';
 import FormDialog from '../FormDialog/FormDialog';
 import Link from '../Link/Link';
+import { formatDateTime, getBugPriorityColor, truncateString } from '../../utils';
 
 interface BugsTableMobileProps {
   bugs: any[];
@@ -35,6 +35,25 @@ const BugsTableMobile: FC<BugsTableMobileProps> = function BugsTableMobile({ bug
                 isResolved={b.isResolved}
                 isMobile
               />
+            </Box>
+            <Box display="flex" my={1}>
+              <Typography variant="body2" color="text.primary" mr={2}>
+                Priority:{' '}
+                <Chip
+                  label={b.priority.toUpperCase()}
+                  color={getBugPriorityColor(b.priority)}
+                  sx={{ fontWeight: 'bold' }}
+                  size="small"
+                />
+              </Typography>
+              <Typography variant="body2" color="text.primary">
+                Status:{' '}
+                <Chip
+                  label={b.isResolved ? 'Closed' : 'Open'}
+                  color={b.isResolved ? 'secondary' : 'info'}
+                  size="small"
+                />
+              </Typography>
             </Box>
             <Typography variant="body2" color="text.primary">
               Created:{' '}

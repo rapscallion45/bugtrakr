@@ -64,7 +64,7 @@ const BugDetails = function BugDetails() {
     <Page title="Dashboard | My Bugs">
       <Container maxWidth="xl">
         <Box sx={{ pb: 5 }}>
-          <Typography variant="h4">My Bugs</Typography>
+          <Typography variant="h3">My Bugs</Typography>
         </Box>
         <Loader
           dataLoading={false}

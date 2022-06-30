@@ -6,7 +6,9 @@ import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
 import AddIcon from '@mui/icons-material/Add';
+import AppsIcon from '@mui/icons-material/Apps';
 import Page from '../../../components/Page/Page';
 import DashboardLayout from '../../../layouts/DashboardLayout/DashboardLayout';
 import Loader from '../../../components/Loader/Loader';
@@ -14,6 +16,7 @@ import BugsTable from '../../../components/BugsTable/BugsTable';
 import BugsTableMobile from '../../../components/BugsTable/BugsTableMobile';
 import MHidden from '../../../components/@MUI-Extended/MHidden';
 import FormDialog from '../../../components/FormDialog/FormDialog';
+import Link from '../../../components/Link/Link';
 import { bugActions } from '../../../redux/actions';
 
 const ProjectDetails = function ProjectDetails() {
@@ -43,8 +46,25 @@ const ProjectDetails = function ProjectDetails() {
   return (
     <Page title={`Dashboard | ${projectData?.name} Data`}>
       <Container maxWidth="xl">
-        <Box display="flex" sx={{ pb: 5 }}>
-          <Typography variant="h4">{projectData?.name}</Typography>
+        <Breadcrumbs aria-label="breadcrumb">
+          <Link
+            underline="hover"
+            sx={{ display: 'flex', alignItems: 'center', fontSize: '0.9rem' }}
+            color="inherit"
+            href="/dashboard"
+          >
+            <AppsIcon sx={{ mr: 0.5 }} fontSize="inherit" />
+            All Projects
+          </Link>
+          <Typography
+            sx={{ display: 'flex', alignItems: 'center', fontSize: '0.9rem' }}
+            color="text.primary"
+          >
+            {projectData?.name}
+          </Typography>
+        </Breadcrumbs>
+        <Box display="flex" sx={{ pt: 2, pb: 5 }}>
+          <Typography variant="h3">{projectData?.name}</Typography>
           <MHidden width="smDown">
             <Box display="flex" justifyContent="end" sx={{ flexGrow: 1 }}>
               <FormDialog

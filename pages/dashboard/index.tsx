@@ -31,7 +31,7 @@ const Dashboard = function Dashboard() {
       <Container maxWidth="xl">
         <Box display="flex" sx={{ pb: 5 }}>
           <Box>
-            <Typography variant="h4">All Projects</Typography>
+            <Typography variant="h3">All Projects</Typography>
             <Typography variant="body1">List of all projects created and joined by you</Typography>
           </Box>
           <MHidden width="smDown">
