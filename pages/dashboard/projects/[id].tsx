@@ -19,6 +19,7 @@ import MHidden from '../../../components/@MUI-Extended/MHidden';
 import FormDialog from '../../../components/FormDialog/FormDialog';
 import ConfirmDialog from '../../../components/ConfirmDialog/ConfirmDialog';
 import Link from '../../../components/Link/Link';
+import ProjectMenu from '../../../components/ProjectMenu/ProjectMenu';
 import { bugActions, projectActions } from '../../../redux/actions';
 import { formatDateTime } from '../../../utils';
 
@@ -28,6 +29,7 @@ const ProjectDetails = function ProjectDetails() {
   const { id } = router.query;
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const { user } = useSelector((state) => state.authentication);
   const {
     leaving,
     loading: projectsLoading,
@@ -44,7 +46,7 @@ const ProjectDetails = function ProjectDetails() {
   const projectData = projects?.find((project) => project.id === id);
 
   useEffect(() => {
-    dispatch(bugActions.getBugs(projectData.id));
+    dispatch(bugActions.getBugs(projectData?.id));
   }, [projectData]);
 
   const handleLeaveProject = (closeDialog: () => void) => {
@@ -75,18 +77,28 @@ const ProjectDetails = function ProjectDetails() {
           <Box display="flex" pb={1}>
             <Typography variant="h3">{projectData?.name}</Typography>
             <Box display="flex" justifyContent="end" sx={{ flexGrow: 1 }}>
-              <ConfirmDialog
-                title="Confirm Leave Project"
-                contentText={`Are you sure you want to leave project "${projectData?.name}"?`}
-                actionBtnText="Leave"
-                triggerBtn={{
-                  type: isMobile ? 'fab' : 'normal',
-                  text: 'Leave Project',
-                  icon: ExitToAppIcon,
-                }}
-                processing={leaving}
-                actionFunc={(closeDialog) => handleLeaveProject(closeDialog)}
-              />
+              {user.id !== projectData?.createdBy.id && (
+                <ConfirmDialog
+                  title="Confirm Leave Project"
+                  contentText={`Are you sure you want to leave project "${projectData?.name}"?`}
+                  actionBtnText="Leave"
+                  triggerBtn={{
+                    type: isMobile ? 'fab' : 'normal',
+                    text: 'Leave Project',
+                    icon: ExitToAppIcon,
+                  }}
+                  processing={leaving}
+                  actionFunc={(closeDialog) => handleLeaveProject(closeDialog)}
+                />
+              )}
+              {user.id === projectData?.createdBy.id && (
+                <ProjectMenu
+                  projectId={projectData?.id}
+                  currentName={projectData?.name}
+                  currentMembers={projectData?.members.map((m) => m.member.id)}
+                  isAdmin={projectData?.createdBy.id === user?.id}
+                />
+              )}
             </Box>
           </Box>
           <Divider />
@@ -95,14 +107,16 @@ const ProjectDetails = function ProjectDetails() {
           </Typography>
           <Typography variant="body">
             Created on:{' '}
-            <span style={{ fontWeight: 'bold' }}>{formatDateTime(projectData?.createdAt)}</span>
+            <span style={{ fontWeight: 'bold' }}>
+              {formatDateTime(projectData?.createdAt || 0)}
+            </span>
           </Typography>
         </Box>
         <Loader
           dataLoading={projectsLoading || bugsLoading}
           dataError={Boolean(projectsError) || Boolean(bugsError)}
           dataLoaded={projectsLoaded && bugsLoaded}
-          loadingText="Fetching bug data..."
+          loadingText="Fetching project data..."
           errorText="Failed to load project details."
         >
           <Box display="flex" sx={{ pt: 2, pb: 5 }}>

@@ -42,6 +42,7 @@ function deleteProject(id: string, closeDialog: () => void) {
       () => {
         dispatch(success(id));
         if (closeDialog) closeDialog();
+        router.push('/dashboard');
         dispatch(
           alertActions.enqueueSnackbar({
             message: 'Project deleted successfully.',
