@@ -1,13 +1,18 @@
-import { useEffect } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { Divider, useMediaQuery } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import { useTheme, styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import QueryStatsIcon from '@mui/icons-material/QueryStats';
+import GroupIcon from '@mui/icons-material/Group';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import AppsIcon from '@mui/icons-material/Apps';
 import Page from '../../../components/Page/Page';
@@ -23,12 +28,42 @@ import ProjectMenu from '../../../components/ProjectMenu/ProjectMenu';
 import { bugActions, projectActions } from '../../../redux/actions';
 import { formatDateTime } from '../../../utils';
 
+const TabStyle = styled(Tab)({
+  display: 'flex',
+  flexDirection: 'row',
+  minHeight: '60px',
+});
+
+interface ProjectTabPanelProps {
+  children: any;
+  index: number;
+  value: number;
+}
+
+const ProjectTabPanel: FC<ProjectTabPanelProps> = function AssetStatisticsTabPanel({
+  children,
+  value,
+  index,
+}) {
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`project-tab-panel-${index}`}
+      aria-labelledby={`full-width-tab-${index}`}
+    >
+      {value === index && <Box sx={{ paddingBottom: '30px' }}>{children}</Box>}
+    </div>
+  );
+};
+
 const ProjectDetails = function ProjectDetails() {
   const dispatch = useDispatch();
   const router = useRouter();
   const { id } = router.query;
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [tab, setTab] = useState<number>(0);
   const { user } = useSelector((state) => state.authentication);
   const {
     leaving,
@@ -49,9 +84,18 @@ const ProjectDetails = function ProjectDetails() {
     dispatch(bugActions.getBugs(projectData?.id));
   }, [projectData]);
 
+  const handleTabChange = (event, newValue) => {
+    setTab(newValue);
+  };
+
   const handleLeaveProject = (closeDialog: () => void) => {
     dispatch(projectActions.leaveProject(id.toString(), closeDialog));
   };
+
+  const a11yProps = (index) => ({
+    id: `full-width-tab-${index}`,
+    'aria-controls': `full-width-tabpanel-${index}`,
+  });
 
   return (
     <Page title={`Dashboard | ${projectData?.name} Data`}>
@@ -77,7 +121,7 @@ const ProjectDetails = function ProjectDetails() {
           <Box display="flex" pb={1}>
             <Typography variant="h3">{projectData?.name}</Typography>
             <Box display="flex" justifyContent="end" sx={{ flexGrow: 1 }}>
-              {user.id !== projectData?.createdBy.id && (
+              {user.id !== projectData?.createdBy.id ? (
                 <ConfirmDialog
                   title="Confirm Leave Project"
                   contentText={`Are you sure you want to leave project "${projectData?.name}"?`}
@@ -90,14 +134,27 @@ const ProjectDetails = function ProjectDetails() {
                   processing={leaving}
                   actionFunc={(closeDialog) => handleLeaveProject(closeDialog)}
                 />
-              )}
-              {user.id === projectData?.createdBy.id && (
-                <ProjectMenu
-                  projectId={projectData?.id}
-                  currentName={projectData?.name}
-                  currentMembers={projectData?.members.map((m) => m.member.id)}
-                  isAdmin={projectData?.createdBy.id === user?.id}
-                />
+              ) : (
+                <Box display="flex" justifyContent="center" alignItems="center">
+                  <ConfirmDialog
+                    title="Confirm Delete Project"
+                    contentText={`Are you sure you want to delete project "${projectData?.name}"?`}
+                    actionBtnText="Delete"
+                    triggerBtn={{
+                      type: 'icon',
+                      icon: DeleteIcon,
+                      color: 'inherit',
+                    }}
+                    processing={leaving}
+                    actionFunc={(closeDialog) => handleLeaveProject(closeDialog)}
+                  />
+                  <ProjectMenu
+                    projectId={projectData?.id}
+                    currentName={projectData?.name}
+                    currentMembers={projectData?.members.map((m) => m.member.id)}
+                    isAdmin={projectData?.createdBy.id === user?.id}
+                  />
+                </Box>
               )}
             </Box>
           </Box>
@@ -119,25 +176,50 @@ const ProjectDetails = function ProjectDetails() {
           loadingText="Fetching project data..."
           errorText="Failed to load project details."
         >
-          <Box display="flex" sx={{ pt: 2, pb: 5 }}>
-            <Typography variant="h4">Bug List</Typography>
-            <MHidden width="smDown">
-              <Box display="flex" justifyContent="end" sx={{ flexGrow: 1 }}>
-                <FormDialog
-                  triggerBtn={{
-                    type: 'normal',
-                    icon: AddIcon,
-                    text: 'Create New Bug',
-                  }}
-                  title="Create New Bug"
-                >
-                  {/* <ProjectForm editMode={null} /> */}
-                </FormDialog>
-              </Box>
-            </MHidden>
+          <Box pb={3}>
+            <Tabs
+              value={tab}
+              indicatorColor="primary"
+              textColor="primary"
+              onChange={handleTabChange}
+              aria-label="project tabs"
+              variant="scrollable"
+              scrollButtons="auto"
+              allowScrollButtonsMobile
+            >
+              <TabStyle
+                icon={<QueryStatsIcon sx={{ margin: '0px 10px 3px 10px !important' }} />}
+                label="Project Overview"
+                {...a11yProps(0)}
+              />
+              <TabStyle
+                icon={<GroupIcon sx={{ margin: '0px 10px 3px 10px !important' }} />}
+                label="Assigned Users"
+                {...a11yProps(1)}
+              />
+            </Tabs>
           </Box>
-          {!isMobile && <BugsTable bugs={bugs} />}
-          {isMobile && <BugsTableMobile bugs={bugs} />}
+          <ProjectTabPanel value={tab} index={0}>
+            <Box display="flex" sx={{ pt: 2, pb: 5 }}>
+              <Typography variant="h4">Bug List</Typography>
+              <MHidden width="smDown">
+                <Box display="flex" justifyContent="end" sx={{ flexGrow: 1 }}>
+                  <FormDialog
+                    triggerBtn={{
+                      type: 'normal',
+                      icon: AddIcon,
+                      text: 'Create New Bug',
+                    }}
+                    title="Create New Bug"
+                  >
+                    {/* <ProjectForm editMode={null} /> */}
+                  </FormDialog>
+                </Box>
+              </MHidden>
+            </Box>
+            {!isMobile && <BugsTable bugs={bugs} />}
+            {isMobile && <BugsTableMobile bugs={bugs} />}
+          </ProjectTabPanel>
         </Loader>
       </Container>
     </Page>
