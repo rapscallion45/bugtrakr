@@ -74,37 +74,20 @@ const ProjectDetails = function ProjectDetails() {
         <Box display="flex" flexDirection="column" sx={{ pt: 2, pb: 5 }}>
           <Box display="flex" pb={1}>
             <Typography variant="h3">{projectData?.name}</Typography>
-            <MHidden width="smDown">
-              <Box display="flex" justifyContent="end" sx={{ flexGrow: 1 }}>
-                <ConfirmDialog
-                  title="Confirm Leave Project"
-                  contentText={`Are you sure you want to leave project "${projectData?.name}"?`}
-                  actionBtnText="Leave"
-                  triggerBtn={{
-                    type: 'normal',
-                    text: 'Leave Project',
-                    icon: ExitToAppIcon,
-                  }}
-                  processing={leaving}
-                  actionFunc={(closeDialog) => handleLeaveProject(closeDialog)}
-                />
-              </Box>
-            </MHidden>
-            <MHidden width="smUp">
-              <Box display="flex" justifyContent="end" sx={{ flexGrow: 1 }}>
-                <ConfirmDialog
-                  title="Confirm Leave Project"
-                  contentText={`Are you sure you want to leave project "${projectData?.name}"?`}
-                  actionBtnText="Leave"
-                  triggerBtn={{
-                    type: 'fab',
-                    icon: ExitToAppIcon,
-                  }}
-                  processing={leaving}
-                  actionFunc={(closeDialog) => handleLeaveProject(closeDialog)}
-                />
-              </Box>
-            </MHidden>
+            <Box display="flex" justifyContent="end" sx={{ flexGrow: 1 }}>
+              <ConfirmDialog
+                title="Confirm Leave Project"
+                contentText={`Are you sure you want to leave project "${projectData?.name}"?`}
+                actionBtnText="Leave"
+                triggerBtn={{
+                  type: isMobile ? 'fab' : 'normal',
+                  text: 'Leave Project',
+                  icon: ExitToAppIcon,
+                }}
+                processing={leaving}
+                actionFunc={(closeDialog) => handleLeaveProject(closeDialog)}
+              />
+            </Box>
           </Box>
           <Divider />
           <Typography pt={1} variant="body">
