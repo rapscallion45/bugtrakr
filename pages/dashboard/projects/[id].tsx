@@ -101,7 +101,7 @@ const ProjectDetails = function ProjectDetails() {
                     icon: ExitToAppIcon,
                   }}
                   processing={leaving}
-                  actionFunc={handleLeaveProject}
+                  actionFunc={(closeDialog) => handleLeaveProject(closeDialog)}
                 />
               </Box>
             </MHidden>
