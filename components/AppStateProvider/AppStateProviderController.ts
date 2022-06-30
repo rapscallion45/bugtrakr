@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { accountActions } from '../../redux/actions';
+import { accountActions, usersActions } from '../../redux/actions';
 
 const AppStateProviderController = function AppStateProviderController() {
   const dispatch = useDispatch();
@@ -13,8 +13,11 @@ const AppStateProviderController = function AppStateProviderController() {
   }, []);
 
   useEffect(() => {
-    /* whenever authentication state changes, grab account info */
-    dispatch(accountActions.get(user?.id));
+    /* whenever authentication state changes, grab auth protected data */
+    if (loggedIn && user) {
+      dispatch(accountActions.get(user?.id));
+      dispatch(usersActions.getUsers());
+    }
   }, [user, loggedIn]);
 
   return { loading };

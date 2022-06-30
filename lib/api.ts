@@ -97,3 +97,12 @@ export async function updateProject(token, body) {
 
   return fetch(`${API_REST_URL}/projects/${body.id}`, requestOptions);
 }
+
+export async function getUsers(token) {
+  const requestOptions = {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+  };
+
+  return fetch(`${API_REST_URL}/users`, requestOptions);
+}

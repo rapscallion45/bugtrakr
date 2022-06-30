@@ -10,6 +10,7 @@ import validateResetToken from './validateResetToken.reducer';
 import account from './account.reducer';
 import alert from './alert.reducer';
 import projects from './projects.reducer';
+import users from './users.reducer';
 
 const rootReducer = combineReducers({
   account,
@@ -22,5 +23,6 @@ const rootReducer = combineReducers({
   validateResetToken,
   alert,
   projects,
+  users,
 });
 export default rootReducer;

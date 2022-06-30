@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux';
 import {
   TextField,
   Button,
@@ -13,17 +14,6 @@ import {
 import LabelImportantIcon from '@mui/icons-material/LabelImportant';
 import GroupIcon from '@mui/icons-material/Group';
 import usePrjectFormController from './ProjectFormController';
-
-const users = [
-  {
-    id: '1',
-    username: 'CarlTest',
-  },
-  {
-    id: '2',
-    username: 'CarlTest2',
-  },
-];
 
 interface BaseType {
   closeDialog?: () => void;
@@ -59,7 +49,7 @@ const ProjectForm: React.FC<ProjectFormProps> = function ProjectForm({
   currentMembers,
   projectId,
 }) {
-  // const users = useSelector(state => state.users);
+  const { data: users } = useSelector((state) => state.users);
   const { creating, updating, formik, setSelectedMembers } = usePrjectFormController(
     editMode,
     projectId,
