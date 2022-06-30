@@ -6,7 +6,7 @@ const HideOnScroll: React.FC<{ children: React.ReactElement<any, any> }> = funct
   const trigger = useScrollTrigger();
 
   return (
-    <Slide appear={false} direction="up" in={!trigger}>
+    <Slide appear direction="up" in={!trigger}>
       {children}
     </Slide>
   );

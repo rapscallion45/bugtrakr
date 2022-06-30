@@ -7,4 +7,5 @@ export { default as handleResponse } from './handleResponse';
 export { default as handleResponseHeaders } from './handleResponseHeaders';
 export { default as truncateString } from './truncateString';
 export { default as formatDateTime } from './formatDateTime';
+export { default as formatDateInWords } from './formatDateInWords';
 export { default as getBugPriorityColor } from './getBugPriorityColor';

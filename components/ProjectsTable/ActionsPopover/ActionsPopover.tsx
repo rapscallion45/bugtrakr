@@ -44,7 +44,7 @@ const ActionsPopover: FC<ProjectsMenuProps> = function ActionsPopover({
     setAnchorEl(null);
   };
 
-  const handleDelete = (id, closeDialog) => {
+  const handleDelete = (id: string, closeDialog: () => void) => {
     dispatch(projectActions.deleteProject(id, closeDialog));
   };
 

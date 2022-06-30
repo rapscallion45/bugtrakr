@@ -10,6 +10,7 @@ import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import AddIcon from '@mui/icons-material/Add';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import DeleteIcon from '@mui/icons-material/Delete';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import GroupIcon from '@mui/icons-material/Group';
@@ -23,6 +24,9 @@ import BugsTableMobile from '../../../components/BugsTable/BugsTableMobile';
 import MHidden from '../../../components/@MUI-Extended/MHidden';
 import FormDialog from '../../../components/FormDialog/FormDialog';
 import ConfirmDialog from '../../../components/ConfirmDialog/ConfirmDialog';
+import MembersTable from '../../../components/MembersTable/MembersTable';
+import MembersTableMobile from '../../../components/MembersTable/MembersTableMobile';
+import ProjectForm from '../../../components/ProjectForm/ProjectForm';
 import Link from '../../../components/Link/Link';
 import ProjectMenu from '../../../components/ProjectMenu/ProjectMenu';
 import { bugActions, projectActions } from '../../../redux/actions';
@@ -79,6 +83,7 @@ const ProjectDetails = function ProjectDetails() {
     data: bugs,
   } = useSelector((state) => state.bugs);
   const projectData = projects?.find((project) => project.id === id);
+  const isAdmin = user.id === projectData?.createdBy.id;
 
   useEffect(() => {
     dispatch(bugActions.getBugs(projectData?.id));
@@ -121,7 +126,7 @@ const ProjectDetails = function ProjectDetails() {
           <Box display="flex" pb={1}>
             <Typography variant="h3">{projectData?.name}</Typography>
             <Box display="flex" justifyContent="end" sx={{ flexGrow: 1 }}>
-              {user.id !== projectData?.createdBy.id ? (
+              {!isAdmin ? (
                 <ConfirmDialog
                   title="Confirm Leave Project"
                   contentText={`Are you sure you want to leave project "${projectData?.name}"?`}
@@ -152,7 +157,7 @@ const ProjectDetails = function ProjectDetails() {
                     projectId={projectData?.id}
                     currentName={projectData?.name}
                     currentMembers={projectData?.members.map((m) => m.member.id)}
-                    isAdmin={projectData?.createdBy.id === user?.id}
+                    isAdmin={isAdmin}
                   />
                 </Box>
               )}
@@ -219,6 +224,46 @@ const ProjectDetails = function ProjectDetails() {
             </Box>
             {!isMobile && <BugsTable bugs={bugs} />}
             {isMobile && <BugsTableMobile bugs={bugs} />}
+          </ProjectTabPanel>
+          <ProjectTabPanel value={tab} index={1}>
+            <Box display="flex" sx={{ pt: 2, pb: 5 }}>
+              <Typography variant="h4">Users List</Typography>
+              {isAdmin && (
+                <MHidden width="smDown">
+                  <Box display="flex" justifyContent="end" sx={{ flexGrow: 1 }}>
+                    <FormDialog
+                      triggerBtn={{
+                        type: 'normal',
+                        icon: PersonAddIcon,
+                        text: 'Add User',
+                      }}
+                      title="Add User"
+                    >
+                      <ProjectForm
+                        editMode="members"
+                        projectId={projectData?.id}
+                        currentMembers={projectData?.members.map((m) => m.member.id)}
+                        currentName={projectData?.name}
+                      />
+                    </FormDialog>
+                  </Box>
+                </MHidden>
+              )}
+            </Box>
+            {!isMobile ? (
+              <MembersTable
+                members={projectData?.members}
+                projectId={projectData?.id}
+                adminId={projectData?.createdBy?.id}
+              />
+            ) : (
+              <MembersTableMobile
+                members={projectData?.members}
+                projectId={projectData?.id}
+                projectName={projectData?.name}
+                adminId={projectData?.createdBy?.id}
+              />
+            )}
           </ProjectTabPanel>
         </Loader>
       </Container>
