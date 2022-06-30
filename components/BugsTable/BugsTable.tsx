@@ -11,10 +11,9 @@ import {
   Paper,
   Typography,
 } from '@mui/material';
-// import { useSelector } from 'react-redux';
-// import { ProjectState } from '../../redux/types';
-// import { selectAuthState } from '../../redux/slices/authSlice';
+import AddIcon from '@mui/icons-material/Add';
 import ActionsPopover from './ActionsPopover/ActionsPopover';
+import FormDialog from '../FormDialog/FormDialog';
 import { formatDateTime, truncateString } from '../../utils';
 
 const tableHeaders = ['Name', 'Priority', 'Status', 'Added', 'Updated', 'Notes', 'Actions'];
@@ -38,8 +37,6 @@ interface BugsTableProps {
 }
 
 const BugsTable: FC<BugsTableProps> = function ProjectsTable({ bugs }) {
-  //   const { user } = useSelector(selectAuthState);
-
   return (
     <Paper>
       <TableStyle>
@@ -89,6 +86,23 @@ const BugsTable: FC<BugsTableProps> = function ProjectsTable({ bugs }) {
           ))}
         </TableBody>
       </TableStyle>
+      {!bugs.length && (
+        <Box display="flex" alignItems="center" flexDirection="column" py={5}>
+          <Typography pb={1} variant="h6">
+            No bugs to show.
+          </Typography>
+          <FormDialog
+            triggerBtn={{
+              type: 'normal',
+              icon: AddIcon,
+              text: 'Create New Bug',
+            }}
+            title="Create New Bug"
+          >
+            {/* <ProjectForm editMode={null} /> */}
+          </FormDialog>
+        </Box>
+      )}
     </Paper>
   );
 };

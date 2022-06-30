@@ -1,11 +1,11 @@
 import { FC } from 'react';
-// import { useSelector } from 'react-redux';
-// import { selectAuthState } from '../../redux/slices/authSlice';
 import { Box, Divider, Typography } from '@mui/material';
-// import { useMainPageStyles } from '../../styles/muiStyles';
+import AddIcon from '@mui/icons-material/Add';
 import StickyNote2Icon from '@mui/icons-material/StickyNote2';
 import { formatDateTime, truncateString } from '../../utils';
 import ActionsPopover from './ActionsPopover/ActionsPopover';
+import HideOnScroll from '../HideOnScroll/HideOnScroll';
+import FormDialog from '../FormDialog/FormDialog';
 import Link from '../Link/Link';
 
 interface BugsTableMobileProps {
@@ -13,9 +13,8 @@ interface BugsTableMobileProps {
 }
 
 const BugsTableMobile: FC<BugsTableMobileProps> = function BugsTableMobile({ bugs }) {
-  //   const { user } = useSelector(selectAuthState);
   return (
-    <div>
+    <Box pb={14}>
       <Divider />
       {bugs.map((b, i) => (
         <div key={b.id} style={{ paddingBottom: i + 1 === bugs.length ? '2em' : 0 }}>
@@ -71,7 +70,37 @@ const BugsTableMobile: FC<BugsTableMobileProps> = function BugsTableMobile({ bug
           <Divider />
         </div>
       ))}
-    </div>
+      {!bugs.length && (
+        <Box display="flex" alignItems="center" flexDirection="column" py={5}>
+          <Typography pb={1} variant="h6">
+            No bugs to show.
+          </Typography>
+          <FormDialog
+            triggerBtn={{
+              type: 'normal',
+              icon: AddIcon,
+              text: 'Create New Bug',
+            }}
+            title="Create New Bug"
+          >
+            {/* <ProjectForm editMode={null} /> */}
+          </FormDialog>
+        </Box>
+      )}
+      <HideOnScroll>
+        <Box position="fixed" sx={{ bottom: '100px', right: '25px', maxWidth: '170px' }}>
+          <FormDialog
+            triggerBtn={{
+              type: 'fab',
+              icon: AddIcon,
+            }}
+            title="Create New Bug"
+          >
+            {/* <ProjectForm editMode={null} /> */}
+          </FormDialog>
+        </Box>
+      </HideOnScroll>
+    </Box>
   );
 };
 export default BugsTableMobile;
