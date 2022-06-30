@@ -1,3 +1,4 @@
+import { router } from 'next/router';
 import { projectConstants } from '../constants';
 import { projectService } from '../services';
 import alertActions from './alert.actions';
@@ -199,11 +200,57 @@ function updateProjectMembers(id: string, members: string[], closeDialog: () => 
   };
 }
 
+function leaveProject(id: string, closeDialog: () => void) {
+  function request() {
+    return { type: projectConstants.LEAVE_REQUEST };
+  }
+  function success() {
+    return { type: projectConstants.LEAVE_SUCCESS };
+  }
+  function failure(error: string) {
+    return { type: projectConstants.LEAVE_FAILURE, error };
+  }
+
+  return (dispatch) => {
+    dispatch(request());
+
+    projectService.leaveProject(id).then(
+      () => {
+        dispatch(success());
+        if (closeDialog) closeDialog();
+        router.push('/dashboard');
+        dispatch(
+          alertActions.enqueueSnackbar({
+            message: `You have been removed from the project.`,
+            options: {
+              key: new Date().getTime() + Math.random(),
+              variant: 'success',
+            },
+          })
+        );
+      },
+      (error) => {
+        dispatch(failure(error.toString()));
+        dispatch(
+          alertActions.enqueueSnackbar({
+            message: error.toString(),
+            options: {
+              key: new Date().getTime() + Math.random(),
+              variant: 'error',
+            },
+          })
+        );
+      }
+    );
+  };
+}
+
 const accountActions = {
   getProjects,
   createProject,
   deleteProject,
   updateProject,
   updateProjectMembers,
+  leaveProject,
 };
 export default accountActions;

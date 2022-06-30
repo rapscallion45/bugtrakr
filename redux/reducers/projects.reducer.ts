@@ -92,6 +92,22 @@ function projects(state: ProjectState = {}, action: ProjectAction) {
         updating: false,
         error: action.error,
       };
+    case projectConstants.LEAVE_REQUEST:
+      return {
+        ...state,
+        leaving: true,
+      };
+    case projectConstants.LEAVE_SUCCESS:
+      return {
+        ...state,
+        leaving: false,
+      };
+    case projectConstants.LEAVE_FAILURE:
+      return {
+        ...state,
+        leaving: false,
+        error: action.error,
+      };
     default:
       return state;
   }

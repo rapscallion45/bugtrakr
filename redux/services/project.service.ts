@@ -49,11 +49,22 @@ function updateProjectMembers(id: string, members: string[]) {
   return fetch(`/api/project-members`, requestOptions).then(handleResponse);
 }
 
+function leaveProject(id: string) {
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id }),
+  };
+
+  return fetch(`/api/projects/${id}/members/leave`, requestOptions).then(handleResponse);
+}
+
 const projectService = {
   getProject,
   deleteProject,
   createProject,
   updateProject,
   updateProjectMembers,
+  leaveProject,
 };
 export default projectService;

@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { useMediaQuery } from '@mui/material';
+import { Divider, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import AddIcon from '@mui/icons-material/Add';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import AppsIcon from '@mui/icons-material/Apps';
 import Page from '../../../components/Page/Page';
 import DashboardLayout from '../../../layouts/DashboardLayout/DashboardLayout';
@@ -16,8 +17,10 @@ import BugsTable from '../../../components/BugsTable/BugsTable';
 import BugsTableMobile from '../../../components/BugsTable/BugsTableMobile';
 import MHidden from '../../../components/@MUI-Extended/MHidden';
 import FormDialog from '../../../components/FormDialog/FormDialog';
+import ConfirmDialog from '../../../components/ConfirmDialog/ConfirmDialog';
 import Link from '../../../components/Link/Link';
-import { bugActions } from '../../../redux/actions';
+import { bugActions, projectActions } from '../../../redux/actions';
+import { formatDateTime } from '../../../utils';
 
 const ProjectDetails = function ProjectDetails() {
   const dispatch = useDispatch();
@@ -26,6 +29,7 @@ const ProjectDetails = function ProjectDetails() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const {
+    leaving,
     loading: projectsLoading,
     loaded: projectsLoaded,
     error: projectsError,
@@ -42,6 +46,10 @@ const ProjectDetails = function ProjectDetails() {
   useEffect(() => {
     dispatch(bugActions.getBugs(projectData.id));
   }, [projectData]);
+
+  const handleLeaveProject = (closeDialog: () => void) => {
+    dispatch(projectActions.leaveProject(id.toString(), closeDialog));
+  };
 
   return (
     <Page title={`Dashboard | ${projectData?.name} Data`}>
@@ -63,8 +71,49 @@ const ProjectDetails = function ProjectDetails() {
             {projectData?.name}
           </Typography>
         </Breadcrumbs>
-        <Box display="flex" sx={{ pt: 2, pb: 5 }}>
-          <Typography variant="h3">{projectData?.name}</Typography>
+        <Box display="flex" flexDirection="column" sx={{ pt: 2, pb: 5 }}>
+          <Box display="flex" pb={1}>
+            <Typography variant="h3">{projectData?.name}</Typography>
+            <MHidden width="smDown">
+              <Box display="flex" justifyContent="end" sx={{ flexGrow: 1 }}>
+                <ConfirmDialog
+                  title="Confirm Leave Project"
+                  contentText={`Are you sure you want to leave project "${projectData?.name}"?`}
+                  actionBtnText="Leave"
+                  triggerBtn={{
+                    type: 'normal',
+                    text: 'Leave Project',
+                    icon: ExitToAppIcon,
+                  }}
+                  processing={leaving}
+                  actionFunc={(closeDialog) => handleLeaveProject(closeDialog)}
+                />
+              </Box>
+            </MHidden>
+            <MHidden width="smUp">
+              <Box display="flex" justifyContent="end" sx={{ flexGrow: 1 }}>
+                <ConfirmDialog
+                  title="Confirm Leave Project"
+                  contentText={`Are you sure you want to leave project "${projectData?.name}"?`}
+                  actionBtnText="Leave"
+                  triggerBtn={{
+                    type: 'fab',
+                    icon: ExitToAppIcon,
+                  }}
+                  processing={leaving}
+                  actionFunc={handleLeaveProject}
+                />
+              </Box>
+            </MHidden>
+          </Box>
+          <Divider />
+          <Typography pt={1} variant="body">
+            Admin: <span style={{ fontWeight: 'bold' }}>{projectData?.createdBy.username}</span>
+          </Typography>
+          <Typography variant="body">
+            Created on:{' '}
+            <span style={{ fontWeight: 'bold' }}>{formatDateTime(projectData?.createdAt)}</span>
+          </Typography>
         </Box>
         <Loader
           dataLoading={projectsLoading || bugsLoading}

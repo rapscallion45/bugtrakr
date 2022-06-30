@@ -108,6 +108,15 @@ export async function updateProjectMembers(token, body) {
   return fetch(`${API_REST_URL}/projects/${body.id}/members`, requestOptions);
 }
 
+export async function leaveProject(token, id) {
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+  };
+
+  return fetch(`${API_REST_URL}/projects/${id}/members/leave`, requestOptions);
+}
+
 export async function getBugs(token, id) {
   const requestOptions = {
     method: 'GET',
