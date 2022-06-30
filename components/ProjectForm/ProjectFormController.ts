@@ -4,9 +4,9 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { projectActions } from '../../redux/actions';
 
-const usePrjectFormController = (editMode, projectId, currentName, closeDialog) => {
+const usePrjectFormController = (editMode, projectId, currentName, currentMembers, closeDialog) => {
   const dispatch = useDispatch();
-  const [selectedMembers, setSelectedMembers] = useState<string[]>([]);
+  const [selectedMembers, setSelectedMembers] = useState<string[]>(currentMembers);
   const { creating, updating } = useSelector((state) => state.projects);
 
   const validationSchema = Yup.object().shape({
@@ -17,9 +17,10 @@ const usePrjectFormController = (editMode, projectId, currentName, closeDialog) 
 
   const handleSubmit = (name: string) => {
     switch (editMode) {
-      case 'name':
       case 'members':
-        dispatch(projectActions.updateProject(projectId, name, selectedMembers, closeDialog));
+        break;
+      case 'name':
+        dispatch(projectActions.updateProject(projectId, name, closeDialog));
         break;
       default:
         dispatch(projectActions.createProject(name, selectedMembers, closeDialog));
@@ -37,6 +38,10 @@ const usePrjectFormController = (editMode, projectId, currentName, closeDialog) 
     },
   });
 
-  return { creating, updating, formik, setSelectedMembers };
+  const handleEditMembers = () => {
+    dispatch(projectActions.updateProjectMembers(projectId, selectedMembers, closeDialog));
+  };
+
+  return { creating, updating, formik, setSelectedMembers, handleEditMembers };
 };
 export default usePrjectFormController;

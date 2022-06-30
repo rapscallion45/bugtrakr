@@ -113,6 +113,7 @@ const ActionsPopover: FC<ProjectsMenuProps> = function ActionsPopover({
               <ProjectForm
                 editMode="members"
                 projectId={projectId}
+                currentName={currentName}
                 currentMembers={currentMembers}
               />
             </FormDialog>

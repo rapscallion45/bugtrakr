@@ -40,7 +40,7 @@ const ProjectsTableMobile: FC<ProjectsTableMobileProps> = function ProjectsTable
                 <ActionsPopover
                   projectId={p.id}
                   currentName={p.name}
-                  currentMembers={p.members.map((m) => m.id)}
+                  currentMembers={p.members.map((m) => m.member.id)}
                   isAdmin={p.createdBy.id === user?.id}
                   isMobile
                   iconSize="default"

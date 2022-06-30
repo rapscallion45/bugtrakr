@@ -23,10 +23,11 @@ export default function Button(theme) {
           },
         },
         containedSecondary: {
-          color: theme.palette.grey[500],
+          border: '1px solid lightgray',
+          color: theme.palette.grey[900],
           backgroundColor: 'white',
           '&:hover': {
-            color: theme.palette.grey[500],
+            color: theme.palette.grey[900],
             backgroundColor: 'white',
           },
         },

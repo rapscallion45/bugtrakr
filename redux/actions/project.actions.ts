@@ -111,7 +111,7 @@ function createProject(name: string, members: string[], closeDialog: () => void)
   };
 }
 
-function updateProject(id: string, name: string, members: string[], closeDialog: () => void) {
+function updateProject(id: string, name: string, closeDialog: () => void) {
   function request() {
     return { type: projectConstants.UPDATE_REQUEST };
   }
@@ -125,13 +125,57 @@ function updateProject(id: string, name: string, members: string[], closeDialog:
   return (dispatch) => {
     dispatch(request());
 
-    projectService.updateProject(id, name, members).then(
+    projectService.updateProject(id, name).then(
       (data) => {
         dispatch(success(data));
         if (closeDialog) closeDialog();
         dispatch(
           alertActions.enqueueSnackbar({
-            message: `Project renamed to "${name}".`,
+            message: `Project updated.`,
+            options: {
+              key: new Date().getTime() + Math.random(),
+              variant: 'success',
+            },
+          })
+        );
+      },
+      (error) => {
+        dispatch(failure(error.toString()));
+        dispatch(
+          alertActions.enqueueSnackbar({
+            message: error.toString(),
+            options: {
+              key: new Date().getTime() + Math.random(),
+              variant: 'error',
+            },
+          })
+        );
+      }
+    );
+  };
+}
+
+function updateProjectMembers(id: string, members: string[], closeDialog: () => void) {
+  function request() {
+    return { type: projectConstants.UPDATEMEMBERS_REQUEST };
+  }
+  function success(projectId: string, data: any) {
+    return { type: projectConstants.UPDATEMEMBERS_SUCCESS, projectId, data };
+  }
+  function failure(error: string) {
+    return { type: projectConstants.UPDATEMEMBERS_FAILURE, error };
+  }
+
+  return (dispatch) => {
+    dispatch(request());
+
+    projectService.updateProjectMembers(id, members).then(
+      (data) => {
+        dispatch(success(id, data));
+        if (closeDialog) closeDialog();
+        dispatch(
+          alertActions.enqueueSnackbar({
+            message: `Project members updated.`,
             options: {
               key: new Date().getTime() + Math.random(),
               variant: 'success',
@@ -160,5 +204,6 @@ const accountActions = {
   createProject,
   deleteProject,
   updateProject,
+  updateProjectMembers,
 };
 export default accountActions;

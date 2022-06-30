@@ -46,16 +46,12 @@ const ProjectForm: React.FC<ProjectFormProps> = function ProjectForm({
   closeDialog,
   editMode,
   currentName,
-  currentMembers,
+  currentMembers = [],
   projectId,
 }) {
   const { data: users } = useSelector((state) => state.users);
-  const { creating, updating, formik, setSelectedMembers } = usePrjectFormController(
-    editMode,
-    projectId,
-    currentName,
-    closeDialog
-  );
+  const { creating, updating, formik, setSelectedMembers, handleEditMembers } =
+    usePrjectFormController(editMode, projectId, currentName, currentMembers, closeDialog);
 
   const selectMembersOnChange = (e: any, selectedOption: User[]) => {
     setSelectedMembers(selectedOption.map((user) => user.id));
@@ -140,7 +136,20 @@ const ProjectForm: React.FC<ProjectFormProps> = function ProjectForm({
           }
         />
       )}
-      {(editMode === 'members' || editMode === 'name') && (
+      {editMode === 'members' && (
+        <Button
+          fullWidth
+          variant="contained"
+          color="primary"
+          disabled={updating}
+          sx={{ padding: '10px 0', marginTop: '20px' }}
+          onClick={handleEditMembers}
+        >
+          {!updating && 'Submit'}
+          {updating && <CircularProgress size={25} color="inherit" />}
+        </Button>
+      )}
+      {editMode === 'name' && (
         <Button
           type="submit"
           fullWidth

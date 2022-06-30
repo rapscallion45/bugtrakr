@@ -50,6 +50,7 @@ function projects(state: ProjectState = {}, action: ProjectAction) {
         error: action.error,
       };
     case projectConstants.UPDATE_REQUEST:
+    case projectConstants.UPDATEMEMBERS_REQUEST:
       return {
         ...state,
         updating: true,
@@ -70,7 +71,22 @@ function projects(state: ProjectState = {}, action: ProjectAction) {
           return p;
         }),
       };
+    case projectConstants.UPDATEMEMBERS_SUCCESS:
+      return {
+        ...state,
+        updating: false,
+        data: state.data.map((p) => {
+          if (p.id === action.projectId) {
+            return {
+              ...p,
+              members: action.data,
+            };
+          }
+          return p;
+        }),
+      };
     case projectConstants.UPDATE_FAILURE:
+    case projectConstants.UPDATEMEMBERS_FAILURE:
       return {
         ...state,
         updating: false,

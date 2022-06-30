@@ -29,14 +29,24 @@ function createProject(name: string, members: string[]) {
   return fetch(`/api/projects`, requestOptions).then(handleResponse);
 }
 
-function updateProject(id: string, name: string, members: string[]) {
+function updateProject(id: string, name: string) {
   const requestOptions = {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ id, name, members }),
+    body: JSON.stringify({ id, name }),
   };
 
   return fetch(`/api/projects`, requestOptions).then(handleResponse);
+}
+
+function updateProjectMembers(id: string, members: string[]) {
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id, members }),
+  };
+
+  return fetch(`/api/project-members`, requestOptions).then(handleResponse);
 }
 
 const projectService = {
@@ -44,5 +54,6 @@ const projectService = {
   deleteProject,
   createProject,
   updateProject,
+  updateProjectMembers,
 };
 export default projectService;
