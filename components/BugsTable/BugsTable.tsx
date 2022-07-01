@@ -75,12 +75,12 @@ const BugsTable: FC<BugsTableProps> = function BugsTable({ bugs, projectId }) {
                 />
               </TableCell>
               <TableCell onClick={() => router.push(`/dashboard/bugs/${b.id}`)} align="center">
-                {formatDateTime(b.createdAt)} ~ {b.createdBy.username}
+                {formatDateTime(b.createdAt)} by {b.createdBy.username}
               </TableCell>
               <TableCell onClick={() => router.push(`/dashboard/bugs/${b.id}`)} align="center">
                 {!b.updatedAt || !b.updatedBy
-                  ? 'n/a'
-                  : `${formatDateTime(b.updatedAt)} ~ ${b.updatedBy.username}`}
+                  ? 'No updates'
+                  : `${formatDateTime(b.updatedAt)} by ${b.updatedBy.username}`}
               </TableCell>
               <TableCell onClick={() => router.push(`/dashboard/bugs/${b.id}`)} align="center">
                 {b.notes.length}
