@@ -68,6 +68,7 @@ function bugs(state: any = {}, action: any) {
               description: action.data.description ? action.data.description : b.description,
               priority: action.data.priority ? action.data.priority : b.priority,
               updatedAt: action.data.updatedAt,
+              updatedBy: action.data.updatedBy,
             };
           }
           return b;

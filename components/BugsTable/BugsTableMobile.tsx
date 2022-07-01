@@ -67,15 +67,15 @@ const BugsTableMobile: FC<BugsTableMobileProps> = function BugsTableMobile({ bug
               <Typography variant="body2" color="text.primary">
                 Created:{' '}
                 <strong>
-                  {formatDateTime(b.createdAt)} ~ {b.createdBy.username}
+                  {formatDateTime(b.createdAt)} by {b.createdBy.username}
                 </strong>
               </Typography>
               <Typography variant="body2" color="text.primary">
                 Updated:{' '}
                 <strong>
-                  {b.updatedAt !== null
-                    ? `${formatDateTime(b.updatedAt)} ~ ${b.updatedBy.username}`
-                    : `n/a`}
+                  {!b.updatedAt || !b.updatedBy
+                    ? `No updates`
+                    : `${formatDateTime(b.updatedAt)} by ${b.updatedBy.username}`}
                 </strong>
               </Typography>
 
