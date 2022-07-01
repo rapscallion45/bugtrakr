@@ -21,14 +21,14 @@ export interface IAccountState {
 }
 
 export interface INotificationOptions {
-  key: string;
-  variant: string;
+  key?: number;
+  variant?: string;
 }
 
 export interface INotification {
-  key: string;
-  message: string;
-  options: INotificationOptions;
+  key?: string;
+  message?: string;
+  options?: INotificationOptions;
 }
 
 export interface IAlertState {
@@ -82,7 +82,7 @@ export interface IBugState {
   title: string;
   description: string;
   priority: BugPriority;
-  notes: Note[];
+  notes: INote[];
   isResolved: boolean;
   createdBy: User;
   updatedBy?: User;

@@ -8,6 +8,7 @@ import AccountPopover from './AccountPopover/AccountPopover';
 import NotificationsPopover from './NotificationsPopover/NotificationsPopover';
 import Logo from '../Logo/Logo';
 import Link from '../Link/Link';
+import { AppState } from '../../redux/reducers';
 
 const DRAWER_WIDTH = 280;
 const APPBAR_MOBILE = 64;
@@ -24,7 +25,7 @@ const NavBar: FC<NavBarProps> = function NavBar({
   showLogo = false,
   fullWidth = true,
 }) {
-  const loggedIn = useSelector((state) => state.authentication?.loggedIn);
+  const loggedIn = useSelector((state: AppState) => state.authentication?.loggedIn);
 
   const RootStyle = styled(AppBar)(({ theme }) => ({
     boxShadow: 'none',

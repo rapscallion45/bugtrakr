@@ -2,12 +2,13 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import { alertActions } from '../redux/actions';
+import { AppState } from '../redux/reducers';
 
 let displayed = [];
 
 const useNotifier = () => {
   const dispatch = useDispatch();
-  const notifications = useSelector((state) => state.alert?.notifications || []);
+  const notifications = useSelector((state: AppState) => state.alert?.notifications || []);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const storeDisplayed = (id) => {
@@ -34,7 +35,9 @@ const useNotifier = () => {
         key,
         ...options,
         onClose: (event, reason, myKey) => {
+          // @ts-ignore
           if (options.onClose) {
+            // @ts-ignore
             options.onClose(event, reason, myKey);
           }
         },

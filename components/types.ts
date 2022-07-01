@@ -25,7 +25,7 @@ export interface IconButtonType {
   icon: (props: SvgIconProps) => JSX.Element;
   size?: 'small' | 'medium';
   style?: { [name: string]: string } | { [name: string]: number };
-  iconSize?: 'small' | 'default' | 'large';
+  iconSize?: 'small' | 'inherit' | 'large';
   className?: string;
   color?: 'primary' | 'secondary' | 'inherit';
 }
@@ -44,7 +44,7 @@ export interface FabButtonType {
   type: 'fab';
   icon: (props: SvgIconProps) => JSX.Element;
   size?: 'small' | 'medium' | 'large';
-  variant?: 'extended' | 'round';
+  variant?: 'extended' | 'circular';
   text?: string;
   color?: 'primary' | 'secondary' | 'inherit';
 }

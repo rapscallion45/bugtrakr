@@ -2,9 +2,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { accountActions } from '../../redux/actions';
+import { AppState } from '../../redux/reducers';
 
 const useUserProfileFormController = () => {
-  const { updating, user } = useSelector((state) => state.account);
+  const { updating, user } = useSelector((state: AppState) => state.account);
   const userFirstName = user?.firstName;
   const userAvatarSrc = user?.avatar?.url;
   const dispatch = useDispatch();

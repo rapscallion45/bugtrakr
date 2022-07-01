@@ -17,6 +17,7 @@ import UserMembershipForm from '../../components/UserMembershipForm/UserMembersh
 import UserBillingForm from '../../components/UserBillingForm/UserBillingForm';
 import ChangePasswordRequestForm from '../../components/ChangePasswordRequestForm/ChangePasswordRequestForm';
 import Loader from '../../components/Loader/Loader';
+import { AppState } from '../../redux/reducers';
 
 const TabStyle = styled(Tab)({
   display: 'flex',
@@ -48,7 +49,7 @@ const MyAccountTabPanel: FC<MyAccountTabPanelProps> = function MyAccountTabPanel
 };
 
 const MyAccount = function MyAccount() {
-  const account = useSelector((state) => state.account);
+  const account = useSelector((state: AppState) => state.account);
   const [tabValue, setTabValue] = useState(0);
   const dataLoading = account.loading;
   const dataLoaded = account.loaded;

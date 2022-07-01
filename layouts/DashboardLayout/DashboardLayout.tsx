@@ -6,6 +6,7 @@ import NavBar from '../../components/NavBar/NavBar';
 import NavSideBar from '../../components/NavSideBar/NavSideBar';
 import Preloader from '../../components/Preloader/Preloader';
 import useNotifier from '../../hooks/useNotifier';
+import { AppState } from '../../redux/reducers';
 
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 92;
@@ -34,8 +35,8 @@ interface DashboardLayoutProps {
 }
 
 const DashboardLayout: FC<DashboardLayoutProps> = function DashboardLayout({ children }) {
-  const loggedIn = useSelector((state) => state.authentication.loggedIn);
-  const authenticating = useSelector((state) => state.authentication.authenticating);
+  const loggedIn = useSelector((state: AppState) => state.authentication.loggedIn);
+  const authenticating = useSelector((state: AppState) => state.authentication.authenticating);
   const [open, setOpen] = useState(false);
   useNotifier();
 

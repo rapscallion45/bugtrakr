@@ -7,6 +7,7 @@ import ErrorLayout from '../layouts/ErrorLayout/ErrorLayout';
 function Page404() {
   return (
     <Container>
+      {/* @ts-ignore */}
       <MotionContainer initial="initial" open>
         <Box sx={{ maxWidth: 480, margin: 'auto', textAlign: 'center' }}>
           <motion.div variants={varBounceIn}>

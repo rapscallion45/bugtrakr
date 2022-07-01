@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Popover } from '@mui/material';
+import { Popover, Theme } from '@mui/material';
 import { alpha, styled } from '@mui/material/styles';
 
 const ArrowStyle = styled('span')(({ theme }) => ({
@@ -26,15 +26,19 @@ interface MenuPopoverProps {
   other?: any;
   onClose?: () => void;
   anchorEl: any;
+  // all other props
+  [x: string]: any;
 }
 
 const MenuPopover: FC<MenuPopoverProps> = function MenuPopover({
+  open,
   children = null,
   sx = null,
   ...other
 }) {
   return (
     <Popover
+      open={open}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       PaperProps={{
@@ -42,8 +46,9 @@ const MenuPopover: FC<MenuPopoverProps> = function MenuPopover({
           mt: 1.5,
           ml: 0.5,
           overflow: 'inherit',
-          boxShadow: (theme) => theme.customShadows.z20,
-          border: (theme) => `solid 1px ${theme.palette.grey[500_8]}`,
+          // @ts-ignore
+          boxShadow: (theme: Theme) => theme.customShadows.z20,
+          border: (theme: Theme) => `solid 1px ${theme.palette.grey[500_8]}`,
           width: 200,
           ...sx,
         },

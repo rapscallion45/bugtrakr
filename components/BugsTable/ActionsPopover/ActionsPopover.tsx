@@ -15,13 +15,14 @@ import ConfirmDialog from '../../ConfirmDialog/ConfirmDialog';
 import FormDialog from '../../FormDialog/FormDialog';
 import BugForm from '../../BugForm/BugForm';
 import { bugActions } from '../../../redux/actions';
+import { AppState } from '../../../redux/reducers';
 
 interface BugsMenuProps {
   bugId: string;
   currentData: any;
   isResolved: boolean;
   isMobile: boolean;
-  iconSize?: 'small' | 'default' | 'large';
+  iconSize?: 'small' | 'inherit' | 'large';
   projectId: string | string[];
 }
 
@@ -34,7 +35,7 @@ const ActionsPopover: FC<BugsMenuProps> = function ActionsPopover({
   projectId,
 }) {
   const dispatch = useDispatch();
-  const { deleting, reopening, closing } = useSelector((state) => state.bugs);
+  const { deleting, reopening, closing } = useSelector((state: AppState) => state.bugs);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {

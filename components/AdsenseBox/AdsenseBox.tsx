@@ -7,6 +7,7 @@ interface AdsenseBoxProps {
 const AdsenseBox: FC<AdsenseBoxProps> = function AdsenseBox({ slot }) {
   useEffect(() => {
     /* Grab Google Ads */
+    // @ts-ignore
     (window.adsbygoogle = window.adsbygoogle || []).push({});
   }, []);
 

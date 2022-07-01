@@ -30,7 +30,7 @@ const FormDialog: React.FC<{
           className={triggerBtn.className}
           style={triggerBtn.style}
         >
-          <triggerBtn.icon fontSize={triggerBtn.iconSize || 'default'} />
+          <triggerBtn.icon fontSize={triggerBtn.iconSize || 'inherit'} />
         </IconButton>
       );
     }
@@ -46,7 +46,7 @@ const FormDialog: React.FC<{
       return (
         <HideOnScroll>
           <Fab
-            variant={triggerBtn.variant || 'round'}
+            variant={triggerBtn.variant || 'circular'}
             size={triggerBtn.size || 'large'}
             color={triggerBtn.color || 'primary'}
             onClick={handleDialogOpen}

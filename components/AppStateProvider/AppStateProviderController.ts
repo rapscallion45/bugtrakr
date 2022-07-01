@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { accountActions, usersActions } from '../../redux/actions';
+import { AppState } from '../../redux/reducers';
 
 const AppStateProviderController = function AppStateProviderController() {
   const dispatch = useDispatch();
-  const { authenticating, user, loggedIn } = useSelector((state) => state.authentication);
+  const { authenticating, user, loggedIn } = useSelector((state: AppState) => state.authentication);
   const loading = Boolean(authenticating);
 
   useEffect(() => {

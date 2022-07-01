@@ -4,10 +4,11 @@ import queryString from 'query-string';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { accountActions } from '../../redux/actions';
+import { AppState } from '../../redux/reducers';
 
 const useResetPasswordController = () => {
-  const resettingPassword = useSelector((state) => state.resetPassword.resettingPassword);
-  const tokenStatus = useSelector((state) => state.validateResetToken.tokenValid);
+  const resettingPassword = useSelector((state: AppState) => state.resetPassword.resettingPassword);
+  const tokenStatus = useSelector((state: AppState) => state.validateResetToken.tokenValid);
   const [tokenString, setTokenString] = useState(null);
   const dispatch = useDispatch();
 
@@ -17,7 +18,7 @@ const useResetPasswordController = () => {
     /* remove token from url to prevent http referer leakage */
     // history.replace(window.location.pathname);
 
-    dispatch(accountActions.validateResetToken({ token }));
+    dispatch(accountActions.validateResetToken(token));
     setTokenString(token);
   }, []);
 

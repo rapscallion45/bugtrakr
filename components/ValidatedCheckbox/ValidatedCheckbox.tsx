@@ -42,13 +42,12 @@ const ValidatedCheckbox: FC<ValidatedCheckboxProps> = function ValidatedCheckbox
             value={value}
             id={checkboxId}
             name={checkboxName}
-            type="checkbox"
             onChange={onChange}
             color="primary"
           />
         }
         label={
-          <Typography variant="body4" sx={{ mt: '3px' }}>
+          <Typography variant="body2" sx={{ mt: '3px' }}>
             {label}
           </Typography>
         }

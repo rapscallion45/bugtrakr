@@ -8,6 +8,7 @@ import ScrollBar from '../ScrollBar/ScrollBar';
 import NavSection from '../NavSection/NavSection';
 import MHidden from '../@MUI-Extended/MHidden';
 import sideBarConfig from './sideBarConfig';
+import { AppState } from '../../redux/reducers';
 
 const DRAWER_WIDTH = 280;
 
@@ -22,7 +23,7 @@ const AccountStyle = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   padding: theme.spacing(2, 2.5),
-  borderRadius: theme.shape.borderRadiusSm,
+  borderRadius: theme.shape.borderRadius,
   backgroundColor: theme.palette.grey[200],
 }));
 
@@ -36,10 +37,10 @@ const DashboardSideBar: FC<DashboardSideBarProps> = function DashboardSideBar({
   onCloseSidebar,
 }) {
   const { pathname } = useRouter();
-  const userAuth = useSelector((state) => state.authentication?.user);
-  const loggedIn = useSelector((state) => state.authentication?.loggedIn);
-  const isDemo = useSelector((state) => state.authentication?.demo);
-  const user = useSelector((state) => state.account?.user);
+  const userAuth = useSelector((state: AppState) => state.authentication?.user);
+  const loggedIn = useSelector((state: AppState) => state.authentication?.loggedIn);
+  const isDemo = useSelector((state: AppState) => state.authentication?.demo);
+  const user = useSelector((state: AppState) => state.account?.user);
 
   useEffect(() => {
     if (isOpenSidebar) {

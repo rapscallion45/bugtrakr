@@ -2,10 +2,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { accountActions } from '../../redux/actions';
+import { AppState } from '../../redux/reducers';
 
 const RegisterController = () => {
   const dispatch = useDispatch();
-  const registering = useSelector((state) => state.registration.registering);
+  const registering = useSelector((state: AppState) => state.registration.registering);
 
   const validationSchema = Yup.object().shape({
     first_name: Yup.string().required('First Name is required'),

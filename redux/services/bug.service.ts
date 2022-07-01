@@ -19,7 +19,7 @@ function deleteBug(projectId: string | string[], id: string) {
   return fetch(`/api/projects/${projectId}/bugs/${id}`, requestOptions).then(handleResponse);
 }
 
-function createBug(projectId: string, payload: IBugPayload) {
+function createBug(projectId: string | string[], payload: IBugPayload) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -29,7 +29,7 @@ function createBug(projectId: string, payload: IBugPayload) {
   return fetch(`/api/projects/${projectId}/bugs`, requestOptions).then(handleResponse);
 }
 
-function updateBug(projectId: string, id: string, payload: IBugPayload) {
+function updateBug(projectId: string | string[], id: string, payload: IBugPayload) {
   const requestOptions = {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
@@ -39,7 +39,7 @@ function updateBug(projectId: string, id: string, payload: IBugPayload) {
   return fetch(`/api/projects/${projectId}/bugs/${id}`, requestOptions).then(handleResponse);
 }
 
-function updateBugNotes(projectId: string, id: string, members: string[]) {
+function updateBugNotes(projectId: string | string[], id: string, members: string[]) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { useMediaQuery } from '@mui/material';
+import { useMediaQuery, Theme } from '@mui/material';
 
 interface MHiddenProps {
   children?: any;
@@ -17,10 +17,20 @@ interface MHiddenProps {
 }
 
 const MHidden: FC<MHiddenProps> = function MHidden({ width, children = null }) {
-  const breakpoint = width.substring(0, 2);
+  const breakpoint = width.substring(0, 2) as
+    | 'xs'
+    | 'sm'
+    | 'md'
+    | 'lg'
+    | 'xl'
+    | 'xs'
+    | 'sm'
+    | 'md'
+    | 'lg'
+    | 'xl';
 
-  const hiddenUp = useMediaQuery((theme) => theme.breakpoints.up(breakpoint));
-  const hiddenDown = useMediaQuery((theme) => theme.breakpoints.down(breakpoint));
+  const hiddenUp = useMediaQuery((theme: Theme) => theme.breakpoints.up(breakpoint));
+  const hiddenDown = useMediaQuery((theme: Theme) => theme.breakpoints.down(breakpoint));
 
   if (width.includes('Down')) {
     return hiddenDown ? null : children;

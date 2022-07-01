@@ -1,12 +1,12 @@
 import { FC } from 'react';
-import { useTheme } from '@emotion/react';
+import { Theme, useTheme } from '@mui/material';
 
 interface RankArrowProps {
   variant?: string;
 }
 
 const RankArrow: FC<RankArrowProps> = ({ variant }) => {
-  const theme = useTheme();
+  const theme: Theme = useTheme();
 
   const getArrow = () => {
     switch (variant) {

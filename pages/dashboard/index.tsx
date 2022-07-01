@@ -15,10 +15,11 @@ import ProjectsTableMobile from '../../components/ProjectsTable/ProjectsTableMob
 import FormDialog from '../../components/FormDialog/FormDialog';
 import ProjectForm from '../../components/ProjectForm/ProjectForm';
 import { projectActions } from '../../redux/actions';
+import { AppState } from '../../redux/reducers';
 
 const Dashboard = function Dashboard() {
   const dispatch = useDispatch();
-  const { loaded, loading, error, data } = useSelector((state) => state.projects);
+  const { loaded, loading, error, data } = useSelector((state: AppState) => state.projects);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 

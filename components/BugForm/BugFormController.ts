@@ -3,6 +3,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { IBugPayload } from '../../redux/types/types';
 import { bugActions } from '../../redux/actions';
+import { AppState } from '../../redux/reducers';
 
 const useBugFormController = (
   bugId: string,
@@ -12,7 +13,7 @@ const useBugFormController = (
   closeDialog: () => void
 ) => {
   const dispatch = useDispatch();
-  const { creating, updating } = useSelector((state) => state.bugs);
+  const { creating, updating } = useSelector((state: AppState) => state.bugs);
 
   const validationSchema = Yup.object().shape({
     title: Yup.string()

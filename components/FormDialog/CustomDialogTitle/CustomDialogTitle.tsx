@@ -1,6 +1,6 @@
 import React from 'react';
-import { Typography, IconButton, Box } from '@mui/material';
-import { withStyles, Theme, WithStyles, createStyles } from '@mui/styles';
+import { Typography, Theme, IconButton, Box } from '@mui/material';
+import { withStyles, WithStyles, createStyles } from '@mui/styles';
 import MuiDialogTitle from '@mui/material/DialogTitle';
 import MuiDialogContent from '@mui/material/DialogContent';
 import MuiDialogActions from '@mui/material/DialogActions';

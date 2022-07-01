@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { projectActions } from '../../redux/actions';
+import { AppState } from '../../redux/reducers';
 
 const useProjectFormController = (
   editMode,
@@ -13,7 +14,7 @@ const useProjectFormController = (
 ) => {
   const dispatch = useDispatch();
   const [selectedMembers, setSelectedMembers] = useState<string[]>(currentMembers);
-  const { creating, updating } = useSelector((state) => state.projects);
+  const { creating, updating } = useSelector((state: AppState) => state.projects);
 
   const validationSchema = Yup.object().shape({
     name: Yup.string()

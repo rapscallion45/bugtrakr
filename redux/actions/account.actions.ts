@@ -2,6 +2,7 @@ import Router from 'next/router';
 import { accountConstants } from '../constants';
 import { accountService } from '../services';
 import alertActions from './alert.actions';
+import { IAccount } from '../types/types';
 
 const ISSERVER = typeof window === 'undefined';
 
@@ -229,7 +230,7 @@ function register(user: IAccount) {
   };
 }
 
-function verifyEmail(verificationToken: string) {
+function verifyEmail(verificationToken: string | string[]) {
   function request() {
     return { type: accountConstants.VERIFY_EMAIL_REQUEST };
   }
@@ -403,7 +404,7 @@ function resetPassword(resetToken: string, password: string) {
   };
 }
 
-function validateResetToken(resetToken: string) {
+function validateResetToken(resetToken: string | string[]) {
   function request() {
     return { type: accountConstants.VALIDATE_RESET_TOKEN_REQUEST };
   }

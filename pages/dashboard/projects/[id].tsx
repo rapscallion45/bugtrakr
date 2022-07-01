@@ -31,6 +31,7 @@ import BugForm from '../../../components/BugForm/BugForm';
 import Link from '../../../components/Link/Link';
 import ProjectMenu from '../../../components/ProjectMenu/ProjectMenu';
 import { bugActions, projectActions } from '../../../redux/actions';
+import { AppState } from '../../../redux/reducers';
 import { formatDateTime } from '../../../utils';
 
 const TabStyle = styled(Tab)({
@@ -69,20 +70,20 @@ const ProjectDetails = function ProjectDetails() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [tab, setTab] = useState<number>(0);
-  const { user } = useSelector((state) => state.authentication);
+  const { user } = useSelector((state: AppState) => state.authentication);
   const {
     leaving,
     loading: projectsLoading,
     loaded: projectsLoaded,
     error: projectsError,
     data: projects,
-  } = useSelector((state) => state.projects);
+  } = useSelector((state: AppState) => state.projects);
   const {
     loading: bugsLoading,
     loaded: bugsLoaded,
     error: bugsError,
     data: bugs,
-  } = useSelector((state) => state.bugs);
+  } = useSelector((state: AppState) => state.bugs);
   const projectData = projects?.find((project) => project.id === id);
   const isAdmin = user.id === projectData?.createdBy.id;
 

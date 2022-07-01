@@ -45,10 +45,10 @@ const UserBillingForm: FC = function UserBillingForm() {
                       name="cardNumber"
                       label="Card Number"
                       type="string"
-                      value={formik.values.cardNamber}
+                      value={formik.values.cardNumber}
                       onChange={formik.handleChange}
-                      error={formik.touched.cardNamber && Boolean(formik.errors.cardNamber)}
-                      helperText={formik.touched.cardNamber && formik.errors.cardNamber}
+                      error={formik.touched.cardNumber && Boolean(formik.errors.cardNumber)}
+                      helperText={formik.touched.cardNumber && formik.errors.cardNumber}
                       disabled
                     />
                   </Grid>

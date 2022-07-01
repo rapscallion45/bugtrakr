@@ -1,3 +1,4 @@
+// @ts-ignore
 import { router } from 'next/router';
 import { projectConstants } from '../constants';
 import { projectService } from '../services';

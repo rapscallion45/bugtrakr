@@ -10,9 +10,11 @@ import ConfirmDialog from '../ConfirmDialog/ConfirmDialog';
 import ProjectForm from '../ProjectForm/ProjectForm';
 import { projectActions } from '../../redux/actions';
 import { formatDateInWords } from '../../utils';
+import { IProjectMember } from '../../redux/types/types';
+import { AppState } from '../../redux/reducers';
 
 interface MembersTableMobileProps {
-  members: ProjectMember[];
+  members: IProjectMember[];
   adminId: string;
   projectId: string;
   projectName: string;
@@ -25,8 +27,8 @@ const MembersTableMobile: FC<MembersTableMobileProps> = function MembersTableMob
   projectName,
 }) {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.authentication);
-  const { removing } = useSelector((state) => state.projects);
+  const { user } = useSelector((state: AppState) => state.authentication);
+  const { removing } = useSelector((state: AppState) => state.projects);
   const isAdmin = adminId === user?.id;
 
   const handleRemoveUser = (memberId: string, closeDialog: () => void) => {

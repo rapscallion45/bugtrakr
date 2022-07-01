@@ -10,6 +10,7 @@ import HideOnScroll from '../HideOnScroll/HideOnScroll';
 import FormDialog from '../FormDialog/FormDialog';
 import Link from '../Link/Link';
 import ProjectForm from '../ProjectForm/ProjectForm';
+import { AppState } from '../../redux/reducers';
 
 interface ProjectsTableMobileProps {
   projects: any[];
@@ -18,7 +19,7 @@ interface ProjectsTableMobileProps {
 const ProjectsTableMobile: FC<ProjectsTableMobileProps> = function ProjectsTableMobile({
   projects,
 }) {
-  const { user } = useSelector((state) => state.authentication);
+  const { user } = useSelector((state: AppState) => state.authentication);
 
   return (
     <Box pb={14}>
@@ -43,7 +44,7 @@ const ProjectsTableMobile: FC<ProjectsTableMobileProps> = function ProjectsTable
                   currentMembers={p.members.map((m) => m.member.id)}
                   isAdmin={p.createdBy.id === user?.id}
                   isMobile
-                  iconSize="default"
+                  iconSize="inherit"
                 />
               </Box>
               <Typography variant="body2" color="text.primary">
@@ -61,13 +62,13 @@ const ProjectsTableMobile: FC<ProjectsTableMobileProps> = function ProjectsTable
               >
                 <Box display="flex" justifyContent="space-between" sx={{ width: '100px' }}>
                   <Box display="inline-flex" sx={{ verticalAlign: 'middle' }}>
-                    <BugReportIcon color="text.primary" />
+                    <BugReportIcon />
                     <Typography variant="subtitle1" color="text.primary">
                       : {p.bugs.length}
                     </Typography>
                   </Box>
                   <Box display="inline-flex" sx={{ verticalAlign: 'middle' }}>
-                    <GroupIcon color="text.primary" />{' '}
+                    <GroupIcon />{' '}
                     <Typography variant="subtitle1" color="text.primary">
                       : {p.members.length}
                     </Typography>

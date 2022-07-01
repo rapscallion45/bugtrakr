@@ -54,7 +54,7 @@ const ConfirmDialog: React.FC<{
           className={triggerBtn.className}
           style={triggerBtn.style}
         >
-          <triggerBtn.icon fontSize={triggerBtn.iconSize || 'default'} />
+          <triggerBtn.icon fontSize={triggerBtn.iconSize || 'inherit'} />
         </IconButton>
       );
     }
@@ -70,7 +70,7 @@ const ConfirmDialog: React.FC<{
       return (
         <HideOnScroll>
           <Fab
-            variant={triggerBtn.variant || 'round'}
+            variant={triggerBtn.variant || 'circular'}
             size={triggerBtn.size || 'medium'}
             color={triggerBtn.color || 'primary'}
             onClick={handleDialogOpen}

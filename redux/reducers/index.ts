@@ -28,3 +28,5 @@ const rootReducer = combineReducers({
   users,
 });
 export default rootReducer;
+
+export type AppState = ReturnType<typeof rootReducer>;

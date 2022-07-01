@@ -7,6 +7,8 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import ConfirmDialog from '../ConfirmDialog/ConfirmDialog';
 import { projectActions } from '../../redux/actions';
 import { formatDateInWords } from '../../utils';
+import { IProjectMember } from '../../redux/types/types';
+import { AppState } from '../../redux/reducers';
 
 const tableHeaders = ['ID', 'Username', 'Role', 'Added'];
 
@@ -25,15 +27,15 @@ const TableRowStyle = styled(TableRow)(({ theme }) => ({
 }));
 
 interface MembersTableProps {
-  members: ProjectMember[];
+  members: IProjectMember[];
   adminId: string;
   projectId: string;
 }
 
 const MembersTable: FC<MembersTableProps> = function MembersTable({ members, adminId, projectId }) {
   const dispatch = useDispatch();
-  const { removing } = useSelector((state) => state.projects);
-  const { user } = useSelector((state) => state.authentication);
+  const { removing } = useSelector((state: AppState) => state.projects);
+  const { user } = useSelector((state: AppState) => state.authentication);
   const isAdmin = adminId === user?.id;
 
   const handleRemoveUser = (memberId: string, closeDialog: () => void) => {

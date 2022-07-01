@@ -1,4 +1,4 @@
-import { FC , useMemo } from 'react';
+import { FC, useMemo } from 'react';
 import { CacheProvider } from '@emotion/react';
 import { CssBaseline } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -25,6 +25,7 @@ const ThemeConfig: FC<ThemeConfigProps> = function ThemeConfig({ emotionCache, c
     []
   );
 
+  // @ts-ignore
   const theme = createTheme(themeOptions);
   theme.components = componentsOverride(theme);
 

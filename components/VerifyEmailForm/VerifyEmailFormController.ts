@@ -2,9 +2,10 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import queryString from 'query-string';
 import { accountActions } from '../../redux/actions';
+import { AppState } from '../../redux/reducers';
 
 const useVerifyEmailController = () => {
-  const emailStatus = useSelector((state) => state.verifyEmail.emailVerified);
+  const emailStatus = useSelector((state: AppState) => state.verifyEmail.emailVerified);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -13,7 +14,7 @@ const useVerifyEmailController = () => {
     /* remove token from url to prevent http referer leakage */
     // history.replace(window.location.pathname);
 
-    dispatch(accountActions.verifyEmail({ token }));
+    dispatch(accountActions.verifyEmail(token));
   }, []);
 
   return { emailStatus };

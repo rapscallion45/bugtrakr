@@ -11,13 +11,14 @@ import ConfirmDialog from '../ConfirmDialog/ConfirmDialog';
 import FormDialog from '../FormDialog/FormDialog';
 import ProjectForm from '../ProjectForm/ProjectForm';
 import { projectActions } from '../../redux/actions';
+import { AppState } from '../../redux/reducers';
 
 interface ProjectsMenuProps {
   projectId: string;
   currentName: string;
   currentMembers?: string[];
   isAdmin: boolean;
-  iconSize?: 'small' | 'default' | 'large';
+  iconSize?: 'small' | 'inherit' | 'large';
 }
 
 const ProjectMenu: FC<ProjectsMenuProps> = function ProjectMenu({
@@ -28,7 +29,7 @@ const ProjectMenu: FC<ProjectsMenuProps> = function ProjectMenu({
   iconSize,
 }) {
   const dispatch = useDispatch();
-  const { deleting } = useSelector((state) => state.projects);
+  const { deleting } = useSelector((state: AppState) => state.projects);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {

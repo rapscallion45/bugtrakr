@@ -14,6 +14,7 @@ import {
 import LabelImportantIcon from '@mui/icons-material/LabelImportant';
 import GroupIcon from '@mui/icons-material/Group';
 import useProjectFormController from './ProjectFormController';
+import { AppState } from '../../redux/reducers';
 
 interface BaseType {
   closeDialog?: () => void;
@@ -49,11 +50,11 @@ const ProjectForm: React.FC<ProjectFormProps> = function ProjectForm({
   currentMembers = [],
   projectId,
 }) {
-  const { data: users } = useSelector((state) => state.users);
+  const { data: users } = useSelector((state: AppState) => state.users);
   const { creating, updating, formik, setSelectedMembers, handleEditMembers } =
     useProjectFormController(editMode, projectId, currentName, currentMembers, closeDialog);
 
-  const selectMembersOnChange = (e: any, selectedOption: User[]) => {
+  const selectMembersOnChange = (e: any, selectedOption: any[]) => {
     setSelectedMembers(selectedOption.map((user) => user.id));
   };
 
@@ -112,7 +113,7 @@ const ProjectForm: React.FC<ProjectFormProps> = function ProjectForm({
             />
           )}
           renderOption={(props, option) => (
-            <ListItem dense component="div" {...props}>
+            <ListItem dense {...props}>
               <ListItemAvatar>
                 <Avatar>{option.username?.slice(0, 1)}</Avatar>
               </ListItemAvatar>

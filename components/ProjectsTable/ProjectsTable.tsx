@@ -17,6 +17,7 @@ import ActionsPopover from './ActionsPopover/ActionsPopover';
 import FormDialog from '../FormDialog/FormDialog';
 import ProjectForm from '../ProjectForm/ProjectForm';
 import { formatDateTime, truncateString } from '../../utils';
+import { AppState } from '../../redux/reducers';
 
 const tableHeaders = ['Name', 'Bugs', 'Members', 'Admin', 'Added', 'Actions'];
 
@@ -39,7 +40,7 @@ interface ProjectsTableProps {
 }
 
 const ProjectsTable: FC<ProjectsTableProps> = function ProjectsTable({ projects }) {
-  const { user } = useSelector((state) => state.authentication);
+  const { user } = useSelector((state: AppState) => state.authentication);
 
   return (
     <Paper>

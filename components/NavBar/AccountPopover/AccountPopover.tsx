@@ -9,6 +9,7 @@ import { alpha } from '@mui/material/styles';
 import { Button, Box, Divider, MenuItem, Typography, Avatar, IconButton } from '@mui/material';
 import MenuPopover from '../../MenuPopover/MenuPopover';
 import Link from '../../Link/Link';
+import { AppState } from '../../../redux/reducers';
 
 const MENU_OPTIONS_LOGGED_IN = [
   {
@@ -44,10 +45,10 @@ const MENU_OPTIONS_LOGGED_OUT = [
 const AccountPopover: FC = function AccountPopover() {
   const anchorRef = useRef(null);
   const [open, setOpen] = useState<boolean>(false);
-  const userAuth = useSelector((state) => state.authentication?.user);
-  const loggedIn = useSelector((state) => state.authentication?.loggedIn);
-  const demo = useSelector((state) => state.authentication?.demo);
-  const user = useSelector((state) => state.account?.user);
+  const userAuth = useSelector((state: AppState) => state.authentication?.user);
+  const loggedIn = useSelector((state: AppState) => state.authentication?.loggedIn);
+  const demo = useSelector((state: AppState) => state.authentication?.demo);
+  const user = useSelector((state: AppState) => state.account?.user);
 
   const handleOpen = () => {
     setOpen(true);
