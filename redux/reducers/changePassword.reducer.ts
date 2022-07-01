@@ -1,6 +1,6 @@
 import { accountConstants } from '../constants';
 
-function changePassword(state: ChangePasswordState = {}, action: ChangePasswordAction) {
+function changePassword(state: any = {}, action: any) {
   switch (action.type) {
     case accountConstants.CHANGE_PASSWORD_REQUEST:
       return {

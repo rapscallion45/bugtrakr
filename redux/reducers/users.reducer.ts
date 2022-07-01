@@ -1,6 +1,6 @@
 import { usersConstants } from '../constants';
 
-function projects(state: UsersState = {}, action: UsersAction) {
+function projects(state: any = {}, action: any) {
   switch (action.type) {
     case usersConstants.GET_REQUEST:
       return {

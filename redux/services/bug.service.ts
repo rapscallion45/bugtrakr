@@ -1,4 +1,5 @@
 import { handleResponse } from '../../utils';
+import { IBugPayload } from '../types/types';
 
 function getBug(projectId: string) {
   const requestOptions = {
@@ -9,34 +10,33 @@ function getBug(projectId: string) {
   return fetch(`/api/projects/${projectId}/bugs`, requestOptions).then(handleResponse);
 }
 
-function deleteBug(projectId: string, id: string) {
+function deleteBug(projectId: string | string[], id: string) {
   const requestOptions = {
     method: 'DELETE',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ id }),
   };
 
-  return fetch(`/api/projects/${projectId}/bugs`, requestOptions).then(handleResponse);
+  return fetch(`/api/projects/${projectId}/bugs/${id}`, requestOptions).then(handleResponse);
 }
 
-function createBug(projectId: string, name: string, members: string[]) {
+function createBug(projectId: string, payload: IBugPayload) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, members }),
+    body: JSON.stringify(payload),
   };
 
   return fetch(`/api/projects/${projectId}/bugs`, requestOptions).then(handleResponse);
 }
 
-function updateBug(projectId: string, id: string, name: string) {
+function updateBug(projectId: string, id: string, payload: IBugPayload) {
   const requestOptions = {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ id, name }),
+    body: JSON.stringify(payload),
   };
 
-  return fetch(`/api/projects/${projectId}/bugs`, requestOptions).then(handleResponse);
+  return fetch(`/api/projects/${projectId}/bugs/${id}`, requestOptions).then(handleResponse);
 }
 
 function updateBugNotes(projectId: string, id: string, members: string[]) {

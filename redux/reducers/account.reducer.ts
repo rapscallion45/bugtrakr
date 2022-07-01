@@ -1,6 +1,6 @@
 import { accountConstants } from '../constants';
 
-function account(state: AccountState = {}, action: AccountAction) {
+function account(state: any = {}, action: any) {
   switch (action.type) {
     case accountConstants.GETDETAILS_REQUEST:
       return {

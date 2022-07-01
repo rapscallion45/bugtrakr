@@ -1,6 +1,6 @@
 import { accountConstants } from '../constants';
 
-function verifyEmail(state: VerifyEmailState = {}, action: VerifyEmailAction) {
+function verifyEmail(state: any = {}, action: any) {
   switch (action.type) {
     case accountConstants.VERIFY_EMAIL_REQUEST:
       return {

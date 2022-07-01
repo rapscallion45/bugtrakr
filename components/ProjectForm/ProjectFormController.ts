@@ -4,7 +4,13 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { projectActions } from '../../redux/actions';
 
-const usePrjectFormController = (editMode, projectId, currentName, currentMembers, closeDialog) => {
+const useProjectFormController = (
+  editMode,
+  projectId,
+  currentName,
+  currentMembers,
+  closeDialog
+) => {
   const dispatch = useDispatch();
   const [selectedMembers, setSelectedMembers] = useState<string[]>(currentMembers);
   const { creating, updating } = useSelector((state) => state.projects);
@@ -44,4 +50,4 @@ const usePrjectFormController = (editMode, projectId, currentName, currentMember
 
   return { creating, updating, formik, setSelectedMembers, handleEditMembers };
 };
-export default usePrjectFormController;
+export default useProjectFormController;

@@ -1,6 +1,7 @@
 import { bugConstants } from '../constants';
+import { IBugState } from '../types/types';
 
-function bugs(state: BugState = {}, action: BugAction) {
+function bugs(state: any = {}, action: any) {
   switch (action.type) {
     case bugConstants.GET_REQUEST:
       return {
@@ -24,7 +25,7 @@ function bugs(state: BugState = {}, action: BugAction) {
       return {
         ...state,
         deleting: false,
-        data: state.data.filter((p: BugState) => p.id !== action.bugId),
+        data: state.data.filter((b: IBugState) => b.id !== action.bugId),
       };
     case bugConstants.DELETE_FAILURE:
       return {
@@ -59,30 +60,31 @@ function bugs(state: BugState = {}, action: BugAction) {
       return {
         ...state,
         updating: false,
-        data: state.data.map((p) => {
-          if (p.id === action.data.id) {
+        data: state.data.map((b: IBugState) => {
+          if (b.id === action.data.id) {
             return {
-              ...p,
-              name: action.data.name ? action.data.name : p.name,
-              members: action.data.members ? action.data.members : p.members,
+              ...b,
+              title: action.data.title ? action.data.title : b.title,
+              description: action.data.description ? action.data.description : b.description,
+              priority: action.data.priority ? action.data.priority : b.priority,
               updatedAt: action.data.updatedAt,
             };
           }
-          return p;
+          return b;
         }),
       };
     case bugConstants.UPDATENOTES_SUCCESS:
       return {
         ...state,
         updating: false,
-        data: state.data.map((p) => {
-          if (p.id === action.bugId) {
+        data: state.data.map((b: IBugState) => {
+          if (b.id === action.bugId) {
             return {
-              ...p,
-              members: action.data,
+              ...b,
+              notes: action.data,
             };
           }
-          return p;
+          return b;
         }),
       };
     case bugConstants.UPDATE_FAILURE:

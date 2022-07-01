@@ -1,5 +1,6 @@
 import { bugConstants } from '../constants';
 import { bugService } from '../services';
+import { IBugPayload } from '../types/types';
 import alertActions from './alert.actions';
 
 function getBugs(projectId: string) {
@@ -23,7 +24,7 @@ function getBugs(projectId: string) {
   };
 }
 
-function deleteBug(projectId: string, id: string, closeDialog: () => void) {
+function deleteBug(projectId: string | string[], id: string, closeDialog: () => void) {
   function request(bugId: string) {
     return { type: bugConstants.DELETE_REQUEST, bugId };
   }
@@ -67,7 +68,7 @@ function deleteBug(projectId: string, id: string, closeDialog: () => void) {
   };
 }
 
-function createBug(projectId: string, name: string, members: string[], closeDialog: () => void) {
+function createBug(projectId: string | string[], payload: IBugPayload, closeDialog: () => void) {
   function request() {
     return { type: bugConstants.CREATE_REQUEST };
   }
@@ -81,13 +82,13 @@ function createBug(projectId: string, name: string, members: string[], closeDial
   return (dispatch) => {
     dispatch(request());
 
-    bugService.createBug(projectId, name, members).then(
+    bugService.createBug(projectId, payload).then(
       (data) => {
         dispatch(success(data));
         if (closeDialog) closeDialog();
         dispatch(
           alertActions.enqueueSnackbar({
-            message: `Bug "${data.name}" created successfully.`,
+            message: `Bug "${data.title}" created successfully.`,
             options: {
               key: new Date().getTime() + Math.random(),
               variant: 'success',
@@ -111,7 +112,12 @@ function createBug(projectId: string, name: string, members: string[], closeDial
   };
 }
 
-function updateBug(projectId: string, id: string, name: string, closeDialog: () => void) {
+function updateBug(
+  projectId: string | string[],
+  id: string,
+  payload: IBugPayload,
+  closeDialog: () => void
+) {
   function request() {
     return { type: bugConstants.UPDATE_REQUEST };
   }
@@ -125,7 +131,7 @@ function updateBug(projectId: string, id: string, name: string, closeDialog: () 
   return (dispatch) => {
     dispatch(request());
 
-    bugService.updateBug(projectId, id, name).then(
+    bugService.updateBug(projectId, id, payload).then(
       (data) => {
         dispatch(success(data));
         if (closeDialog) closeDialog();

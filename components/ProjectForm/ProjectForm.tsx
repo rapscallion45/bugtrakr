@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import LabelImportantIcon from '@mui/icons-material/LabelImportant';
 import GroupIcon from '@mui/icons-material/Group';
-import usePrjectFormController from './ProjectFormController';
+import useProjectFormController from './ProjectFormController';
 
 interface BaseType {
   closeDialog?: () => void;
@@ -51,7 +51,7 @@ const ProjectForm: React.FC<ProjectFormProps> = function ProjectForm({
 }) {
   const { data: users } = useSelector((state) => state.users);
   const { creating, updating, formik, setSelectedMembers, handleEditMembers } =
-    usePrjectFormController(editMode, projectId, currentName, currentMembers, closeDialog);
+    useProjectFormController(editMode, projectId, currentName, currentMembers, closeDialog);
 
   const selectMembersOnChange = (e: any, selectedOption: User[]) => {
     setSelectedMembers(selectedOption.map((user) => user.id));

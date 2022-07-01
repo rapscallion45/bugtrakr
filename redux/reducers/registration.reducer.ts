@@ -1,6 +1,6 @@
 import { accountConstants } from '../constants';
 
-function registration(state: RegistrationState = {}, action: RegistrationAction) {
+function registration(state: any = {}, action: any) {
   switch (action.type) {
     case accountConstants.REGISTER_REQUEST:
       return {

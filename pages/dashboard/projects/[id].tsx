@@ -27,6 +27,7 @@ import ConfirmDialog from '../../../components/ConfirmDialog/ConfirmDialog';
 import MembersTable from '../../../components/MembersTable/MembersTable';
 import MembersTableMobile from '../../../components/MembersTable/MembersTableMobile';
 import ProjectForm from '../../../components/ProjectForm/ProjectForm';
+import BugForm from '../../../components/BugForm/BugForm';
 import Link from '../../../components/Link/Link';
 import ProjectMenu from '../../../components/ProjectMenu/ProjectMenu';
 import { bugActions, projectActions } from '../../../redux/actions';
@@ -168,10 +169,10 @@ const ProjectDetails = function ProjectDetails() {
             </Box>
           </Box>
           <Divider />
-          <Typography pt={1} variant="body">
+          <Typography pt={1} variant="body1">
             Admin: <span style={{ fontWeight: 'bold' }}>{projectData?.createdBy.username}</span>
           </Typography>
-          <Typography variant="body">
+          <Typography variant="body1">
             Created on:{' '}
             <span style={{ fontWeight: 'bold' }}>
               {formatDateTime(projectData?.createdAt || 0)}
@@ -199,12 +200,12 @@ const ProjectDetails = function ProjectDetails() {
               <TabStyle
                 icon={<QueryStatsIcon sx={{ margin: '0px 10px 3px 10px !important' }} />}
                 label="Project Overview"
-                {...a11yProps(0)}
+                {...a11yProps('0')}
               />
               <TabStyle
                 icon={<GroupIcon sx={{ margin: '0px 10px 3px 10px !important' }} />}
                 label="Assigned Users"
-                {...a11yProps(1)}
+                {...a11yProps('1')}
               />
             </Tabs>
           </Box>
@@ -221,13 +222,13 @@ const ProjectDetails = function ProjectDetails() {
                     }}
                     title="Create New Bug"
                   >
-                    {/* <ProjectForm editMode={null} /> */}
+                    <BugForm isEditMode={false} projectId={projectData?.id} />
                   </FormDialog>
                 </Box>
               </MHidden>
             </Box>
-            {!isMobile && <BugsTable bugs={bugs} />}
-            {isMobile && <BugsTableMobile bugs={bugs} />}
+            {!isMobile && <BugsTable bugs={bugs} projectId={id} />}
+            {isMobile && <BugsTableMobile bugs={bugs} projectId={id} />}
           </ProjectTabPanel>
           <ProjectTabPanel value={tab} index={1}>
             <Box display="flex" sx={{ pt: 2, pb: 5 }}>

@@ -1,4 +1,5 @@
-import { FC, useRef, useState } from 'react';
+import { FC, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import InfoIcon from '@mui/icons-material/Info';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
@@ -6,11 +7,14 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import ReplayIcon from '@mui/icons-material/Replay';
-import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import { alpha } from '@mui/material/styles';
 import { Button, Box, Divider, MenuItem, IconButton, Typography } from '@mui/material';
 import MenuPopover from '../../MenuPopover/MenuPopover';
 import Link from '../../Link/Link';
+import ConfirmDialog from '../../ConfirmDialog/ConfirmDialog';
+import FormDialog from '../../FormDialog/FormDialog';
+import BugForm from '../../BugForm/BugForm';
+import { bugActions } from '../../../redux/actions';
 
 interface BugsMenuProps {
   bugId: string;
@@ -18,6 +22,7 @@ interface BugsMenuProps {
   isResolved: boolean;
   isMobile: boolean;
   iconSize?: 'small' | 'default' | 'large';
+  projectId: string | string[];
 }
 
 const ActionsPopover: FC<BugsMenuProps> = function ActionsPopover({
@@ -26,43 +31,32 @@ const ActionsPopover: FC<BugsMenuProps> = function ActionsPopover({
   isResolved,
   isMobile,
   iconSize,
+  projectId,
 }) {
-  const anchorRef = useRef(null);
-  const [open, setOpen] = useState<boolean>(false);
+  const dispatch = useDispatch();
+  const { deleting, reopening, closing } = useSelector((state) => state.bugs);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
+  const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
   };
 
-  const handleEdit = () => {
-    handleClose();
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
   };
 
-  const handleCloseBug = () => {
-    if (isResolved) handleClose();
-    handleClose();
-  };
-
-  const handleAddNote = () => {
-    handleClose();
-  };
-
-  const handleDelete = () => {
-    handleClose();
+  const handleDelete = (id: string, closeDialog: () => void) => {
+    dispatch(bugActions.deleteBug(projectId, id, closeDialog));
   };
 
   return (
     <>
       <IconButton
-        ref={anchorRef}
         size="large"
-        color={open ? 'primary' : 'default'}
-        onClick={handleOpen}
+        color={anchorEl ? 'primary' : 'default'}
+        onClick={handleOpenMenu}
         sx={{
-          ...(open && {
+          ...(Boolean(anchorEl) && {
             bgcolor: (theme) =>
               alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
           }),
@@ -72,9 +66,10 @@ const ActionsPopover: FC<BugsMenuProps> = function ActionsPopover({
         {isMobile && <MoreVertIcon fontSize={iconSize || 'medium'} />}
       </IconButton>
       <MenuPopover
-        open={open}
-        onClose={handleClose}
-        anchorEl={anchorRef.current}
+        open={Boolean(anchorEl)}
+        onClose={handleCloseMenu}
+        keepMounted
+        anchorEl={anchorEl}
         sx={{ width: 220 }}
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
@@ -86,41 +81,74 @@ const ActionsPopover: FC<BugsMenuProps> = function ActionsPopover({
         <MenuItem
           component={Link}
           href={`/dashboard/bugs/${bugId}`}
-          onClick={handleClose}
+          onClick={handleCloseMenu}
           sx={{ typography: 'body2', py: 1, px: 2.5 }}
         >
           <InfoIcon sx={{ marginRight: '10px' }} />
           Bug Details
         </MenuItem>
-        <MenuItem onClick={handleEdit} sx={{ typography: 'body2', py: 1, px: 2.5 }}>
-          <EditOutlinedIcon sx={{ marginRight: '10px' }} />
-          Update Bug
-        </MenuItem>
-        <MenuItem onClick={handleCloseBug} sx={{ typography: 'body2', py: 1, px: 2.5 }}>
-          {isResolved && (
-            <>
-              <ReplayIcon sx={{ marginRight: '10px' }} />
-              Reopen Bug
-            </>
-          )}
-          {!isResolved && (
-            <>
-              <DoneOutlineIcon sx={{ marginRight: '10px' }} />
-              Close Bug
-            </>
-          )}
-        </MenuItem>
-        <MenuItem onClick={handleAddNote} sx={{ typography: 'body2', py: 1, px: 2.5 }}>
-          <NoteAddIcon sx={{ marginRight: '10px' }} />
-          Add Note
-        </MenuItem>
-        <MenuItem onClick={handleDelete} sx={{ typography: 'body2', py: 1, px: 2.5 }}>
-          <DeleteOutlineIcon sx={{ marginRight: '10px' }} />
-          Delete
-        </MenuItem>
+        <FormDialog
+          triggerBtn={{
+            type: 'menu',
+            icon: EditOutlinedIcon,
+            iconStyle: { marginRight: '10px' },
+            text: 'Update Bug',
+            closeMenu: handleCloseMenu,
+          }}
+          title="Update Bug"
+        >
+          <BugForm isEditMode projectId={projectId} currentData={currentData} bugId={bugId} />
+        </FormDialog>
+
+        {isResolved ? (
+          <ConfirmDialog
+            title="Confirm Reopen Bug"
+            contentText={`Are you sure you want to reopen bug "${currentData?.title}"?`}
+            actionBtnText="Reopen"
+            triggerBtn={{
+              type: 'menu',
+              text: 'Reopen Bug',
+              icon: ReplayIcon,
+              iconStyle: { marginRight: '10px' },
+              closeMenu: handleCloseMenu,
+            }}
+            processing={reopening}
+            actionFunc={(closeDialog) => handleDelete(bugId, closeDialog)}
+          />
+        ) : (
+          <ConfirmDialog
+            title="Confirm Close Bug"
+            contentText={`Are you sure you want to close bug "${currentData?.title}"?`}
+            actionBtnText="Close"
+            triggerBtn={{
+              type: 'menu',
+              text: 'Close Bug',
+              icon: DoneOutlineIcon,
+              iconStyle: { marginRight: '10px' },
+              closeMenu: handleCloseMenu,
+            }}
+            processing={closing}
+            actionFunc={(closeDialog) => handleDelete(bugId, closeDialog)}
+          />
+        )}
+        <ConfirmDialog
+          title="Confirm Delete Bug"
+          contentText={`Are you sure you want to permanently delete bug "${currentData?.title}"?`}
+          actionBtnText="Delete"
+          triggerBtn={{
+            type: 'menu',
+            text: 'Delete Bug',
+            icon: DeleteOutlineIcon,
+            iconStyle: { marginRight: '10px' },
+            closeMenu: handleCloseMenu,
+            color: 'error',
+          }}
+          processing={deleting}
+          actionFunc={(closeDialog) => handleDelete(bugId, closeDialog)}
+        />
 
         <Box sx={{ p: 2, pt: 1.5 }}>
-          <Button fullWidth color="inherit" variant="outlined" onClick={handleClose}>
+          <Button fullWidth color="inherit" variant="outlined" onClick={handleCloseMenu}>
             Close
           </Button>
         </Box>

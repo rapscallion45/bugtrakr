@@ -5,14 +5,17 @@ import StickyNote2Icon from '@mui/icons-material/StickyNote2';
 import ActionsPopover from './ActionsPopover/ActionsPopover';
 import HideOnScroll from '../HideOnScroll/HideOnScroll';
 import FormDialog from '../FormDialog/FormDialog';
+import BugForm from '../BugForm/BugForm';
 import Link from '../Link/Link';
 import { formatDateTime, getBugPriorityColor, truncateString } from '../../utils';
+import { IBugState } from '../../redux/types/types';
 
 interface BugsTableMobileProps {
-  bugs: any[];
+  bugs: IBugState[];
+  projectId: string | string[];
 }
 
-const BugsTableMobile: FC<BugsTableMobileProps> = function BugsTableMobile({ bugs }) {
+const BugsTableMobile: FC<BugsTableMobileProps> = function BugsTableMobile({ bugs, projectId }) {
   return (
     <Box pb={14}>
       <Divider />
@@ -35,6 +38,7 @@ const BugsTableMobile: FC<BugsTableMobileProps> = function BugsTableMobile({ bug
                   currentData={{ title: b.title, description: b.description, priority: b.priority }}
                   isResolved={b.isResolved}
                   isMobile
+                  projectId={projectId}
                 />
               </Box>
               <Box display="flex" my={1}>
@@ -107,7 +111,7 @@ const BugsTableMobile: FC<BugsTableMobileProps> = function BugsTableMobile({ bug
             }}
             title="Create New Bug"
           >
-            {/* <ProjectForm editMode={null} /> */}
+            <BugForm isEditMode={false} projectId={projectId} />
           </FormDialog>
         </Box>
       )}
@@ -120,7 +124,7 @@ const BugsTableMobile: FC<BugsTableMobileProps> = function BugsTableMobile({ bug
             }}
             title="Create New Bug"
           >
-            {/* <ProjectForm editMode={null} /> */}
+            <BugForm isEditMode={false} projectId={projectId} />
           </FormDialog>
         </Box>
       </HideOnScroll>

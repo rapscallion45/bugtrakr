@@ -1,6 +1,6 @@
 import { accountConstants } from '../constants';
 
-function validateResetToken(state: ValidateResetTokenState = {}, action: ValidateResetTokenAction) {
+function validateResetToken(state: any = {}, action: any) {
   switch (action.type) {
     case accountConstants.VALIDATE_RESET_TOKEN_REQUEST:
       return {

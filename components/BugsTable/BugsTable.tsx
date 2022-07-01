@@ -15,7 +15,9 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import ActionsPopover from './ActionsPopover/ActionsPopover';
 import FormDialog from '../FormDialog/FormDialog';
+import BugForm from '../BugForm/BugForm';
 import { formatDateTime, getBugPriorityColor, truncateString } from '../../utils';
+import { IBugState } from '../../redux/types/types';
 
 const tableHeaders = ['Name', 'Priority', 'Status', 'Added', 'Updated', 'Notes', 'Actions'];
 
@@ -34,10 +36,11 @@ const TableRowStyle = styled(TableRow)(({ theme }) => ({
 }));
 
 interface BugsTableProps {
-  bugs: any[];
+  bugs: IBugState[];
+  projectId: string | string[];
 }
 
-const BugsTable: FC<BugsTableProps> = function ProjectsTable({ bugs }) {
+const BugsTable: FC<BugsTableProps> = function BugsTable({ bugs, projectId }) {
   return (
     <Paper>
       <TableStyle>
@@ -88,6 +91,7 @@ const BugsTable: FC<BugsTableProps> = function ProjectsTable({ bugs }) {
                   currentData={{ title: b.title, description: b.description, priority: b.priority }}
                   isResolved={b.isResolved}
                   isMobile={false}
+                  projectId={projectId}
                 />
               </TableCell>
             </TableRowStyle>
@@ -107,7 +111,7 @@ const BugsTable: FC<BugsTableProps> = function ProjectsTable({ bugs }) {
             }}
             title="Create New Bug"
           >
-            {/* <ProjectForm editMode={null} /> */}
+            <BugForm isEditMode={false} projectId={projectId} />
           </FormDialog>
         </Box>
       )}

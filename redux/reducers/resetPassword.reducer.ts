@@ -1,6 +1,6 @@
 import { accountConstants } from '../constants';
 
-function resetPassword(state: ResetPasswordState = {}, action: ResetPasswordAction) {
+function resetPassword(state: any = {}, action: any) {
   switch (action.type) {
     case accountConstants.RESET_PASSWORD_REQUEST:
       return {

@@ -1,6 +1,7 @@
 import { projectConstants } from '../constants';
+import { IProjectState, IProjectMember } from '../types/types';
 
-function projects(state: ProjectState = {}, action: ProjectAction) {
+function projects(state: any = {}, action: any) {
   switch (action.type) {
     case projectConstants.GET_REQUEST:
       return {
@@ -24,7 +25,7 @@ function projects(state: ProjectState = {}, action: ProjectAction) {
       return {
         ...state,
         deleting: false,
-        data: state.data.filter((p: ProjectState) => p.id !== action.projectId),
+        data: state.data.filter((p: IProjectState) => p.id !== action.projectId),
       };
     case projectConstants.DELETE_FAILURE:
       return {
@@ -59,7 +60,7 @@ function projects(state: ProjectState = {}, action: ProjectAction) {
       return {
         ...state,
         updating: false,
-        data: state.data.map((p) => {
+        data: state.data.map((p: IProjectState) => {
           if (p.id === action.data.id) {
             return {
               ...p,
@@ -75,7 +76,7 @@ function projects(state: ProjectState = {}, action: ProjectAction) {
       return {
         ...state,
         updating: false,
-        data: state.data.map((p) => {
+        data: state.data.map((p: IProjectState) => {
           if (p.id === action.projectId) {
             return {
               ...p,
@@ -101,11 +102,13 @@ function projects(state: ProjectState = {}, action: ProjectAction) {
       return {
         ...state,
         removing: false,
-        data: state.data.map((p: ProjectState) => {
+        data: state.data.map((p: IProjectState) => {
           if (p.id === action.projectId) {
             return {
               ...p,
-              members: p.members?.filter((m) => m.member.id !== action.projectMemberId),
+              members: p.members?.filter(
+                (m: IProjectMember) => m.member.id !== action.projectMemberId
+              ),
             };
           }
           return p;
