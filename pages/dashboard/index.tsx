@@ -1,63 +1,64 @@
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
+import AddIcon from '@mui/icons-material/Add';
 import Page from '../../components/Page/Page';
+import MHidden from '../../components/@MUI-Extended/MHidden';
 import DashboardLayout from '../../layouts/DashboardLayout/DashboardLayout';
 import Loader from '../../components/Loader/Loader';
-
-// const projectData = [
-//   {
-//     id: 1,
-//     name: 'Test1',
-//     bugs: 5,
-//     members: 3,
-//     admin: 'test',
-//     added: new Date(),
-//   },
-//   {
-//     id: 2,
-//     name: 'Test2',
-//     bugs: 5,
-//     members: 3,
-//     admin: 'test',
-//     added: new Date(),
-//   },
-//   {
-//     id: 3,
-//     name: 'Test3',
-//     bugs: 5,
-//     members: 3,
-//     admin: 'test',
-//     added: new Date(),
-//   },
-//   {
-//     id: 4,
-//     name: 'Test4',
-//     bugs: 5,
-//     members: 3,
-//     admin: 'test',
-//     added: new Date(),
-//   },
-// ];
+import ProjectsTable from '../../components/ProjectsTable/ProjectsTable';
+import ProjectsTableMobile from '../../components/ProjectsTable/ProjectsTableMobile';
+import FormDialog from '../../components/FormDialog/FormDialog';
+import ProjectForm from '../../components/ProjectForm/ProjectForm';
+import { projectActions } from '../../redux/actions';
+import { AppState } from '../../redux/reducers';
 
 const Dashboard = function Dashboard() {
+  const dispatch = useDispatch();
+  const { loaded, loading, error, data } = useSelector((state: AppState) => state.projects);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  useEffect(() => {
+    dispatch(projectActions.getProjects());
+  }, []);
+
   return (
-    <Page title="Dashboard | Overview">
+    <Page title="Dashboard | All Projects">
       <Container maxWidth="xl">
-        <Box sx={{ pb: 5 }}>
-          <Typography variant="h4">All Projects</Typography>
+        <Box display="flex" sx={{ pb: 5 }}>
+          <Box>
+            <Typography variant="h3">All Projects</Typography>
+            <Typography variant="body1">List of all projects created and joined by you</Typography>
+          </Box>
+          <MHidden width="smDown">
+            <Box display="flex" justifyContent="end" sx={{ flexGrow: 1 }}>
+              <FormDialog
+                triggerBtn={{
+                  type: 'normal',
+                  icon: AddIcon,
+                  text: 'Create New Project',
+                }}
+                title="Create New Project"
+              >
+                <ProjectForm editMode={null} />
+              </FormDialog>
+            </Box>
+          </MHidden>
         </Box>
         <Loader
-          dataLoading={false}
-          dataError={false}
-          dataLoaded
-          loadingText="Fetching your FPL data..."
-          errorText="Failed to load your FPL data. Try re-syncing your team from the My Account page."
+          dataLoading={loading}
+          dataError={Boolean(error)}
+          dataLoaded={loaded}
+          loadingText="Fetching project data..."
+          errorText="Failed to load project data."
         >
-          <Grid container spacing={3}>
-            <Typography>Index</Typography>
-          </Grid>
+          {!isMobile && <ProjectsTable projects={data} />}
+          {isMobile && <ProjectsTableMobile projects={data} />}
         </Loader>
       </Container>
     </Page>

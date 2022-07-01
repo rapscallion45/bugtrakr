@@ -8,6 +8,7 @@ import AccountPopover from './AccountPopover/AccountPopover';
 import NotificationsPopover from './NotificationsPopover/NotificationsPopover';
 import Logo from '../Logo/Logo';
 import Link from '../Link/Link';
+import { AppState } from '../../redux/reducers';
 
 const DRAWER_WIDTH = 280;
 const APPBAR_MOBILE = 64;
@@ -21,10 +22,10 @@ interface NavBarProps {
 
 const NavBar: FC<NavBarProps> = function NavBar({
   onOpenSidebar,
-  showLogo = true,
+  showLogo = false,
   fullWidth = true,
 }) {
-  const loggedIn = useSelector((state) => state.authentication?.loggedIn);
+  const loggedIn = useSelector((state: AppState) => state.authentication?.loggedIn);
 
   const RootStyle = styled(AppBar)(({ theme }) => ({
     boxShadow: 'none',
@@ -50,7 +51,7 @@ const NavBar: FC<NavBarProps> = function NavBar({
         {!showLogo && (
           <MHidden width="lgUp">
             <IconButton onClick={onOpenSidebar} sx={{ mr: 1, color: 'text.primary' }}>
-              <MenuIcon color="primary" />
+              <MenuIcon htmlColor="black" />
             </IconButton>
             <Link href="/">
               <Logo />
@@ -66,7 +67,7 @@ const NavBar: FC<NavBarProps> = function NavBar({
         <Box sx={{ flexGrow: 1 }} />
 
         <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
-          <MHidden width="smDown">
+          <MHidden width="xsDown">
             <Box>{loggedIn && <NotificationsPopover />}</Box>
           </MHidden>
           {loggedIn && <AccountPopover />}

@@ -8,6 +8,7 @@ import AuthLayout from '../layouts/AuthLayout/AuthLayout';
 import MHidden from '../components/@MUI-Extended/MHidden';
 import RegisterForm from '../components/RegisterForm/RegisterForm';
 import ScrollBar from '../components/ScrollBar/ScrollBar';
+import { AppState } from '../redux/reducers';
 
 const SectionStyle = styled(Card)(({ theme }) => ({
   width: '100%',
@@ -34,7 +35,7 @@ const ContentStyle = styled('div')(({ theme }) => ({
 }));
 
 const Register = function Register() {
-  const loggedIn = useSelector((state) => state.authentication.loggedIn);
+  const loggedIn = useSelector((state: AppState) => state.authentication.loggedIn);
 
   /* If we're logged in, ignore the request and re-route to dashboard */
   useEffect(() => {
@@ -46,7 +47,7 @@ const Register = function Register() {
       <MHidden width="mdDown">
         <SectionStyle>
           <Typography variant="h3" sx={{ px: 10, mt: 10, mb: 5 }}>
-            Sign up to gain access to free FPL analysis tools and more!
+            Sign up to gain access to FREE bug tracking tools!
           </Typography>
         </SectionStyle>
       </MHidden>

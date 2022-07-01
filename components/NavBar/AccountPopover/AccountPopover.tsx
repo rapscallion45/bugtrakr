@@ -9,6 +9,7 @@ import { alpha } from '@mui/material/styles';
 import { Button, Box, Divider, MenuItem, Typography, Avatar, IconButton } from '@mui/material';
 import MenuPopover from '../../MenuPopover/MenuPopover';
 import Link from '../../Link/Link';
+import { AppState } from '../../../redux/reducers';
 
 const MENU_OPTIONS_LOGGED_IN = [
   {
@@ -24,7 +25,7 @@ const MENU_OPTIONS_LOGGED_IN = [
   {
     label: 'My Account',
     icon: AccountCircleIcon,
-    linkTo: '/dashboard/my-accounts',
+    linkTo: '/dashboard/my-account',
   },
 ];
 
@@ -43,10 +44,11 @@ const MENU_OPTIONS_LOGGED_OUT = [
 
 const AccountPopover: FC = function AccountPopover() {
   const anchorRef = useRef(null);
-  const [open, setOpen] = useState(false);
-  const userAuth = useSelector((state) => state.authentication?.user);
-  const loggedIn = useSelector((state) => state.authentication?.loggedIn);
-  const user = useSelector((state) => state.account?.user);
+  const [open, setOpen] = useState<boolean>(false);
+  const userAuth = useSelector((state: AppState) => state.authentication?.user);
+  const loggedIn = useSelector((state: AppState) => state.authentication?.loggedIn);
+  const demo = useSelector((state: AppState) => state.authentication?.demo);
+  const user = useSelector((state: AppState) => state.account?.user);
 
   const handleOpen = () => {
     setOpen(true);
@@ -86,12 +88,14 @@ const AccountPopover: FC = function AccountPopover() {
         sx={{ width: 220 }}
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
-          <Typography variant="subtitle1" noWrap>
-            {loggedIn ? `${userAuth?.firstName} ${userAuth?.lastName}` : 'Sign In'}
-          </Typography>
-          {loggedIn && (
-            <Typography variant="body2" sx={{ fontSize: '0.8rem', color: 'text.secondary' }} noWrap>
-              {userAuth?.email}
+          {!demo && (
+            <Typography variant="subtitle1" noWrap>
+              {loggedIn ? `${userAuth?.username}` : 'Sign In'}
+            </Typography>
+          )}
+          {demo && (
+            <Typography variant="subtitle1" noWrap>
+              Demo Mode
             </Typography>
           )}
         </Box>

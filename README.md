@@ -1,12 +1,12 @@
-# Let's Talk FPL - Front end FPL web application
+# BUGTRAKR - Front end bug tracking SPA
 
-This is the Let's Talk FPL front end web application for FPL, built with React, React-Redux, Thunk, NextJS, MUI v5, FireBase and WordPress CMS.
+BugTrakr is a simple bug/issue tracking SPA built with TypeScript, NextJS and Redux. It has been styled with MUI v5 and is tested with React Testing Library.
 
-This application allows users to sync their fantasy premier league teams with statistical data from across several sources, including xG data.
+This application allows users to add their projects and track bugs/issues within those projects, allowing project and bug creation, updates and deletion. Bugs can have different priority levels and can be opened, reopened and closed. Different users can also be assigned and removed to each project, thus giving a level of privacy to the system.
 
 ## Project Status
 
-This project is currently in development. Users can currently sync their teams with various data, however further feature development and data integrations are ongoing.
+This project is currently in development.
 
 ## Installation and Setup
 

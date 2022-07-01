@@ -170,8 +170,8 @@ const NotificationItem: FC<NotificationItemProps> = function NotificationItem({
 
 const NotificationsPopover: FC = function NotificationsPopover() {
   const anchorRef = useRef(null);
-  const [open, setOpen] = useState(false);
-  const [notifications, setNotifications] = useState(NOTIFICATIONS);
+  const [open, setOpen] = useState<boolean>(false);
+  const [notifications, setNotifications] = useState<any[]>(NOTIFICATIONS);
   const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
 
   const handleOpen = () => {
@@ -206,7 +206,7 @@ const NotificationsPopover: FC = function NotificationsPopover() {
         }}
       >
         <Badge badgeContent={totalUnRead} color="error">
-          <NotificationsIcon color="primary" />
+          <NotificationsIcon htmlColor="black" />
         </Badge>
       </IconButton>
 

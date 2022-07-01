@@ -1,5 +1,4 @@
-import PropTypes from 'prop-types';
-import { useMemo } from 'react';
+import { FC, useMemo } from 'react';
 import { CacheProvider } from '@emotion/react';
 import { CssBaseline } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -9,7 +8,12 @@ import typography from './typography';
 import componentsOverride from './overrides';
 import shadows, { customShadows } from './shadows';
 
-function ThemeConfig({ emotionCache, children }) {
+interface ThemeConfigProps {
+  emotionCache?: any;
+  children?: any;
+}
+
+const ThemeConfig: FC<ThemeConfigProps> = function ThemeConfig({ emotionCache, children }) {
   const themeOptions = useMemo(
     () => ({
       palette,
@@ -21,6 +25,7 @@ function ThemeConfig({ emotionCache, children }) {
     []
   );
 
+  // @ts-ignore
   const theme = createTheme(themeOptions);
   theme.components = componentsOverride(theme);
 
@@ -32,10 +37,6 @@ function ThemeConfig({ emotionCache, children }) {
       </ThemeProvider>
     </CacheProvider>
   );
-}
-
-ThemeConfig.propTypes = {
-  children: PropTypes.node,
 };
 
 export default ThemeConfig;

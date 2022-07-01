@@ -1,6 +1,6 @@
 import { accountConstants } from '../constants';
 
-function forgotPassword(state: ForgotPasswordState = {}, action: ForgotPasswordAction) {
+function forgotPassword(state: any = {}, action: any) {
   switch (action.type) {
     case accountConstants.FORGOT_PASSWORD_REQUEST:
       return {

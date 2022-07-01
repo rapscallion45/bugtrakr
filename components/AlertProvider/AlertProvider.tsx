@@ -4,6 +4,7 @@ import { SnackbarProvider } from 'notistack';
 import MuiAlert from '@mui/material/Alert';
 import Slide from '@mui/material/Slide';
 import { alertActions } from '../../redux/actions';
+import { AppState } from '../../redux/reducers';
 
 interface AlertProps {
   id?: any;
@@ -19,13 +20,14 @@ const Alert: FC<AlertProps> = forwardRef((props, ref) => {
   };
 
   /* find this alert in state and get variant */
-  const { notifications } = useSelector((state) => state.alert);
+  const { notifications } = useSelector((state: AppState) => state.alert);
   const variant = notifications.find((notification) => notification.key === id)?.options?.variant;
 
   return (
     <MuiAlert
-      elevation={6}
+      // @ts-ignore
       ref={ref}
+      elevation={6}
       variant="filled"
       severity={variant}
       onClose={handleClose}
@@ -43,6 +45,7 @@ const AlertProvider: FC<AlertProviderProps> = function AlertProvider({ children 
 
   return (
     <SnackbarProvider
+      // @ts-ignore
       ref={notistackRef}
       maxSnack={5}
       anchorOrigin={{

@@ -21,13 +21,14 @@ export default async function accountDetails(req: NextApiRequest, res: NextApiRe
     case 'POST':
       /* call api */
       try {
-        const data = await getUserById(id, authToken);
+        const response = await getUserById(id, authToken);
+        const data = await response.json();
 
         /* send back server response */
-        if (data?.user) {
-          return res.status(200).json(data?.user);
+        if (response.status === 200) {
+          return res.status(200).json(data);
         }
-        return res.status(400).json({ message: 'Request failed.' });
+        return res.status(400).json({ message: data.message });
       } catch (error) {
         return res.status(501).json({
           message: 'Oops, something went wrong with the request.',
@@ -37,13 +38,14 @@ export default async function accountDetails(req: NextApiRequest, res: NextApiRe
     case 'PUT':
       /* call api */
       try {
-        const data = await updateUserById(id, authToken, user);
+        const response = await updateUserById(id, authToken, user);
+        const data = await response.json();
 
         /* send back server response */
-        if (data?.updateUser?.user) {
-          return res.status(200).json(data?.updateUser?.user);
+        if (response.status === 201) {
+          return res.status(200).json(data);
         }
-        return res.status(400).json({ message: 'Failed to update profile.' });
+        return res.status(400).json({ message: data.message });
       } catch (error) {
         return res.status(501).json({
           message: 'Oops, something went wrong with the request.',

@@ -1,6 +1,7 @@
 import { alertConstants } from '../constants';
+import { INotification } from '../types/types';
 
-function alert(state: AlertState = { notifications: [] }, action: AlertAction) {
+function alert(state: any = { notifications: [] }, action: any) {
   switch (action.type) {
     case alertConstants.ENQUEUE_SNACKBAR:
       return {
@@ -17,7 +18,7 @@ function alert(state: AlertState = { notifications: [] }, action: AlertAction) {
     case alertConstants.CLOSE_SNACKBAR:
       return {
         ...state,
-        notifications: state.notifications.map((notification) =>
+        notifications: state.notifications.map((notification: INotification) =>
           action.dismissAll || notification.key === action.key
             ? { ...notification, dismissed: true }
             : { ...notification }
@@ -28,7 +29,7 @@ function alert(state: AlertState = { notifications: [] }, action: AlertAction) {
       return {
         ...state,
         notifications: state.notifications.filter(
-          (notification) => notification.key !== action.key
+          (notification: INotification) => notification.key !== action.key
         ),
       };
 

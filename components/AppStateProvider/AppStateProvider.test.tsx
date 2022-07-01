@@ -7,6 +7,7 @@ import toJson from 'enzyme-to-json';
 import { waitFor } from '@testing-library/react';
 import rootReducer from '../../redux/reducers';
 import AppStateProvider from './AppStateProvider';
+import userMock from '../../__mocks__/userMock';
 
 const middleware = [thunkMiddleware];
 const TEST_DIV_TEXT = "I'm the test child div!";
@@ -39,9 +40,13 @@ describe('App State Provider', () => {
   describe('Call relevant API', () => {
     beforeAll(() => jest.spyOn(window, 'fetch'));
 
-    it('Should call 2 API in total', () => {
+    it('Should call Authenticate, Account data and Users data APIs', async () => {
       /* Arrange */
-      const testStore = createStore(rootReducer, {}, applyMiddleware(...middleware));
+      const testStore = createStore(
+        rootReducer,
+        { authentication: { user: userMock } },
+        applyMiddleware(...middleware)
+      );
 
       /* Act */
       mount(
@@ -53,51 +58,30 @@ describe('App State Provider', () => {
       );
 
       /* Assert */
-      expect(window.fetch).toHaveBeenCalledTimes(2);
-    });
-
-    it('Should call Account data API', () => {
-      /* Arrange */
-      const testStore = createStore(rootReducer, {}, applyMiddleware(...middleware));
-
-      /* Act */
-      mount(
-        <Provider store={testStore}>
-          <AppStateProvider>
-            <MockChild />
-          </AppStateProvider>
-        </Provider>
-      );
-
-      /* Assert */
-      expect(window.fetch).toHaveBeenCalledWith(
-        '/api/account',
-        expect.objectContaining({
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-        })
-      );
-    });
-
-    it('Should call authenticate user API', () => {
-      /* Arrange */
-      const testStore = createStore(rootReducer, {}, applyMiddleware(...middleware));
-
-      /* Act */
-      mount(
-        <Provider store={testStore}>
-          <AppStateProvider>
-            <MockChild />
-          </AppStateProvider>
-        </Provider>
-      );
-
-      /* Assert */
+      await waitFor(() => {
+        /* wait for all API calls and state updates to complete */
+        expect(window.fetch).toHaveBeenCalledTimes(3);
+      });
       expect(window.fetch).toHaveBeenCalledWith(
         '/api/authenticate',
         expect.objectContaining({
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+        })
+      );
+      expect(window.fetch).toHaveBeenCalledWith(
+        '/api/users',
+        expect.objectContaining({
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        })
+      );
+      expect(window.fetch).toHaveBeenCalledWith(
+        '/api/account',
+        expect.objectContaining({
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: userMock.id }),
         })
       );
     });

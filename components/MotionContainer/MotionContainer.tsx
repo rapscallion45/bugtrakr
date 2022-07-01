@@ -5,7 +5,7 @@ import { varWrapEnter } from './variants';
 
 interface MotionContainerProps {
   open: boolean;
-  children?: Node;
+  children?: any;
 }
 
 const MotionContainer: FC<MotionContainerProps> = function MotionContainer({

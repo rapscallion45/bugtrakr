@@ -8,6 +8,7 @@ import ScrollBar from '../ScrollBar/ScrollBar';
 import NavSection from '../NavSection/NavSection';
 import MHidden from '../@MUI-Extended/MHidden';
 import sideBarConfig from './sideBarConfig';
+import { AppState } from '../../redux/reducers';
 
 const DRAWER_WIDTH = 280;
 
@@ -22,7 +23,7 @@ const AccountStyle = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   padding: theme.spacing(2, 2.5),
-  borderRadius: theme.shape.borderRadiusSm,
+  borderRadius: theme.shape.borderRadius,
   backgroundColor: theme.palette.grey[200],
 }));
 
@@ -36,10 +37,10 @@ const DashboardSideBar: FC<DashboardSideBarProps> = function DashboardSideBar({
   onCloseSidebar,
 }) {
   const { pathname } = useRouter();
-  const userAuth = useSelector((state) => state.authentication?.user);
-  const loggedIn = useSelector((state) => state.authentication?.loggedIn);
-  const isDemo = useSelector((state) => state.authentication?.demo);
-  const user = useSelector((state) => state.account?.user);
+  const userAuth = useSelector((state: AppState) => state.authentication?.user);
+  const loggedIn = useSelector((state: AppState) => state.authentication?.loggedIn);
+  const isDemo = useSelector((state: AppState) => state.authentication?.demo);
+  const user = useSelector((state: AppState) => state.account?.user);
 
   useEffect(() => {
     if (isOpenSidebar) {
@@ -72,10 +73,10 @@ const DashboardSideBar: FC<DashboardSideBarProps> = function DashboardSideBar({
             </MuiLink>
           )}
           <Box sx={{ ml: 2 }}>
-            <Typography variant="h6" sx={{ color: 'text.primary' }}>
+            <Typography variant="h4" sx={{ color: 'text.primary' }}>
               {loggedIn && !isDemo
                 ? `Hi, ${userAuth?.firstName}! 👋`
-                : `Welcome to ${process.env.APP_NAME}! 👋`}
+                : `Hi! Welcome to ${process.env.APP_NAME}! 👋`}
             </Typography>
           </Box>
         </AccountStyle>
@@ -106,7 +107,7 @@ const DashboardSideBar: FC<DashboardSideBarProps> = function DashboardSideBar({
                 Want more?
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                Upgrade your membership plan to gain access to more FPL analysis tools!
+                Upgrade your membership plan to gain access to more analysis tools!
               </Typography>
             </Box>
           )}
@@ -116,7 +117,7 @@ const DashboardSideBar: FC<DashboardSideBarProps> = function DashboardSideBar({
                 Sign Up
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                Create an account to gain access to our FPL analysis tools!
+                Create an account to begin tracking your projects!
               </Typography>
             </Box>
           )}

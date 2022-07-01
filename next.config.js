@@ -4,7 +4,7 @@ module.exports = {
     formats: ['image/avif', 'image/webp'],
   },
   env: {
-    APP_NAME: `Bug Trakr`,
+    APP_NAME: `BugTrakR`,
     PL_RESOURCE_URL: 'https://resources.premierleague.com/premierleague',
     FB_APP_ID: '680726796221491',
     GOOGLE_CLIENT_ID: '57200106798-20rrlje80hsje1m6oddm7tne1q9ucq0e.apps.googleusercontent.com',

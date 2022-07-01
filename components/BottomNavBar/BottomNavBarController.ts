@@ -3,12 +3,13 @@ import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import routes from './routes';
+import { AppState } from '../../redux/reducers';
 
 const useBottomNavBarController = () => {
   const isDesktop = useMediaQuery('(min-width:992px)');
   const router = useRouter();
   const [value, setValue] = useState(router.pathname);
-  const loggedIn = useSelector((state) => state.authentication.loggedIn);
+  const loggedIn = useSelector((state: AppState) => state.authentication.loggedIn);
 
   useEffect(() => {
     setValue(router.pathname);

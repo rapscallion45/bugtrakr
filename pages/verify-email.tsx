@@ -7,6 +7,7 @@ import Link from '../components/Link/Link';
 import AuthLayout from '../layouts/AuthLayout/AuthLayout';
 import MHidden from '../components/@MUI-Extended/MHidden';
 import VerifyEmailForm from '../components/VerifyEmailForm/VerifyEmailForm';
+import { AppState } from '../redux/reducers';
 
 const SectionStyle = styled(Card)(({ theme }) => ({
   width: '100%',
@@ -28,7 +29,7 @@ const ContentStyle = styled('div')(({ theme }) => ({
 }));
 
 const VerifyEmail = function VerifyEmail() {
-  const loggedIn = useSelector((state) => state.authentication?.loggedIn);
+  const loggedIn = useSelector((state: AppState) => state.authentication?.loggedIn);
 
   /* If we're logged in, ignore the request and re-route to dashboard */
   useEffect(() => {

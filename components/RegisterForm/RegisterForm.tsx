@@ -28,7 +28,7 @@ const RegisterForm: FC = function RegisterForm() {
         </Link>
       </Box>
       <Typography variant="h4" component="h4" sx={{ textAlign: 'center' }}>
-        Get started free with {process.env.APP_NAME}
+        Get started FREE with {process.env.APP_NAME}
       </Typography>
       <Typography
         variant="body2"

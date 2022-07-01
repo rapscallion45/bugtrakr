@@ -12,7 +12,7 @@ const ResetPasswordForm: FC = function ResetPasswordForm() {
 
   const getForm = () => (
     <Container>
-      <Typography variant="body" component="p" sx={{ paddingBottom: '15px', textAlign: 'center' }}>
+      <Typography variant="body1" component="p" sx={{ paddingBottom: '15px', textAlign: 'center' }}>
         Please enter your new password below
       </Typography>
       <form onSubmit={formik.handleSubmit}>

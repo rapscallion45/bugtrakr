@@ -84,7 +84,7 @@ const NavItem: FC<NavItemProps> = function NavItem({ item, active }) {
   };
 
   const activeRootStyle = {
-    color: 'primary.main',
+    color: 'black',
     fontWeight: 'fontWeightMedium',
     bgcolor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
     '&:before': { display: 'block' },
@@ -99,6 +99,7 @@ const NavItem: FC<NavItemProps> = function NavItem({ item, active }) {
     return (
       <>
         <ListItemStyle
+          // @ts-ignore
           onClick={handleOpen}
           sx={{
             ...(isActiveRoot && activeRootStyle),
@@ -118,6 +119,7 @@ const NavItem: FC<NavItemProps> = function NavItem({ item, active }) {
               return (
                 <ListItemStyle
                   key={childItem.title}
+                  // @ts-ignore
                   component={Link}
                   href={childItem.path}
                   sx={{
@@ -155,6 +157,7 @@ const NavItem: FC<NavItemProps> = function NavItem({ item, active }) {
 
   return path ? (
     <ListItemStyle
+      // @ts-ignore
       component={Link}
       href={path}
       target={item.newTab ? '_blank' : ''}
@@ -173,7 +176,7 @@ const NavItem: FC<NavItemProps> = function NavItem({ item, active }) {
 
 interface NavSectionProps {
   navConfig: ISidebarConfig[];
-  other: any;
+  other?: any;
 }
 
 const NavSection: FC<NavSectionProps> = function NavSection({ navConfig, ...other }) {

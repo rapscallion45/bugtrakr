@@ -16,7 +16,7 @@ if (!ISSERVER) {
   initialState = user ? { authenticating: true, user } : initialState;
 }
 
-function authentication(state: AuthenticationState = initialState, action: AuthenticationAction) {
+function authentication(state: any = initialState, action: any) {
   switch (action.type) {
     case accountConstants.AUTHENTICATE_REQUEST:
       return {

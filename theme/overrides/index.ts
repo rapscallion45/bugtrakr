@@ -17,13 +17,13 @@ import Slider from './Slider';
 
 export default function ComponentsOverrides(theme) {
   return merge(
-    Slider(theme),
-    Dialog(theme),
-    Table(theme),
-    Chip(theme),
+    Slider(),
+    Dialog(),
+    Table(),
+    Chip(),
     Card(theme),
     Lists(theme),
-    Paper(theme),
+    Paper(),
     Input(theme),
     Button(theme),
     Tooltip(theme),

@@ -1,6 +1,7 @@
 import { alertConstants } from '../constants';
+import { INotification } from '../types/types';
 
-function enqueueSnackbar(notification) {
+function enqueueSnackbar(notification: INotification) {
   const key = notification.options && notification.options.key;
 
   return {
@@ -12,7 +13,7 @@ function enqueueSnackbar(notification) {
   };
 }
 
-function closeSnackbar(key: string) {
+function closeSnackbar(key: any) {
   return {
     type: alertConstants.CLOSE_SNACKBAR,
     dismissAll: !key, // dismiss all if no key has been defined
@@ -20,7 +21,7 @@ function closeSnackbar(key: string) {
   };
 }
 
-function removeSnackbar(key: string) {
+function removeSnackbar(key: any) {
   return {
     type: alertConstants.REMOVE_SNACKBAR,
     key,

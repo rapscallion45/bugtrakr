@@ -2,6 +2,7 @@ import Router from 'next/router';
 import { accountConstants } from '../constants';
 import { accountService } from '../services';
 import alertActions from './alert.actions';
+import { IAccount } from '../types/types';
 
 const ISSERVER = typeof window === 'undefined';
 
@@ -41,10 +42,10 @@ function authenticate() {
 }
 
 function login(username: string, password: string) {
-  function request(userData) {
+  function request(userData: IAccount) {
     return { type: accountConstants.LOGIN_REQUEST, userData };
   }
-  function success(userData) {
+  function success(userData: IAccount) {
     return { type: accountConstants.LOGIN_SUCCESS, userData };
   }
   function failure(error: string) {
@@ -79,7 +80,7 @@ function demoLogin() {
   function request() {
     return { type: accountConstants.DEMO_LOGIN_REQUEST };
   }
-  function success(userData) {
+  function success(userData: IAccount) {
     return { type: accountConstants.DEMO_LOGIN_SUCCESS, userData };
   }
   function failure(error: string) {
@@ -114,7 +115,7 @@ function loginWithGoogle(idToken: string) {
   function request() {
     return { type: accountConstants.LOGIN_FACEBOOK_REQUEST };
   }
-  function success(userData) {
+  function success(userData: IAccount) {
     return { type: accountConstants.LOGIN_FACEBOOK_SUCCESS, userData };
   }
   function failure(error: string) {
@@ -146,10 +147,10 @@ function loginWithGoogle(idToken: string) {
 }
 
 function loginWithFacebook(facebookId: string, accessToken: string) {
-  function request(userData) {
-    return { type: accountConstants.LOGIN_FACEBOOK_REQUEST, userData };
+  function request() {
+    return { type: accountConstants.LOGIN_FACEBOOK_REQUEST };
   }
-  function success(userData) {
+  function success(userData: IAccount) {
     return { type: accountConstants.LOGIN_FACEBOOK_SUCCESS, userData };
   }
   function failure(error: string) {
@@ -157,7 +158,7 @@ function loginWithFacebook(facebookId: string, accessToken: string) {
   }
 
   return (dispatch) => {
-    dispatch(request({ facebookId }));
+    dispatch(request());
 
     accountService.loginWithFacebook(facebookId, accessToken).then(
       (user) => {
@@ -229,7 +230,7 @@ function register(user: IAccount) {
   };
 }
 
-function verifyEmail(verificationToken: string) {
+function verifyEmail(verificationToken: string | string[]) {
   function request() {
     return { type: accountConstants.VERIFY_EMAIL_REQUEST };
   }
@@ -403,14 +404,14 @@ function resetPassword(resetToken: string, password: string) {
   };
 }
 
-function validateResetToken(resetToken: string) {
+function validateResetToken(resetToken: string | string[]) {
   function request() {
     return { type: accountConstants.VALIDATE_RESET_TOKEN_REQUEST };
   }
   function success() {
     return { type: accountConstants.VALIDATE_RESET_TOKEN_SUCCESS };
   }
-  function failure(error) {
+  function failure(error: string) {
     return { type: accountConstants.VALIDATE_RESET_TOKEN_FAILURE, error };
   }
 
@@ -438,13 +439,13 @@ function validateResetToken(resetToken: string) {
 }
 
 function updateAccount(id: string, user: IAccount) {
-  function request(userData) {
+  function request(userData: IAccount) {
     return { type: accountConstants.UPDATE_REQUEST, userData };
   }
-  function success(userData) {
+  function success(userData: IAccount) {
     return { type: accountConstants.UPDATE_SUCCESS, userData };
   }
-  function failure(userData, error: string) {
+  function failure(userData: IAccount, error: string) {
     return { type: accountConstants.UPDATE_FAILURE, userData, error };
   }
 
@@ -484,7 +485,7 @@ function getAccount(id: string) {
   function request() {
     return { type: accountConstants.GETDETAILS_REQUEST };
   }
-  function success(userData) {
+  function success(userData: IAccount) {
     return { type: accountConstants.GETDETAILS_SUCCESS, userData };
   }
   function failure(error: string) {
@@ -502,13 +503,13 @@ function getAccount(id: string) {
 }
 
 function deleteAccount(id: string) {
-  function request(userId) {
+  function request(userId: string) {
     return { type: accountConstants.DELETE_REQUEST, userId };
   }
-  function success(userId) {
+  function success(userId: string) {
     return { type: accountConstants.DELETE_SUCCESS, userId };
   }
-  function failure(userId, error: string) {
+  function failure(userId: string, error: string) {
     return { type: accountConstants.DELETE_FAILURE, userId, error };
   }
 

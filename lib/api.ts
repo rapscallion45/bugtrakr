@@ -1,144 +1,226 @@
-import { v4 as uuid } from 'uuid';
-import client from '../apollo/client';
-import REFRESH_TOKEN from '../apollo/mutations/refreshToken';
-import LOGIN from '../apollo/mutations/login';
-import UPDATE_USER_BY_ID from '../apollo/mutations/updateUserById';
-import GET_USER_BY_ID from '../apollo/queries/getUserById';
+import { IBugPayload, IUser } from '../redux/types/types';
 
-const { NEXT_PUBLIC_WORDPRESS_SITE_REST_URL } = process.env;
-
-export async function refreshToken({ token }) {
-  const { data } = await client.query({
-    query: REFRESH_TOKEN,
-    variables: {
-      input: {
-        clientMutationId: uuid,
-        jwtRefreshToken: token || '',
-      },
-    },
-  });
-
-  return data || {};
-}
+const { API_REST_URL } = process.env;
 
 export async function loginUser({ username, password }) {
-  const { data } = await client.query({
-    query: LOGIN,
-    variables: {
-      input: {
-        clientMutationId: uuid,
-        username: username || '',
-        password: password || '',
-      },
-    },
-  });
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password }),
+  };
 
-  return data || {};
+  return fetch(`${API_REST_URL}/login`, requestOptions);
 }
 
-export function logoutUser() {
-  /* clear apollo cache as user has logged out */
-  client.resetStore();
-}
-
-export async function registerUser(body) {
+export async function registerUser(body: any) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   };
 
-  return fetch(`${NEXT_PUBLIC_WORDPRESS_SITE_REST_URL}/fplfrog/v1/users/register`, requestOptions);
+  return fetch(`${API_REST_URL}/signup`, requestOptions);
 }
 
-export async function verifyEmail(body) {
+export async function verifyEmail(body: any) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   };
 
-  return fetch(
-    `${NEXT_PUBLIC_WORDPRESS_SITE_REST_URL}/fplfrog/v1/users/verify-email`,
-    requestOptions
-  );
+  return fetch(`${API_REST_URL}/users/verify-email`, requestOptions);
 }
 
-export async function forgotPassword(body) {
+export async function forgotPassword(body: any) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   };
 
-  return fetch(
-    `${NEXT_PUBLIC_WORDPRESS_SITE_REST_URL}/fplfrog/v1/users/forgot-password`,
-    requestOptions
-  );
+  return fetch(`${API_REST_URL}/users/forgot-password`, requestOptions);
 }
 
-export async function resetPassword(body) {
+export async function resetPassword(body: any) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   };
 
-  return fetch(
-    `${NEXT_PUBLIC_WORDPRESS_SITE_REST_URL}/fplfrog/v1/users/reset-password`,
-    requestOptions
-  );
+  return fetch(`${API_REST_URL}/users/reset-password`, requestOptions);
 }
 
-export async function validatePasswordReset(body) {
+export async function validatePasswordReset(body: any) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   };
 
-  return fetch(
-    `${NEXT_PUBLIC_WORDPRESS_SITE_REST_URL}/fplfrog/v1/users/validate-reset-token`,
-    requestOptions
-  );
+  return fetch(`${API_REST_URL}/users/validate-reset-token`, requestOptions);
 }
 
-export async function updateUserById(id, authToken, user) {
-  const { data } = await client.query({
-    query: UPDATE_USER_BY_ID,
-    context: {
-      headers: {
-        authorization: authToken ? `Bearer ${authToken}` : '',
-      },
-      context: 'include',
-    },
-    variables: {
-      input: {
-        clientMutationId: uuid,
-        id,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-      },
-    },
-  });
+export async function getProjects(token: string) {
+  const requestOptions = {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+  };
 
-  return data || {};
+  return fetch(`${API_REST_URL}/projects`, requestOptions);
 }
 
-export async function getUserById(id, authToken) {
-  const { data } = await client.query({
-    query: GET_USER_BY_ID,
-    context: {
-      headers: {
-        authorization: authToken ? `Bearer ${authToken}` : '',
-      },
-      context: 'include',
-    },
-    variables: {
-      id,
-    },
-  });
+export async function deleteProject(token: string, id: string) {
+  const requestOptions = {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+  };
 
-  return data || {};
+  return fetch(`${API_REST_URL}/projects/${id}`, requestOptions);
+}
+
+export async function createProject(token: string, body: any) {
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+    body: JSON.stringify(body),
+  };
+
+  return fetch(`${API_REST_URL}/projects`, requestOptions);
+}
+
+export async function updateProject(token: string, body: any) {
+  const requestOptions = {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+    body: JSON.stringify(body),
+  };
+
+  return fetch(`${API_REST_URL}/projects/${body.id}`, requestOptions);
+}
+
+export async function updateProjectMembers(token: string, body: any) {
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+    body: JSON.stringify(body),
+  };
+
+  return fetch(`${API_REST_URL}/projects/${body.id}/members`, requestOptions);
+}
+
+export async function removeProjectMember(token: string, body: any) {
+  const requestOptions = {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+  };
+
+  return fetch(`${API_REST_URL}/projects/${body.id}/members/${body.memberId}`, requestOptions);
+}
+
+export async function leaveProject(token: string, id: string) {
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+  };
+
+  return fetch(`${API_REST_URL}/projects/${id}/members/leave`, requestOptions);
+}
+
+export async function getBugs(token: string, projectId: string | string[]) {
+  const requestOptions = {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+  };
+
+  return fetch(`${API_REST_URL}/projects/${projectId}/bugs`, requestOptions);
+}
+
+export async function createBug(token: string, projectId: string | string[], payload: IBugPayload) {
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+    body: JSON.stringify(payload),
+  };
+
+  return fetch(`${API_REST_URL}/projects/${projectId}/bugs`, requestOptions);
+}
+
+export async function deleteBug(
+  token: string,
+  projectId: string | string[],
+  id: string | string[]
+) {
+  const requestOptions = {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+  };
+
+  return fetch(`${API_REST_URL}/projects/${projectId}/bugs/${id}`, requestOptions);
+}
+
+export async function updateBug(
+  token: string,
+  projectId: string | string[],
+  id: string | string[],
+  payload: IBugPayload
+) {
+  const requestOptions = {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+    body: JSON.stringify(payload),
+  };
+
+  return fetch(`${API_REST_URL}/projects/${projectId}/bugs/${id}`, requestOptions);
+}
+
+export async function closeBug(token: string, projectId: string | string[], id: string | string[]) {
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+  };
+
+  return fetch(`${API_REST_URL}/projects/${projectId}/bugs/${id}/close`, requestOptions);
+}
+
+export async function reopenBug(
+  token: string,
+  projectId: string | string[],
+  id: string | string[]
+) {
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+  };
+
+  return fetch(`${API_REST_URL}/projects/${projectId}/bugs/${id}/reopen`, requestOptions);
+}
+
+export async function getUsers(token: string) {
+  const requestOptions = {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+  };
+
+  return fetch(`${API_REST_URL}/users`, requestOptions);
+}
+
+export async function getUserById(token: string, id: string) {
+  const requestOptions = {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+  };
+
+  return fetch(`${API_REST_URL}/users/${id}`, requestOptions);
+}
+
+export async function updateUserById(token: string, id: string, payload: IUser) {
+  const requestOptions = {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+    body: JSON.stringify(payload),
+  };
+
+  return fetch(`${API_REST_URL}/users/${id}`, requestOptions);
 }

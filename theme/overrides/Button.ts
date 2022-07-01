@@ -3,7 +3,6 @@ export default function Button(theme) {
     MuiButton: {
       styleOverrides: {
         root: {
-          border: '2px solid',
           '&:hover': {
             boxShadow: 'none',
           },
@@ -20,15 +19,15 @@ export default function Button(theme) {
         },
         containedPrimary: {
           '&:hover': {
-            color: theme.palette.success.main,
-            backgroundColor: theme.palette.primary.main,
+            backgroundColor: theme.palette.primary.light,
           },
         },
         containedSecondary: {
-          color: theme.palette.grey[500],
+          border: '1px solid lightgray',
+          color: theme.palette.grey[900],
           backgroundColor: 'white',
           '&:hover': {
-            color: theme.palette.grey[500],
+            color: theme.palette.grey[900],
             backgroundColor: 'white',
           },
         },

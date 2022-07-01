@@ -7,6 +7,7 @@ import ErrorLayout from '../layouts/ErrorLayout/ErrorLayout';
 const Page505 = function Page505() {
   return (
     <Container>
+      {/* @ts-ignore */}
       <MotionContainer initial="initial" open>
         <Box sx={{ maxWidth: 480, margin: 'auto', textAlign: 'center' }}>
           <motion.div variants={varBounceIn}>

@@ -2,9 +2,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { accountActions } from '../../redux/actions';
+import { AppState } from '../../redux/reducers';
 
 const useForgotPasswordFormController = () => {
-  const requestingPassword = useSelector((state) => state.forgotPassword.requestingPassword);
+  const requestingPassword = useSelector(
+    (state: AppState) => state.forgotPassword.requestingPassword
+  );
   const dispatch = useDispatch();
 
   const validationSchema = Yup.object().shape({

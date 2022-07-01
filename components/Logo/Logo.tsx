@@ -22,6 +22,7 @@ interface Props {
 }
 
 const Logo: FC<Props> = function Logo({ sx = null }) {
+  // @ts-ignore
   return <BoxStyle component="img" src="/static/logo.png" sx={{ ...sx }} />;
 };
 

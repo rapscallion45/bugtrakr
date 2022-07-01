@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import { FC } from 'react';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Page from '../../components/Page/Page';
@@ -29,7 +29,11 @@ const HeaderStyle = styled('header')(({ theme }) => ({
   },
 }));
 
-function AuthLayout({ children }) {
+interface AuthLayoutProps {
+  children?: any;
+}
+
+const AuthLayout: FC<AuthLayoutProps> = function AuthLayout({ children }) {
   useNotifier();
 
   return (
@@ -44,10 +48,6 @@ function AuthLayout({ children }) {
       {children}
     </RootStyle>
   );
-}
-
-AuthLayout.propTypes = {
-  children: PropTypes.node,
 };
 
 export default AuthLayout;

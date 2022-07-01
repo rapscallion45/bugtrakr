@@ -1,4 +1,5 @@
 import { handleResponse } from '../../utils';
+import { IAccount } from '../types/types';
 
 function authenticate() {
   const requestOptions = {
@@ -67,7 +68,7 @@ function register(user: IAccount) {
   return fetch(`/api/register`, requestOptions).then(handleResponse);
 }
 
-function verifyEmail(token: string) {
+function verifyEmail(token: string | string[]) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -97,7 +98,7 @@ function resetPassword(token: string, password: string) {
   return fetch(`/api/reset-password`, requestOptions).then(handleResponse);
 }
 
-function validateResetToken(token: string) {
+function validateResetToken(token: string | string[]) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

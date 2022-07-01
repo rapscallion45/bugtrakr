@@ -1,6 +1,5 @@
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { useSelector } from 'react-redux';
-import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -14,8 +13,11 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import Page from '../../components/Page/Page';
 import DashboardLayout from '../../layouts/DashboardLayout/DashboardLayout';
 import UserProfileForm from '../../components/UserProfileForm/UserProfileForm';
+import UserMembershipForm from '../../components/UserMembershipForm/UserMembershipForm';
+import UserBillingForm from '../../components/UserBillingForm/UserBillingForm';
 import ChangePasswordRequestForm from '../../components/ChangePasswordRequestForm/ChangePasswordRequestForm';
 import Loader from '../../components/Loader/Loader';
+import { AppState } from '../../redux/reducers';
 
 const TabStyle = styled(Tab)({
   display: 'flex',
@@ -23,7 +25,17 @@ const TabStyle = styled(Tab)({
   minHeight: '60px',
 });
 
-const MyAccountTabPanel = function MyAccountTabPanel({ children, value, index }) {
+interface MyAccountTabPanelProps {
+  children?: any;
+  value?: number;
+  index?: number;
+}
+
+const MyAccountTabPanel: FC<MyAccountTabPanelProps> = function MyAccountTabPanel({
+  children,
+  value,
+  index,
+}) {
   return (
     <div
       role="tabpanel"
@@ -36,14 +48,8 @@ const MyAccountTabPanel = function MyAccountTabPanel({ children, value, index })
   );
 };
 
-MyAccountTabPanel.propTypes = {
-  children: PropTypes.node.isRequired,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-};
-
 const MyAccount = function MyAccount() {
-  const account = useSelector((state) => state.account);
+  const account = useSelector((state: AppState) => state.account);
   const [tabValue, setTabValue] = useState(0);
   const dataLoading = account.loading;
   const dataLoaded = account.loaded;
@@ -97,10 +103,10 @@ const MyAccount = function MyAccount() {
         <UserProfileForm />
       </MyAccountTabPanel>
       <MyAccountTabPanel value={tabValue} index={1}>
-        <UserProfileForm />
+        <UserMembershipForm />
       </MyAccountTabPanel>
       <MyAccountTabPanel value={tabValue} index={2}>
-        <UserProfileForm />
+        <UserBillingForm />
       </MyAccountTabPanel>
       <MyAccountTabPanel value={tabValue} index={3}>
         <ChangePasswordRequestForm />

@@ -35,6 +35,7 @@ export const NextLinkComposed: FC<NextLinkComposedProps> = forwardRef((props, re
       passHref
       locale={locale}
     >
+      {/* @ts-ignore */}
       <Anchor ref={ref} {...other} />
     </NextLink>
   );
@@ -48,6 +49,8 @@ interface LinkProps {
   linkAs?: any;
   noLinkStyle?: boolean;
   role?: string;
+  // All other props
+  [x: string]: any;
 }
 
 // A styled version of the Next.js Link component:
@@ -64,6 +67,7 @@ const Link: FC<LinkProps> = forwardRef((props, ref) => {
   } = props;
 
   const router = useRouter();
+  // @ts-ignore
   const pathname = typeof href === 'string' ? href : href.pathname;
   const className = clsx(classNameProps, {
     [activeClassName]: router.pathname === pathname && activeClassName,
@@ -74,13 +78,16 @@ const Link: FC<LinkProps> = forwardRef((props, ref) => {
 
   if (isExternal) {
     if (noLinkStyle) {
+      // @ts-ignore
       return <Anchor className={className} href={href} ref={ref} {...other} />;
     }
 
+    // @ts-ignore
     return <MuiLink className={className} href={href} ref={ref} {...other} />;
   }
 
   if (noLinkStyle) {
+    // @ts-ignore
     return <NextLinkComposed className={className} ref={ref} to={href} {...other} />;
   }
 
@@ -89,6 +96,7 @@ const Link: FC<LinkProps> = forwardRef((props, ref) => {
       component={NextLinkComposed}
       linkAs={linkAs}
       className={className}
+      // @ts-ignore
       ref={ref}
       to={href}
       {...other}

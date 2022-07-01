@@ -3,20 +3,14 @@
  */
 import { rest } from 'msw';
 import acountMock from './accountMock';
+import userMock from './userMock';
+import usersDataMock from './usersDataMock';
 
 const serverMockHandlers = [
   /* Test/mock user authentication route */
   rest.post('/api/authenticate', async (req, res, ctx) =>
     /* No need to test auth cookie, assume auth cookie present */
-    res(
-      ctx.status(200),
-      ctx.json({
-        id: acountMock.id,
-        email: acountMock.email,
-        firstName: acountMock.firstName,
-        lastName: acountMock.lastName,
-      })
-    )
+    res(ctx.status(200), ctx.json(userMock))
   ),
   /* Test/mock login route */
   rest.post('/api/login', async (req, res, ctx) => {
@@ -44,9 +38,17 @@ const serverMockHandlers = [
     res(
       ctx.status(200),
       ctx.json({
-        data: {
-          acountMock,
-        },
+        data: usersDataMock,
+      })
+    )
+  ),
+  /* Test/mock Account data route */
+  rest.get('/api/users', async (req, res, ctx) =>
+    /* No need to test auth cookie, assume auth cookie present */
+    res(
+      ctx.status(200),
+      ctx.json({
+        data: usersDataMock,
       })
     )
   ),
