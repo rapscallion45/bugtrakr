@@ -94,6 +94,56 @@ function bugs(state: any = {}, action: any) {
         updating: false,
         error: action.error,
       };
+    case bugConstants.CLOSE_REQUEST:
+      return {
+        ...state,
+        closing: true,
+      };
+    case bugConstants.CLOSE_SUCCESS:
+      return {
+        ...state,
+        closing: false,
+        data: state.data.map((b: IBugState) => {
+          if (b.id === action.bugId) {
+            return {
+              ...b,
+              isResolved: true,
+            };
+          }
+          return b;
+        }),
+      };
+    case bugConstants.CLOSE_FAILURE:
+      return {
+        ...state,
+        closing: false,
+        error: action.error,
+      };
+    case bugConstants.REOPEN_REQUEST:
+      return {
+        ...state,
+        reopening: true,
+      };
+    case bugConstants.REOPEN_SUCCESS:
+      return {
+        ...state,
+        reopening: false,
+        data: state.data.map((b: IBugState) => {
+          if (b.id === action.bugId) {
+            return {
+              ...b,
+              isResolved: false,
+            };
+          }
+          return b;
+        }),
+      };
+    case bugConstants.REOPEN_FAILURE:
+      return {
+        ...state,
+        reopening: false,
+        error: action.error,
+      };
     default:
       return state;
   }

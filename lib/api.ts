@@ -175,6 +175,28 @@ export async function updateBug(
   return fetch(`${API_REST_URL}/projects/${projectId}/bugs/${id}`, requestOptions);
 }
 
+export async function closeBug(token: string, projectId: string | string[], id: string | string[]) {
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+  };
+
+  return fetch(`${API_REST_URL}/projects/${projectId}/bugs/${id}/close`, requestOptions);
+}
+
+export async function reopenBug(
+  token: string,
+  projectId: string | string[],
+  id: string | string[]
+) {
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+  };
+
+  return fetch(`${API_REST_URL}/projects/${projectId}/bugs/${id}/reopen`, requestOptions);
+}
+
 export async function getUsers(token: string) {
   const requestOptions = {
     method: 'GET',

@@ -49,11 +49,31 @@ function updateBugNotes(projectId: string | string[], id: string, members: strin
   return fetch(`/api/projects/${projectId}/bug-notes`, requestOptions).then(handleResponse);
 }
 
+function closeBug(projectId: string | string[], id: string) {
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+  };
+
+  return fetch(`/api/projects/${projectId}/bugs/${id}/close`, requestOptions).then(handleResponse);
+}
+
+function reopenBug(projectId: string | string[], id: string) {
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+  };
+
+  return fetch(`/api/projects/${projectId}/bugs/${id}/reopen`, requestOptions).then(handleResponse);
+}
+
 const bugService = {
   getBug,
   deleteBug,
   createBug,
   updateBug,
   updateBugNotes,
+  closeBug,
+  reopenBug,
 };
 export default bugService;

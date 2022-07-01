@@ -46,6 +46,14 @@ const ActionsPopover: FC<BugsMenuProps> = function ActionsPopover({
     setAnchorEl(null);
   };
 
+  const handleBugClose = (id: string, closeDialog: () => void) => {
+    dispatch(bugActions.closeBug(projectId, id, closeDialog));
+  };
+
+  const handleBugReopen = (id: string, closeDialog: () => void) => {
+    dispatch(bugActions.reopenBug(projectId, id, closeDialog));
+  };
+
   const handleDelete = (id: string, closeDialog: () => void) => {
     dispatch(bugActions.deleteBug(projectId, id, closeDialog));
   };
@@ -100,7 +108,6 @@ const ActionsPopover: FC<BugsMenuProps> = function ActionsPopover({
         >
           <BugForm isEditMode projectId={projectId} currentData={currentData} bugId={bugId} />
         </FormDialog>
-
         {isResolved ? (
           <ConfirmDialog
             title="Confirm Reopen Bug"
@@ -114,7 +121,7 @@ const ActionsPopover: FC<BugsMenuProps> = function ActionsPopover({
               closeMenu: handleCloseMenu,
             }}
             processing={reopening}
-            actionFunc={(closeDialog) => handleDelete(bugId, closeDialog)}
+            actionFunc={(closeDialog) => handleBugReopen(bugId, closeDialog)}
           />
         ) : (
           <ConfirmDialog
@@ -129,7 +136,7 @@ const ActionsPopover: FC<BugsMenuProps> = function ActionsPopover({
               closeMenu: handleCloseMenu,
             }}
             processing={closing}
-            actionFunc={(closeDialog) => handleDelete(bugId, closeDialog)}
+            actionFunc={(closeDialog) => handleBugClose(bugId, closeDialog)}
           />
         )}
         <ConfirmDialog

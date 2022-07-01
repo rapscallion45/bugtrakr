@@ -205,11 +205,101 @@ function updateBugNotes(projectId: string, id: string, members: string[], closeD
   };
 }
 
+function closeBug(projectId: string | string[], id: string, closeDialog: () => void) {
+  function request(bugId: string) {
+    return { type: bugConstants.CLOSE_REQUEST, bugId };
+  }
+  function success(bugId: string) {
+    return { type: bugConstants.CLOSE_SUCCESS, bugId };
+  }
+  function failure(bugId: string, error: string) {
+    return { type: bugConstants.CLOSE_FAILURE, bugId, error };
+  }
+
+  return (dispatch) => {
+    dispatch(request(id));
+
+    bugService.closeBug(projectId, id).then(
+      () => {
+        dispatch(success(id));
+        if (closeDialog) closeDialog();
+        dispatch(
+          alertActions.enqueueSnackbar({
+            message: 'Bug closed.',
+            options: {
+              key: new Date().getTime() + Math.random(),
+              variant: 'success',
+            },
+          })
+        );
+      },
+      (error) => {
+        dispatch(failure(id, error.toString()));
+        dispatch(
+          alertActions.enqueueSnackbar({
+            message: error.toString(),
+            options: {
+              key: new Date().getTime() + Math.random(),
+              variant: 'error',
+            },
+          })
+        );
+      }
+    );
+  };
+}
+
+function reopenBug(projectId: string | string[], id: string, closeDialog: () => void) {
+  function request(bugId: string) {
+    return { type: bugConstants.REOPEN_REQUEST, bugId };
+  }
+  function success(bugId: string) {
+    return { type: bugConstants.REOPEN_SUCCESS, bugId };
+  }
+  function failure(bugId: string, error: string) {
+    return { type: bugConstants.REOPEN_FAILURE, bugId, error };
+  }
+
+  return (dispatch) => {
+    dispatch(request(id));
+
+    bugService.reopenBug(projectId, id).then(
+      () => {
+        dispatch(success(id));
+        if (closeDialog) closeDialog();
+        dispatch(
+          alertActions.enqueueSnackbar({
+            message: 'Bug reopened.',
+            options: {
+              key: new Date().getTime() + Math.random(),
+              variant: 'success',
+            },
+          })
+        );
+      },
+      (error) => {
+        dispatch(failure(id, error.toString()));
+        dispatch(
+          alertActions.enqueueSnackbar({
+            message: error.toString(),
+            options: {
+              key: new Date().getTime() + Math.random(),
+              variant: 'error',
+            },
+          })
+        );
+      }
+    );
+  };
+}
+
 const bugActions = {
   getBugs,
   createBug,
   deleteBug,
   updateBug,
   updateBugNotes,
+  closeBug,
+  reopenBug,
 };
 export default bugActions;
