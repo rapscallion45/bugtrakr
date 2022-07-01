@@ -46,7 +46,17 @@ function updateProjectMembers(id: string, members: string[]) {
     body: JSON.stringify({ id, members }),
   };
 
-  return fetch(`/api/project-members`, requestOptions).then(handleResponse);
+  return fetch(`/api/projects/${id}/members`, requestOptions).then(handleResponse);
+}
+
+function removeProjectMember(id: string, memberId: string) {
+  const requestOptions = {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id, memberId }),
+  };
+
+  return fetch(`/api/projects/${id}/members`, requestOptions).then(handleResponse);
 }
 
 function leaveProject(id: string) {
@@ -65,6 +75,7 @@ const projectService = {
   createProject,
   updateProject,
   updateProjectMembers,
+  removeProjectMember,
   leaveProject,
 };
 export default projectService;

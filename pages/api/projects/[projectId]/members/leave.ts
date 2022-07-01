@@ -1,7 +1,8 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
 import cookie from 'cookie';
 import { leaveProject } from '../../../../../lib/api';
 
-export default async function leave(req, res) {
+export default async function leave(req: NextApiRequest, res: NextApiResponse) {
   /* get req params */
   const { method, body } = req;
   const cookies = cookie.parse(req.headers.cookie);

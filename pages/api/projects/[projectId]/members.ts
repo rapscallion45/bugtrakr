@@ -1,7 +1,8 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
 import cookie from 'cookie';
-import { updateProjectMembers } from '../../lib/api';
+import { updateProjectMembers, removeProjectMember } from '../../../../lib/api';
 
-export default async function projectMembers(req, res) {
+export default async function projectMembers(req: NextApiRequest, res: NextApiResponse) {
   /* get req params */
   const { body, method } = req;
   const cookies = cookie.parse(req.headers.cookie);
@@ -27,6 +28,29 @@ export default async function projectMembers(req, res) {
           return res.status(200).json(data);
         }
         return res.status(400).json({ message: data.message });
+      } catch (error) {
+        return res.status(501).json({
+          message: 'Oops, something went wrong with the request.',
+          error,
+        });
+      }
+    case 'DELETE':
+      /* call api */
+      try {
+        if (!body.id || !body.memberId) {
+          /* no project and/or member ID provided, return error */
+          return res
+            .status(422)
+            .json({ message: 'Unproccesable request, no project or user ID provided.' });
+        }
+
+        const response = await removeProjectMember(authToken, body);
+
+        /* send back server response */
+        if (response.status === 204) {
+          return res.status(200).json({ message: 'User removed from project.' });
+        }
+        return res.status(400).json({ message: 'Failed to remove user from project.' });
       } catch (error) {
         return res.status(501).json({
           message: 'Oops, something went wrong with the request.',

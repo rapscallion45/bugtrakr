@@ -39,7 +39,7 @@ const ProjectMenu: FC<ProjectsMenuProps> = function ProjectMenu({
     setAnchorEl(null);
   };
 
-  const handleDelete = (id, closeDialog) => {
+  const handleDelete = (id: string, closeDialog: () => void) => {
     dispatch(projectActions.deleteProject(id, closeDialog));
   };
 

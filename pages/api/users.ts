@@ -1,7 +1,8 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
 import cookie from 'cookie';
 import { getUsers } from '../../lib/api';
 
-export default async function users(req, res) {
+export default async function users(req: NextApiRequest, res: NextApiResponse) {
   /* get req params */
   const { method } = req;
   const cookies = cookie.parse(req.headers.cookie);

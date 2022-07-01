@@ -201,6 +201,50 @@ function updateProjectMembers(id: string, members: string[], closeDialog: () => 
   };
 }
 
+function removeProjectMember(id: string, memberId: string, closeDialog: () => void) {
+  function request() {
+    return { type: projectConstants.REMOVEMEMBER_REQUEST };
+  }
+  function success(projectId: string, projectMemberId: string) {
+    return { type: projectConstants.REMOVEMEMBER_SUCCESS, projectId, projectMemberId };
+  }
+  function failure(error: string) {
+    return { type: projectConstants.REMOVEMEMBER_FAILURE, error };
+  }
+
+  return (dispatch) => {
+    dispatch(request());
+
+    projectService.removeProjectMember(id, memberId).then(
+      () => {
+        dispatch(success(id, memberId));
+        if (closeDialog) closeDialog();
+        dispatch(
+          alertActions.enqueueSnackbar({
+            message: `Project member removed.`,
+            options: {
+              key: new Date().getTime() + Math.random(),
+              variant: 'success',
+            },
+          })
+        );
+      },
+      (error) => {
+        dispatch(failure(error.toString()));
+        dispatch(
+          alertActions.enqueueSnackbar({
+            message: error.toString(),
+            options: {
+              key: new Date().getTime() + Math.random(),
+              variant: 'error',
+            },
+          })
+        );
+      }
+    );
+  };
+}
+
 function leaveProject(id: string, closeDialog: () => void) {
   function request() {
     return { type: projectConstants.LEAVE_REQUEST };
@@ -252,6 +296,7 @@ const accountActions = {
   deleteProject,
   updateProject,
   updateProjectMembers,
+  removeProjectMember,
   leaveProject,
 };
 export default accountActions;

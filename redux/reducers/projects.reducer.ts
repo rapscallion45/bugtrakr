@@ -92,6 +92,31 @@ function projects(state: ProjectState = {}, action: ProjectAction) {
         updating: false,
         error: action.error,
       };
+    case projectConstants.REMOVEMEMBER_REQUEST:
+      return {
+        ...state,
+        removing: true,
+      };
+    case projectConstants.REMOVEMEMBER_SUCCESS:
+      return {
+        ...state,
+        removing: false,
+        data: state.data.map((p: ProjectState) => {
+          if (p.id === action.projectId) {
+            return {
+              ...p,
+              members: p.members?.filter((m) => m.member.id !== action.projectMemberId),
+            };
+          }
+          return p;
+        }),
+      };
+    case projectConstants.REMOVEMEMBER_FAILURE:
+      return {
+        ...state,
+        removing: false,
+        error: action.error,
+      };
     case projectConstants.LEAVE_REQUEST:
       return {
         ...state,

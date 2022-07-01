@@ -37,7 +37,7 @@ const MembersTable: FC<MembersTableProps> = function MembersTable({ members, adm
   const isAdmin = adminId === user?.id;
 
   const handleRemoveUser = (memberId: string, closeDialog: () => void) => {
-    dispatch(projectActions.removeMember(projectId, memberId, closeDialog));
+    dispatch(projectActions.removeProjectMember(projectId, memberId, closeDialog));
   };
 
   return (
@@ -53,7 +53,7 @@ const MembersTable: FC<MembersTableProps> = function MembersTable({ members, adm
             {isAdmin && <TableCell align="center">Remove</TableCell>}
           </TableRow>
         </TableHead>
-        {members.length !== 0 && (
+        {members && members.length !== 0 && (
           <TableBody>
             {members.map((m) => (
               <TableRowStyle key={m.id}>

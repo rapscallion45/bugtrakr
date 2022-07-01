@@ -29,54 +29,55 @@ const MembersTableMobile: FC<MembersTableMobileProps> = function MembersTableMob
   const { removing } = useSelector((state) => state.projects);
   const isAdmin = adminId === user?.id;
 
-  const handleRemoveUser = (id: string, closeDialog: () => void) => {
-    dispatch(projectActions.removeMember(projectId, memberId, closeDialog));
+  const handleRemoveUser = (memberId: string, closeDialog: () => void) => {
+    dispatch(projectActions.removeProjectMember(projectId, memberId, closeDialog));
   };
 
   return (
     <Box pb={14}>
       <Divider />
-      {members.map((m, i) => (
-        <div key={m.id} style={{ paddingBottom: i + 1 === members.length ? '2em' : 0 }}>
-          <Box sx={{ padding: '0.4em 0.3em' }}>
-            <Box display="flex" alignItems="center">
-              <Box sx={{ flexGrow: 1, textDecoration: 'none' }}>
-                <Typography variant="h4" color="text.primary">
-                  {m.member.username} {m.member.id === user?.id && '(You)'}
-                </Typography>
-              </Box>
-              {isAdmin && (
-                <Box>
-                  {m.member.id === user?.id ? (
-                    <BlockIcon color="secondary" fontSize="large" />
-                  ) : (
-                    <ConfirmDialog
-                      title="Confirm Remove User"
-                      contentText={`Are you sure you want to remove ${m.member.username} from the project?`}
-                      actionBtnText="Remove User"
-                      triggerBtn={{
-                        type: 'icon',
-                        iconSize: 'large',
-                        icon: HighlightOffIcon,
-                        size: 'small',
-                      }}
-                      processing={removing}
-                      actionFunc={(closeDialog) => handleRemoveUser(m.member.id, closeDialog)}
-                    />
-                  )}
+      {members.length !== 0 &&
+        members.map((m, i) => (
+          <div key={m.id} style={{ paddingBottom: i + 1 === members.length ? '2em' : 0 }}>
+            <Box sx={{ padding: '0.4em 0.3em' }}>
+              <Box display="flex" alignItems="center">
+                <Box sx={{ flexGrow: 1, textDecoration: 'none' }}>
+                  <Typography variant="h4" color="text.primary">
+                    {m.member.username} {m.member.id === user?.id && '(You)'}
+                  </Typography>
                 </Box>
-              )}
+                {isAdmin && (
+                  <Box>
+                    {m.member.id === user?.id ? (
+                      <BlockIcon color="secondary" fontSize="large" />
+                    ) : (
+                      <ConfirmDialog
+                        title="Confirm Remove User"
+                        contentText={`Are you sure you want to remove ${m.member.username} from the project?`}
+                        actionBtnText="Remove User"
+                        triggerBtn={{
+                          type: 'icon',
+                          iconSize: 'large',
+                          icon: HighlightOffIcon,
+                          size: 'small',
+                        }}
+                        processing={removing}
+                        actionFunc={(closeDialog) => handleRemoveUser(m.member.id, closeDialog)}
+                      />
+                    )}
+                  </Box>
+                )}
+              </Box>
+              <Typography variant="body2" color="text.primary">
+                Role: <strong>{m.member.id === adminId ? 'Admin' : 'Member'}</strong>
+              </Typography>
+              <Typography variant="body2" color="text.primary">
+                Joined: <strong>{formatDateInWords(m.joinedAt)}</strong>
+              </Typography>
             </Box>
-            <Typography variant="body2" color="text.primary">
-              Role: <strong>{m.member.id === adminId ? 'Admin' : 'Member'}</strong>
-            </Typography>
-            <Typography variant="body2" color="text.primary">
-              Joined: <strong>{formatDateInWords(m.joinedAt)}</strong>
-            </Typography>
-          </Box>
-          <Divider />
-        </div>
-      ))}
+            <Divider />
+          </div>
+        ))}
       {isAdmin && (
         <HideOnScroll>
           <Box position="fixed" sx={{ bottom: '100px', right: '25px', maxWidth: '170px' }}>

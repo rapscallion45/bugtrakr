@@ -87,9 +87,9 @@ const ProjectDetails = function ProjectDetails() {
 
   useEffect(() => {
     dispatch(bugActions.getBugs(projectData?.id));
-  }, [projectData]);
+  }, []);
 
-  const handleTabChange = (event, newValue) => {
+  const handleTabChange = (e: any, newValue: number) => {
     setTab(newValue);
   };
 
@@ -97,7 +97,7 @@ const ProjectDetails = function ProjectDetails() {
     dispatch(projectActions.leaveProject(id.toString(), closeDialog));
   };
 
-  const a11yProps = (index) => ({
+  const a11yProps = (index: string) => ({
     id: `full-width-tab-${index}`,
     'aria-controls': `full-width-tabpanel-${index}`,
   });
