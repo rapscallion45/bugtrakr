@@ -97,6 +97,10 @@ const ProjectDetails = function ProjectDetails() {
     dispatch(projectActions.leaveProject(id.toString(), closeDialog));
   };
 
+  const handleDeleteProject = (closeDialog: () => void) => {
+    dispatch(projectActions.deleteProject(id.toString(), closeDialog));
+  };
+
   const a11yProps = (index: string) => ({
     id: `full-width-tab-${index}`,
     'aria-controls': `full-width-tabpanel-${index}`,
@@ -151,7 +155,7 @@ const ProjectDetails = function ProjectDetails() {
                       color: 'inherit',
                     }}
                     processing={leaving}
-                    actionFunc={(closeDialog) => handleLeaveProject(closeDialog)}
+                    actionFunc={(closeDialog) => handleDeleteProject(closeDialog)}
                   />
                   <ProjectMenu
                     projectId={projectData?.id}
