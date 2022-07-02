@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { Chip, Divider, Grid } from '@mui/material';
-// import { useTheme } from '@mui/material/styles';
+import { Chip, Divider, Grid, useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
@@ -30,8 +30,8 @@ const BugDetails = function BugDetails() {
   const dispatch = useDispatch();
   const router = useRouter();
   const { id } = router.query;
-  // const theme = useTheme();
-  // const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { user } = useSelector((state: AppState) => state.authentication);
   const {
     loading: projectsLoading,
@@ -142,25 +142,33 @@ const BugDetails = function BugDetails() {
               <strong>{bugData?.description}</strong>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Box display="flex" alignItems="center" py={1}>
-                <Typography mr={1} variant="body1">
-                  Priority:
-                </Typography>
-                <Chip
-                  label={bugData?.priority.toUpperCase()}
-                  color={getBugPriorityColor(bugData?.priority)}
-                  sx={{ fontWeight: 'bold' }}
-                />
-              </Box>
-              <Box display="flex" alignItems="center" py={1}>
-                <Typography mr={1} variant="body1">
-                  Status:
-                </Typography>
-                <Chip
-                  label={bugData?.isResolved ? 'Closed' : 'Open'}
-                  color={bugData?.isResolved ? 'secondary' : 'info'}
-                />
-              </Box>
+              <Grid container spacing={1}>
+                <Grid item xs={6} sm={3} md={12}>
+                  <Box display="flex" alignItems="center" py={1}>
+                    <Typography mr={1} variant="body1">
+                      Priority:
+                    </Typography>
+                    <Chip
+                      label={bugData?.priority.toUpperCase()}
+                      color={getBugPriorityColor(bugData?.priority)}
+                      sx={{ fontWeight: 'bold' }}
+                      size={isMobile ? 'small' : 'medium'}
+                    />
+                  </Box>
+                </Grid>
+                <Grid item xs={6} sm={3} md={12}>
+                  <Box display="flex" alignItems="center" py={1}>
+                    <Typography mr={1} variant="body1">
+                      Status:
+                    </Typography>
+                    <Chip
+                      label={bugData?.isResolved ? 'Closed' : 'Open'}
+                      color={bugData?.isResolved ? 'secondary' : 'info'}
+                      size={isMobile ? 'small' : 'medium'}
+                    />
+                  </Box>
+                </Grid>
+              </Grid>
               <Typography pt={1} variant="body1">
                 Opened by: <span style={{ fontWeight: 'bold' }}>{bugData?.createdBy.username}</span>
               </Typography>
