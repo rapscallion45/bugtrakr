@@ -1,3 +1,5 @@
+// @ts-ignore
+import { router } from 'next/router';
 import { bugConstants } from '../constants';
 import { bugService } from '../services';
 import { IBugPayload } from '../types/types';
@@ -42,6 +44,7 @@ function deleteBug(projectId: string | string[], id: string, closeDialog: () => 
       () => {
         dispatch(success(id));
         if (closeDialog) closeDialog();
+        router.push(`/dashboard/projects/${projectId}`);
         dispatch(
           alertActions.enqueueSnackbar({
             message: 'Bug deleted successfully.',

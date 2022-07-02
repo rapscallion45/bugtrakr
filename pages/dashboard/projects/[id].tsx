@@ -73,6 +73,7 @@ const ProjectDetails = function ProjectDetails() {
   const { user } = useSelector((state: AppState) => state.authentication);
   const {
     leaving,
+    deleting,
     loading: projectsLoading,
     loaded: projectsLoaded,
     error: projectsError,
@@ -149,14 +150,14 @@ const ProjectDetails = function ProjectDetails() {
                 <Box display="flex" justifyContent="center" alignItems="center">
                   <ConfirmDialog
                     title="Confirm Delete Project"
-                    contentText={`Are you sure you want to delete project "${projectData?.name}"?`}
+                    contentText={`Are you sure you want to permanently delete project "${projectData?.name}"?`}
                     actionBtnText="Delete"
                     triggerBtn={{
                       type: 'icon',
                       icon: DeleteIcon,
                       color: 'inherit',
                     }}
-                    processing={leaving}
+                    processing={deleting}
                     actionFunc={(closeDialog) => handleDeleteProject(closeDialog)}
                   />
                   <ProjectMenu
