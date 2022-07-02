@@ -9,6 +9,7 @@ import Breadcrumbs from '@mui/material/Breadcrumbs';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AppsIcon from '@mui/icons-material/Apps';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import Page from '../../../components/Page/Page';
 import DashboardLayout from '../../../layouts/DashboardLayout/DashboardLayout';
 import Loader from '../../../components/Loader/Loader';
@@ -19,7 +20,8 @@ import FormDialog from '../../../components/FormDialog/FormDialog';
 import ConfirmDialog from '../../../components/ConfirmDialog/ConfirmDialog';
 // import NoteForm from '../../../components/NoteForm/NoteForm';
 import Link from '../../../components/Link/Link';
-// import BugMenu from '../../../components/NoteMenu/NoteMenu';
+import BugMenu from '../../../components/BugMenu/BugMenu';
+import BugForm from '../../../components/BugForm/BugForm';
 import { bugActions } from '../../../redux/actions';
 import { AppState } from '../../../redux/reducers';
 import { formatDateTime, getBugPriorityColor } from '../../../utils';
@@ -97,14 +99,45 @@ const BugDetails = function BugDetails() {
                   processing={deleting}
                   actionFunc={(closeDialog) => handleDeleteBug(closeDialog)}
                 />
-                {/* <BugMenu bugId={bugData?.id} currentName={bugData?.title} /> */}
+                <BugMenu
+                  bugId={bugData?.id}
+                  projectId={projectData?.id}
+                  currentData={{
+                    title: bugData?.title,
+                    description: bugData?.description,
+                    priority: bugData?.priority,
+                  }}
+                />
               </Box>
             </Box>
           </Box>
           <Divider />
           <Grid container spacing={4} pt={2}>
             <Grid item xs={12} md={6}>
-              Description:
+              <Box display="flex" alignItems="center">
+                <Typography mr={1} variant="body1">
+                  Description:
+                </Typography>
+                <FormDialog
+                  triggerBtn={{
+                    type: 'icon',
+                    icon: EditOutlinedIcon,
+                    color: 'inherit',
+                  }}
+                  title="Edit Bug Info"
+                >
+                  <BugForm
+                    isEditMode
+                    projectId={bugData?.projectId}
+                    currentData={{
+                      title: bugData?.title,
+                      description: bugData?.description,
+                      priority: bugData?.priority,
+                    }}
+                    bugId={bugData?.id}
+                  />
+                </FormDialog>
+              </Box>
               <br />
               <strong>{bugData?.description}</strong>
             </Grid>
