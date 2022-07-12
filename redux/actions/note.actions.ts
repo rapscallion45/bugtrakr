@@ -1,5 +1,6 @@
 import { noteConstants } from '../constants';
 import { noteService } from '../services';
+import { INote } from '../types/types';
 import alertActions from './alert.actions';
 
 function deleteNote(
@@ -60,7 +61,7 @@ function createNote(
   function request(bugID: string | string[]) {
     return { type: noteConstants.CREATE_REQUEST, bugID };
   }
-  function success(bugID: string | string[], data: any) {
+  function success(bugID: string | string[], data: INote) {
     return { type: noteConstants.CREATE_SUCCESS, bugID, data };
   }
   function failure(bugID: string | string[], error: string) {
@@ -110,7 +111,7 @@ function updateNote(
   function request(bugID: string | string[]) {
     return { type: noteConstants.UPDATE_REQUEST, bugID };
   }
-  function success(bugID: string | string[], data: any) {
+  function success(bugID: string | string[], data: INote) {
     return { type: noteConstants.UPDATE_SUCCESS, bugID, data };
   }
   function failure(bugID: string | string[], error: string) {

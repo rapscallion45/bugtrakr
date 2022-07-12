@@ -246,10 +246,11 @@ function bugs(state: any = {}, action: any) {
             return {
               ...b,
               notes: b.notes.map((n: INote) => {
-                if (n.id === action.noteId) {
+                if (n.id === action.data.id) {
                   return {
                     ...n,
-                    body: action.data.body ? action.data.body : n.body,
+                    body: action.data.body,
+                    updatedAt: action.data.updatedAt,
                   };
                 }
                 return n;

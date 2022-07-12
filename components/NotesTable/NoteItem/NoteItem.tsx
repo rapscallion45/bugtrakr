@@ -49,16 +49,16 @@ const NoteItem: FC<NoteItemProps> = function NoteItem({
           <>
             <Typography variant="caption">{formatTimeAgo(note?.createdAt)} ago</Typography>
             {note?.updatedAt !== note?.createdAt && (
-              <Typography color="secondary" variant="caption">
+              <Typography variant="caption">
                 {' '}
-                • updated <em>{formatTimeAgo(note?.updatedAt)} ago</em>
+                • edited <em>{formatTimeAgo(note?.updatedAt)} ago</em>
               </Typography>
             )}
           </>
         }
       />
       <CardContent>
-        <Typography variant="body2" color="text.secondary" sx={{ overflow: 'hidden' }}>
+        <Typography variant="body1" sx={{ overflow: 'hidden' }}>
           {note?.body}
         </Typography>
       </CardContent>

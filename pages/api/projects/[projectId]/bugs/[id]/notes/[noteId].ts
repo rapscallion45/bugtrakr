@@ -43,11 +43,11 @@ export default async function notes(req: NextApiRequest, res: NextApiResponse) {
 
       /* call api */
       try {
-        const response = await updateNote(authToken, query.projectId, query.id, body);
+        const response = await updateNote(authToken, query.projectId, query.noteId, body);
         const data = await response.json();
 
         /* send back server response */
-        if (response.status === 201) {
+        if (response.status === 200) {
           return res.status(200).json(data);
         }
         return res.status(400).json({ message: data.message });
