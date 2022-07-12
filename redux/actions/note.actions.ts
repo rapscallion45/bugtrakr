@@ -57,22 +57,22 @@ function createNote(
   payload: string,
   closeDialog: () => void
 ) {
-  function request() {
-    return { type: noteConstants.CREATE_REQUEST };
+  function request(bugID: string | string[]) {
+    return { type: noteConstants.CREATE_REQUEST, bugID };
   }
-  function success(data: any) {
-    return { type: noteConstants.CREATE_SUCCESS, data };
+  function success(bugID: string | string[], data: any) {
+    return { type: noteConstants.CREATE_SUCCESS, bugID, data };
   }
-  function failure(error: string) {
-    return { type: noteConstants.CREATE_FAILURE, error };
+  function failure(bugID: string | string[], error: string) {
+    return { type: noteConstants.CREATE_FAILURE, bugID, error };
   }
 
   return (dispatch) => {
-    dispatch(request());
+    dispatch(request(bugId));
 
     noteService.createNote(projectId, bugId, payload).then(
       (data) => {
-        dispatch(success(data));
+        dispatch(success(bugId, data));
         if (closeDialog) closeDialog();
         dispatch(
           alertActions.enqueueSnackbar({
@@ -85,7 +85,7 @@ function createNote(
         );
       },
       (error) => {
-        dispatch(failure(error.toString()));
+        dispatch(failure(bugId, error.toString()));
         dispatch(
           alertActions.enqueueSnackbar({
             message: error.toString(),
@@ -107,22 +107,22 @@ function updateNote(
   payload: string,
   closeDialog: () => void
 ) {
-  function request() {
-    return { type: noteConstants.UPDATE_REQUEST };
+  function request(bugID: string | string[]) {
+    return { type: noteConstants.UPDATE_REQUEST, bugID };
   }
-  function success(data: any) {
-    return { type: noteConstants.UPDATE_SUCCESS, data };
+  function success(bugID: string | string[], data: any) {
+    return { type: noteConstants.UPDATE_SUCCESS, bugID, data };
   }
-  function failure(error: string) {
-    return { type: noteConstants.UPDATE_FAILURE, error };
+  function failure(bugID: string | string[], error: string) {
+    return { type: noteConstants.UPDATE_FAILURE, bugID, error };
   }
 
   return (dispatch) => {
-    dispatch(request());
+    dispatch(request(bugId));
 
     noteService.updateNote(projectId, bugId, id, payload).then(
       (data) => {
-        dispatch(success(data));
+        dispatch(success(bugId, data));
         if (closeDialog) closeDialog();
         dispatch(
           alertActions.enqueueSnackbar({
@@ -135,7 +135,7 @@ function updateNote(
         );
       },
       (error) => {
-        dispatch(failure(error.toString()));
+        dispatch(failure(bugId, error.toString()));
         dispatch(
           alertActions.enqueueSnackbar({
             message: error.toString(),

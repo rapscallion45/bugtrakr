@@ -206,7 +206,7 @@ export async function createNote(
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
-    body: payload,
+    body: JSON.stringify({ body: payload }),
   };
 
   return fetch(`${API_REST_URL}/projects/${projectId}/bugs/${bugId}/notes`, requestOptions);
@@ -234,7 +234,7 @@ export async function updateNote(
   const requestOptions = {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
-    body: payload,
+    body: JSON.stringify({ body: payload }),
   };
 
   return fetch(`${API_REST_URL}/projects/${projectId}/notes/${id}`, requestOptions);

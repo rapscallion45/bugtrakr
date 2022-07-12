@@ -15,7 +15,7 @@ function createNote(projectId: string | string[], bugId: string | string[], payl
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: payload,
+    body: JSON.stringify(payload),
   };
 
   return fetch(`/api/projects/${projectId}/bugs/${bugId}/notes`, requestOptions).then(
@@ -32,7 +32,7 @@ function updateNote(
   const requestOptions = {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: payload,
+    body: JSON.stringify(payload),
   };
 
   return fetch(`/api/projects/${projectId}/bugs/${bugId}/notes/${id}`, requestOptions).then(

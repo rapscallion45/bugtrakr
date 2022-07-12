@@ -51,7 +51,6 @@ function bugs(state: any = {}, action: any) {
         error: action.error,
       };
     case bugConstants.UPDATE_REQUEST:
-    case bugConstants.UPDATENOTES_REQUEST:
       return {
         ...state,
         updating: true,
@@ -89,7 +88,6 @@ function bugs(state: any = {}, action: any) {
         }),
       };
     case bugConstants.UPDATE_FAILURE:
-    case bugConstants.UPDATENOTES_FAILURE:
       return {
         ...state,
         updating: false,
@@ -189,45 +187,92 @@ function bugs(state: any = {}, action: any) {
     case noteConstants.CREATE_REQUEST:
       return {
         ...state,
-        creating: true,
+        data: state.data.map((b: IBugState) => {
+          if (b.id === action.bugID) {
+            return {
+              ...b,
+              creatingNote: true,
+            };
+          }
+          return b;
+        }),
       };
     case noteConstants.CREATE_SUCCESS:
       return {
         ...state,
-        creating: false,
-        data: state.data.concat(action.data),
+        data: state.data.map((b: IBugState) => {
+          if (b.id === action.bugID) {
+            return {
+              ...b,
+              notes: b.notes.concat(action.data),
+              creatingNote: false,
+            };
+          }
+          return b;
+        }),
       };
     case noteConstants.CREATE_FAILURE:
       return {
         ...state,
-        creating: false,
-        error: action.error,
+        data: state.data.map((b: IBugState) => {
+          if (b.id === action.bugID) {
+            return {
+              ...b,
+              creatingNote: false,
+              error: action.error,
+            };
+          }
+          return b;
+        }),
       };
     case noteConstants.UPDATE_REQUEST:
       return {
         ...state,
-        updating: true,
+        data: state.data.map((b: IBugState) => {
+          if (b.id === action.bugID) {
+            return {
+              ...b,
+              updatingNote: true,
+            };
+          }
+          return b;
+        }),
       };
     case noteConstants.UPDATE_SUCCESS:
       return {
         ...state,
-        updating: false,
-        data: state.data.map((n: INote) => {
-          if (n.id === action.data.id) {
+        data: state.data.map((b: IBugState) => {
+          if (b.id === action.bugID) {
             return {
-              ...n,
-              body: action.data.body ? action.data.body : n.body,
-              updatedAt: action.data.updatedAt,
+              ...b,
+              notes: b.notes.map((n: INote) => {
+                if (n.id === action.noteId) {
+                  return {
+                    ...n,
+                    body: action.data.body ? action.data.body : n.body,
+                  };
+                }
+                return n;
+              }),
+              updatingNote: false,
             };
           }
-          return n;
+          return b;
         }),
       };
     case noteConstants.UPDATE_FAILURE:
       return {
         ...state,
-        updating: false,
-        error: action.error,
+        data: state.data.map((b: IBugState) => {
+          if (b.id === action.bugID) {
+            return {
+              ...b,
+              updatingNote: false,
+              error: action.error,
+            };
+          }
+          return b;
+        }),
       };
     default:
       return state;
