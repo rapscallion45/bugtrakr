@@ -44,8 +44,6 @@ export interface IUserState {
   token: string;
 }
 
-export type BugPriority = 'low' | 'medium' | 'high';
-
 export interface IUser {
   id: string;
   username: string;
@@ -54,14 +52,14 @@ export interface IUser {
 export interface IProjectMember {
   id: number;
   joinedAt: Date;
-  member: User;
+  member: IUser;
 }
 
 export interface INote {
   id: number;
   bugId: string;
   body: string;
-  author: User;
+  author: IUser;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -69,12 +67,14 @@ export interface INote {
 export interface IProjectState {
   id: string;
   name: string;
-  members: ProjectMember[];
+  members: IProjectMember[];
   bugs: Array<{ id: string }>;
-  createdBy: User;
+  createdBy: IUser;
   createdAt: Date;
   updatedAt: Date;
 }
+
+export type BugPriority = 'low' | 'medium' | 'high';
 
 export interface IBugState {
   id: string;
@@ -84,10 +84,10 @@ export interface IBugState {
   priority: BugPriority;
   notes: INote[];
   isResolved: boolean;
-  createdBy: User;
-  updatedBy?: User;
-  closedBy?: User;
-  reopenedBy?: User;
+  createdBy: IUser;
+  updatedBy?: IUser;
+  closedBy?: IUser;
+  reopenedBy?: IUser;
   closedAt?: Date;
   reopenedAt?: Date;
   updatedAt?: Date;
@@ -137,13 +137,13 @@ export interface IBugPayload {
 
 export interface IEditedBugData extends IBugPayload {
   updatedAt: Date;
-  updatedBy: User;
+  updatedBy: IUser;
 }
 
 export interface IClosedReopenedBugData {
   isResolved: boolean;
   closedAt: Date;
-  closedBy: User;
+  closedBy: IUser;
   reopenedAt: Date;
-  reopenedBy: User;
+  reopenedBy: IUser;
 }

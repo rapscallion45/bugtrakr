@@ -1,5 +1,5 @@
-import { bugConstants } from '../constants';
-import { IBugState } from '../types/types';
+import { bugConstants, noteConstants } from '../constants';
+import { IBugState, INote } from '../types/types';
 
 function bugs(state: any = {}, action: any) {
   switch (action.type) {
@@ -51,7 +51,6 @@ function bugs(state: any = {}, action: any) {
         error: action.error,
       };
     case bugConstants.UPDATE_REQUEST:
-    case bugConstants.UPDATENOTES_REQUEST:
       return {
         ...state,
         updating: true,
@@ -89,7 +88,6 @@ function bugs(state: any = {}, action: any) {
         }),
       };
     case bugConstants.UPDATE_FAILURE:
-    case bugConstants.UPDATENOTES_FAILURE:
       return {
         ...state,
         updating: false,
@@ -144,6 +142,138 @@ function bugs(state: any = {}, action: any) {
         ...state,
         reopening: false,
         error: action.error,
+      };
+    case noteConstants.DELETE_REQUEST:
+      return {
+        ...state,
+        data: state.data.map((b: IBugState) => {
+          if (b.id === action.bugID) {
+            return {
+              ...b,
+              deletingNote: true,
+            };
+          }
+          return b;
+        }),
+      };
+    case noteConstants.DELETE_SUCCESS:
+      return {
+        ...state,
+        data: state.data.map((b: IBugState) => {
+          if (b.id === action.bugID) {
+            return {
+              ...b,
+              notes: b.notes.filter((n) => n.id !== action.noteId),
+              deletingNote: false,
+            };
+          }
+          return b;
+        }),
+      };
+    case noteConstants.DELETE_FAILURE:
+      return {
+        ...state,
+        data: state.data.map((b: IBugState) => {
+          if (b.id === action.bugID) {
+            return {
+              ...b,
+              deletingNote: false,
+              error: action.error,
+            };
+          }
+          return b;
+        }),
+      };
+    case noteConstants.CREATE_REQUEST:
+      return {
+        ...state,
+        data: state.data.map((b: IBugState) => {
+          if (b.id === action.bugID) {
+            return {
+              ...b,
+              creatingNote: true,
+            };
+          }
+          return b;
+        }),
+      };
+    case noteConstants.CREATE_SUCCESS:
+      return {
+        ...state,
+        data: state.data.map((b: IBugState) => {
+          if (b.id === action.bugID) {
+            return {
+              ...b,
+              notes: b.notes.concat(action.data),
+              creatingNote: false,
+            };
+          }
+          return b;
+        }),
+      };
+    case noteConstants.CREATE_FAILURE:
+      return {
+        ...state,
+        data: state.data.map((b: IBugState) => {
+          if (b.id === action.bugID) {
+            return {
+              ...b,
+              creatingNote: false,
+              error: action.error,
+            };
+          }
+          return b;
+        }),
+      };
+    case noteConstants.UPDATE_REQUEST:
+      return {
+        ...state,
+        data: state.data.map((b: IBugState) => {
+          if (b.id === action.bugID) {
+            return {
+              ...b,
+              updatingNote: true,
+            };
+          }
+          return b;
+        }),
+      };
+    case noteConstants.UPDATE_SUCCESS:
+      return {
+        ...state,
+        data: state.data.map((b: IBugState) => {
+          if (b.id === action.bugID) {
+            return {
+              ...b,
+              notes: b.notes.map((n: INote) => {
+                if (n.id === action.data.id) {
+                  return {
+                    ...n,
+                    body: action.data.body,
+                    updatedAt: action.data.updatedAt,
+                  };
+                }
+                return n;
+              }),
+              updatingNote: false,
+            };
+          }
+          return b;
+        }),
+      };
+    case noteConstants.UPDATE_FAILURE:
+      return {
+        ...state,
+        data: state.data.map((b: IBugState) => {
+          if (b.id === action.bugID) {
+            return {
+              ...b,
+              updatingNote: false,
+              error: action.error,
+            };
+          }
+          return b;
+        }),
       };
     default:
       return state;

@@ -16,6 +16,7 @@ import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import GroupIcon from '@mui/icons-material/Group';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import AppsIcon from '@mui/icons-material/Apps';
+import BugReportIcon from '@mui/icons-material/BugReport';
 import Page from '../../../components/Page/Page';
 import DashboardLayout from '../../../layouts/DashboardLayout/DashboardLayout';
 import Loader from '../../../components/Loader/Loader';
@@ -73,6 +74,7 @@ const ProjectDetails = function ProjectDetails() {
   const { user } = useSelector((state: AppState) => state.authentication);
   const {
     leaving,
+    deleting,
     loading: projectsLoading,
     loaded: projectsLoaded,
     error: projectsError,
@@ -149,14 +151,14 @@ const ProjectDetails = function ProjectDetails() {
                 <Box display="flex" justifyContent="center" alignItems="center">
                   <ConfirmDialog
                     title="Confirm Delete Project"
-                    contentText={`Are you sure you want to delete project "${projectData?.name}"?`}
+                    contentText={`Are you sure you want to permanently delete project "${projectData?.name}"?`}
                     actionBtnText="Delete"
                     triggerBtn={{
                       type: 'icon',
                       icon: DeleteIcon,
                       color: 'inherit',
                     }}
-                    processing={leaving}
+                    processing={deleting}
                     actionFunc={(closeDialog) => handleDeleteProject(closeDialog)}
                   />
                   <ProjectMenu
@@ -212,6 +214,7 @@ const ProjectDetails = function ProjectDetails() {
           </Box>
           <ProjectTabPanel value={tab} index={0}>
             <Box display="flex" sx={{ pt: 2, pb: 5 }}>
+              <BugReportIcon fontSize="large" style={{ marginRight: '0.2em' }} />
               <Typography variant="h4">Bug List</Typography>
               <MHidden width="smDown">
                 <Box display="flex" justifyContent="end" sx={{ flexGrow: 1 }}>
@@ -233,6 +236,7 @@ const ProjectDetails = function ProjectDetails() {
           </ProjectTabPanel>
           <ProjectTabPanel value={tab} index={1}>
             <Box display="flex" sx={{ pt: 2, pb: 5 }}>
+              <GroupIcon fontSize="large" style={{ marginRight: '0.2em' }} />
               <Typography variant="h4">Users List</Typography>
               {isAdmin && (
                 <MHidden width="smDown">

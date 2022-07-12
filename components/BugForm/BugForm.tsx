@@ -63,7 +63,7 @@ const BugForm: React.FC<BugFormProps> = function BugForm({
       <TextField
         fullWidth
         multiline
-        rows={1}
+        rows={10}
         variant="outlined"
         margin="normal"
         id="description"
