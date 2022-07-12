@@ -48,9 +48,9 @@ export default async function notes(req: NextApiRequest, res: NextApiResponse) {
 
         /* send back server response */
         if (response.status === 204) {
-          return res.status(200).json({ message: 'Bug deleted.' });
+          return res.status(200).json({ message: 'Note deleted.' });
         }
-        return res.status(400).json({ message: 'Failed to delete bug.' });
+        return res.status(400).json({ message: 'Failed to delete note.' });
       } catch (error) {
         return res.status(501).json({
           message: 'Oops, something went wrong with the request.',
