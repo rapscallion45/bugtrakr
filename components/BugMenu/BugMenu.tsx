@@ -10,6 +10,7 @@ import MenuPopover from '../MenuPopover/MenuPopover';
 import ConfirmDialog from '../ConfirmDialog/ConfirmDialog';
 import FormDialog from '../FormDialog/FormDialog';
 import BugForm from '../BugForm/BugForm';
+import NoteForm from '../NoteForm/NoteForm';
 import { bugActions } from '../../redux/actions';
 import { AppState } from '../../redux/reducers';
 import { IBugPayload } from '../../redux/types/types';
@@ -82,12 +83,7 @@ const BugMenu: FC<BugMenuProps> = function BugMenu({ bugId, projectId, currentDa
           }}
           title="Add Note to Bug"
         >
-          {/* <NoteForm
-            editMode="members"
-            projectId={projectId}
-            currentName={currentName}
-            currentMembers={currentMembers}
-          /> */}
+          <NoteForm isEditMode={false} projectId={projectId} bugId={bugId} />
         </FormDialog>
         <ConfirmDialog
           title="Confirm Delete Bug"

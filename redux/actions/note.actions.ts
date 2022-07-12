@@ -48,7 +48,7 @@ function deleteNote(projectId: string | string[], id: number, closeDialog: () =>
 
 function createNote(
   projectId: string | string[],
-  noteId: string | string[],
+  bugId: string | string[],
   payload: string,
   closeDialog: () => void
 ) {
@@ -65,7 +65,7 @@ function createNote(
   return (dispatch) => {
     dispatch(request());
 
-    noteService.createNote(projectId, noteId, payload).then(
+    noteService.createNote(projectId, bugId, payload).then(
       (data) => {
         dispatch(success(data));
         if (closeDialog) closeDialog();

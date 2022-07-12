@@ -9,7 +9,7 @@ import { Button, Box, IconButton } from '@mui/material';
 import MenuPopover from '../../../MenuPopover/MenuPopover';
 import ConfirmDialog from '../../../ConfirmDialog/ConfirmDialog';
 import FormDialog from '../../../FormDialog/FormDialog';
-// import NoteForm from '../../../NoteForm/NoteForm';
+import NoteForm from '../../../NoteForm/NoteForm';
 import { noteActions } from '../../../../redux/actions';
 import { AppState } from '../../../../redux/reducers';
 import { INote } from '../../../../redux/types/types';
@@ -82,13 +82,13 @@ const ActionsPopover: FC<ActionsPopoverProps> = function ActionsPopover({
               }}
               title="Edit Note"
             >
-              {/* <NoteForm
-                isEditMode={true}
+              <NoteForm
+                isEditMode
                 projectId={projectId}
                 bugId={bugId}
                 noteId={note?.id}
                 currentBody={note?.body}
-              /> */}
+              />
             </FormDialog>
             <ConfirmDialog
               title="Confirm Delete Note"

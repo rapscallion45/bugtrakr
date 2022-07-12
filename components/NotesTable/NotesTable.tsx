@@ -5,6 +5,7 @@ import HideOnScroll from '../HideOnScroll/HideOnScroll';
 import MHidden from '../@MUI-Extended/MHidden';
 import FormDialog from '../FormDialog/FormDialog';
 import NoteItem from './NoteItem/NoteItem';
+import NoteForm from '../NoteForm/NoteForm';
 import { INote } from '../../redux/types/types';
 
 interface NotesTableProps {
@@ -37,7 +38,7 @@ const NotesTable: FC<NotesTableProps> = function NotesTable({
             }}
             title="Create New Note"
           >
-            {/* <NoteForm editMode={null} /> */}
+            <NoteForm isEditMode={false} projectId={projectId} bugId={bugId} />
           </FormDialog>
         </Box>
       )}
@@ -64,7 +65,7 @@ const NotesTable: FC<NotesTableProps> = function NotesTable({
               }}
               title="Add Note"
             >
-              {/* <NoteForm isEditMode={false} projectId={projectId} /> */}
+              <NoteForm isEditMode={false} projectId={projectId} bugId={bugId} />
             </FormDialog>
           </Box>
         </HideOnScroll>

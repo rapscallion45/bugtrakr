@@ -58,7 +58,7 @@ const NoteItem: FC<NoteItemProps> = function NoteItem({
         }
       />
       <CardContent>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" color="text.secondary" sx={{ overflow: 'hidden' }}>
           {note?.body}
         </Typography>
       </CardContent>

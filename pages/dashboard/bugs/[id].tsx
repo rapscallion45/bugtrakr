@@ -20,7 +20,7 @@ import SortBar from '../../../components/SortBar/SortBar';
 import MHidden from '../../../components/@MUI-Extended/MHidden';
 import FormDialog from '../../../components/FormDialog/FormDialog';
 import ConfirmDialog from '../../../components/ConfirmDialog/ConfirmDialog';
-// import NoteForm from '../../../components/NoteForm/NoteForm';
+import NoteForm from '../../../components/NoteForm/NoteForm';
 import Link from '../../../components/Link/Link';
 import BugMenu from '../../../components/BugMenu/BugMenu';
 import BugForm from '../../../components/BugForm/BugForm';
@@ -127,7 +127,7 @@ const BugDetails = function BugDetails() {
           </Box>
           <Divider />
           <Grid container spacing={4} pt={2}>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={6} sx={{ overflow: 'hidden' }}>
               <Box display="flex" alignItems="center">
                 <Typography mr={1} variant="body1">
                   Description:
@@ -215,12 +215,7 @@ const BugDetails = function BugDetails() {
                   }}
                   title="Add Note"
                 >
-                  {/* <NoteForm
-                      editMode="members"
-                      projectId={bugData?.id}
-                      currentMembers={bugData?.members.map((m) => m.member.id)}
-                      currentName={bugData?.name}
-                    /> */}
+                  <NoteForm isEditMode={false} projectId={projectData?.id} bugId={bugData?.id} />
                 </FormDialog>
               </Box>
             </MHidden>
