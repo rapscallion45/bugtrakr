@@ -8,4 +8,6 @@ export { default as handleResponseHeaders } from './handleResponseHeaders';
 export { default as truncateString } from './truncateString';
 export { default as formatDateTime } from './formatDateTime';
 export { default as formatDateInWords } from './formatDateInWords';
+export { default as formatTimeAgo } from './formatTimeAgo';
 export { default as getBugPriorityColor } from './getBugPriorityColor';
+export { default as sortNotes } from './sortNotes';

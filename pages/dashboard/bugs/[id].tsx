@@ -1,20 +1,22 @@
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { Chip, Divider, Grid, useMediaQuery } from '@mui/material';
+import { Chip, Divider, Grid, useMediaQuery, SelectChangeEvent } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
-import AddIcon from '@mui/icons-material/Add';
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AppsIcon from '@mui/icons-material/Apps';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
 import Page from '../../../components/Page/Page';
 import DashboardLayout from '../../../layouts/DashboardLayout/DashboardLayout';
 import Loader from '../../../components/Loader/Loader';
-// import NotesTable from '../../../components/NotesTable/NotesTable';
-// import NotesTableMobile from '../../../components/NotesTable/NotesTableMobile';
+import NotesTable from '../../../components/NotesTable/NotesTable';
+import SortBar from '../../../components/SortBar/SortBar';
 import MHidden from '../../../components/@MUI-Extended/MHidden';
 import FormDialog from '../../../components/FormDialog/FormDialog';
 import ConfirmDialog from '../../../components/ConfirmDialog/ConfirmDialog';
@@ -24,7 +26,14 @@ import BugMenu from '../../../components/BugMenu/BugMenu';
 import BugForm from '../../../components/BugForm/BugForm';
 import { bugActions } from '../../../redux/actions';
 import { AppState } from '../../../redux/reducers';
-import { formatDateTime, getBugPriorityColor } from '../../../utils';
+import { formatDateTime, getBugPriorityColor, sortNotes } from '../../../utils';
+import { NoteSortValues } from '../../../utils/sortNotes';
+
+const menuItems = [
+  { value: 'newest', label: 'Newest' },
+  { value: 'oldest', label: 'Oldest' },
+  { value: 'updated', label: 'Recently Updated' },
+];
 
 const BugDetails = function BugDetails() {
   const dispatch = useDispatch();
@@ -46,9 +55,14 @@ const BugDetails = function BugDetails() {
     error: bugsError,
     data: bugs,
   } = useSelector((state: AppState) => state.bugs);
+  const [sortBy, setSortBy] = useState<NoteSortValues>('newest');
   const bugData = bugs?.find((b) => b.id === id);
   const projectData = projects?.find((p) => p.id === bugData?.projectId);
-  const isAdmin = user.id === bugData?.createdBy.id;
+  const sortedNotes = sortNotes(bugData?.notes || [], sortBy);
+
+  const handleSortChange = (e: SelectChangeEvent) => {
+    setSortBy(e.target.value as NoteSortValues);
+  };
 
   const handleDeleteBug = (closeDialog: () => void) => {
     dispatch(bugActions.deleteBug(bugData.projectId, id.toString(), closeDialog));
@@ -189,43 +203,46 @@ const BugDetails = function BugDetails() {
           errorText="Failed to load bug details."
         >
           <Box display="flex" sx={{ pt: 2, pb: 5 }}>
+            <ForumOutlinedIcon fontSize="large" style={{ marginRight: '0.2em' }} />
             <Typography variant="h4">Notes List</Typography>
-            {isAdmin && (
-              <MHidden width="smDown">
-                <Box display="flex" justifyContent="end" sx={{ flexGrow: 1 }}>
-                  <FormDialog
-                    triggerBtn={{
-                      type: 'normal',
-                      icon: AddIcon,
-                      text: 'Add Note',
-                    }}
-                    title="Add Note"
-                  >
-                    {/* <NoteForm
+            <MHidden width="smDown">
+              <Box display="flex" justifyContent="end" sx={{ flexGrow: 1 }}>
+                <FormDialog
+                  triggerBtn={{
+                    type: 'normal',
+                    icon: NoteAddIcon,
+                    text: 'Add Note',
+                  }}
+                  title="Add Note"
+                >
+                  {/* <NoteForm
                       editMode="members"
                       projectId={bugData?.id}
                       currentMembers={bugData?.members.map((m) => m.member.id)}
                       currentName={bugData?.name}
                     /> */}
-                  </FormDialog>
-                </Box>
-              </MHidden>
-            )}
+                </FormDialog>
+              </Box>
+            </MHidden>
+            <Box pl={2} display="flex" justifyContent="end" sx={{ flexGrow: isMobile ? 1 : 0 }}>
+              <Box>
+                <SortBar
+                  sortBy={sortBy}
+                  handleSortChange={handleSortChange}
+                  menuItems={menuItems}
+                  label="Notes"
+                  size="small"
+                />
+              </Box>
+            </Box>
           </Box>
-          {/* {!isMobile ? (
-            <NotesTable
-              notes={bugData?.members}
-              projectId={bugData?.id}
-              adminId={bugData?.createdBy?.id}
-            />
-          ) : (
-            <NotesTableMobile
-              notes={bugData?.members}
-              projectId={bugData?.id}
-              projectName={bugData?.name}
-              adminId={bugData?.createdBy?.id}
-            />
-          )} */}
+          <NotesTable
+            notes={sortedNotes}
+            bugId={bugData?.id}
+            projectId={projectData?.id}
+            isAdmin={user?.id === projectData?.createdBy?.id}
+            isMobile={isMobile}
+          />
         </Loader>
       </Container>
     </Page>
