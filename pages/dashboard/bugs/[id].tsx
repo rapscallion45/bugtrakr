@@ -204,7 +204,7 @@ const BugDetails = function BugDetails() {
         >
           <Box display="flex" sx={{ pt: 2, pb: 5 }}>
             <ForumOutlinedIcon fontSize="large" style={{ marginRight: '0.2em' }} />
-            <Typography variant="h4">Notes List</Typography>
+            <Typography variant="h4">Notes</Typography>
             <MHidden width="smDown">
               <Box display="flex" justifyContent="end" sx={{ flexGrow: 1 }}>
                 <FormDialog
