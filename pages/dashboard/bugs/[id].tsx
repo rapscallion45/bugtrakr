@@ -220,7 +220,7 @@ const BugDetails = function BugDetails() {
               </Box>
             </MHidden>
             <Box pl={2} display="flex" justifyContent="end" sx={{ flexGrow: isMobile ? 1 : 0 }}>
-              <Box>
+              <Box sx={{ minWidth: '190px' }}>
                 <SortBar
                   sortBy={sortBy}
                   handleSortChange={handleSortChange}
