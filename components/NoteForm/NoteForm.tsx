@@ -19,7 +19,7 @@ const NoteForm: React.FC<NoteFormProps> = function NoteForm({
   isEditMode,
   currentBody,
 }) {
-  const { creating, updating, formik } = useNoteFormController(
+  const { creatingNote, updatingNote, formik } = useNoteFormController(
     noteId,
     projectId,
     bugId,
@@ -59,11 +59,11 @@ const NoteForm: React.FC<NoteFormProps> = function NoteForm({
           fullWidth
           variant="contained"
           color="primary"
-          disabled={creating}
+          disabled={creatingNote}
           sx={{ padding: '10px 0', marginTop: '20px' }}
         >
-          {!creating && 'Create Note'}
-          {creating && <CircularProgress size={25} color="inherit" />}
+          {!creatingNote && 'Create Note'}
+          {creatingNote && <CircularProgress size={25} color="inherit" />}
         </Button>
       ) : (
         <Button
@@ -71,11 +71,11 @@ const NoteForm: React.FC<NoteFormProps> = function NoteForm({
           fullWidth
           variant="contained"
           color="primary"
-          disabled={updating}
+          disabled={updatingNote}
           sx={{ padding: '10px 0', marginTop: '20px' }}
         >
-          {!updating && 'Submit'}
-          {updating && <CircularProgress size={25} color="inherit" />}
+          {!updatingNote && 'Submit'}
+          {updatingNote && <CircularProgress size={25} color="inherit" />}
         </Button>
       )}
     </form>

@@ -1,5 +1,5 @@
-import { bugConstants } from '../constants';
-import { IBugState } from '../types/types';
+import { bugConstants, noteConstants } from '../constants';
+import { IBugState, INote } from '../types/types';
 
 function bugs(state: any = {}, action: any) {
   switch (action.type) {
@@ -143,6 +143,90 @@ function bugs(state: any = {}, action: any) {
       return {
         ...state,
         reopening: false,
+        error: action.error,
+      };
+    case noteConstants.DELETE_REQUEST:
+      return {
+        ...state,
+        data: state.data.map((b: IBugState) => {
+          if (b.id === action.bugID) {
+            return {
+              ...b,
+              deletingNote: true,
+            };
+          }
+          return b;
+        }),
+      };
+    case noteConstants.DELETE_SUCCESS:
+      return {
+        ...state,
+        data: state.data.map((b: IBugState) => {
+          if (b.id === action.bugID) {
+            return {
+              ...b,
+              notes: b.notes.filter((n) => n.id !== action.noteId),
+              deletingNote: false,
+            };
+          }
+          return b;
+        }),
+      };
+    case noteConstants.DELETE_FAILURE:
+      return {
+        ...state,
+        data: state.data.map((b: IBugState) => {
+          if (b.id === action.bugID) {
+            return {
+              ...b,
+              deletingNote: false,
+              error: action.error,
+            };
+          }
+          return b;
+        }),
+      };
+    case noteConstants.CREATE_REQUEST:
+      return {
+        ...state,
+        creating: true,
+      };
+    case noteConstants.CREATE_SUCCESS:
+      return {
+        ...state,
+        creating: false,
+        data: state.data.concat(action.data),
+      };
+    case noteConstants.CREATE_FAILURE:
+      return {
+        ...state,
+        creating: false,
+        error: action.error,
+      };
+    case noteConstants.UPDATE_REQUEST:
+      return {
+        ...state,
+        updating: true,
+      };
+    case noteConstants.UPDATE_SUCCESS:
+      return {
+        ...state,
+        updating: false,
+        data: state.data.map((n: INote) => {
+          if (n.id === action.data.id) {
+            return {
+              ...n,
+              body: action.data.body ? action.data.body : n.body,
+              updatedAt: action.data.updatedAt,
+            };
+          }
+          return n;
+        }),
+      };
+    case noteConstants.UPDATE_FAILURE:
+      return {
+        ...state,
+        updating: false,
         error: action.error,
       };
     default:

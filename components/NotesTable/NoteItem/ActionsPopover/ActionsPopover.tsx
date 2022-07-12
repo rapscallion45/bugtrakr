@@ -32,7 +32,8 @@ const ActionsPopover: FC<ActionsPopoverProps> = function ActionsPopover({
   iconSize,
 }) {
   const dispatch = useDispatch();
-  const { deleting } = useSelector((state: AppState) => state.notes);
+  const { data: bugs } = useSelector((state: AppState) => state.bugs);
+  const { deletingNote } = bugs.find((b) => b.id === bugId);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -44,7 +45,7 @@ const ActionsPopover: FC<ActionsPopoverProps> = function ActionsPopover({
   };
 
   const handleDelete = (id: number, closeDialog: () => void) => {
-    if (bugId) dispatch(noteActions.deleteNote(projectId, id, closeDialog));
+    dispatch(noteActions.deleteNote(projectId, bugId, id, closeDialog));
   };
 
   return (
@@ -101,7 +102,7 @@ const ActionsPopover: FC<ActionsPopoverProps> = function ActionsPopover({
                 iconStyle: { marginRight: '10px' },
                 closeMenu: handleCloseMenu,
               }}
-              processing={deleting}
+              processing={deletingNote}
               actionFunc={(closeDialog) => handleDelete(note?.id, closeDialog)}
             />
           </>

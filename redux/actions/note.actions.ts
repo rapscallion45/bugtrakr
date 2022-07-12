@@ -2,27 +2,32 @@ import { noteConstants } from '../constants';
 import { noteService } from '../services';
 import alertActions from './alert.actions';
 
-function deleteNote(projectId: string | string[], id: number, closeDialog: () => void) {
-  function request(noteId: number) {
-    return { type: noteConstants.DELETE_REQUEST, noteId };
+function deleteNote(
+  projectId: string | string[],
+  bugId: string | string[],
+  id: number,
+  closeDialog: () => void
+) {
+  function request(bugID: string | string[], noteId: number) {
+    return { type: noteConstants.DELETE_REQUEST, bugID, noteId };
   }
-  function success(noteId: number) {
-    return { type: noteConstants.DELETE_SUCCESS, noteId };
+  function success(bugID: string | string[], noteId: number) {
+    return { type: noteConstants.DELETE_SUCCESS, bugID, noteId };
   }
-  function failure(error: string) {
-    return { type: noteConstants.DELETE_FAILURE, error };
+  function failure(bugID: string | string[], error: string) {
+    return { type: noteConstants.DELETE_FAILURE, bugID, error };
   }
 
   return (dispatch) => {
-    dispatch(request(id));
+    dispatch(request(bugId, id));
 
-    noteService.deleteNote(projectId, id).then(
+    noteService.deleteNote(projectId, bugId, id).then(
       () => {
-        dispatch(success(id));
+        dispatch(success(bugId, id));
         if (closeDialog) closeDialog();
         dispatch(
           alertActions.enqueueSnackbar({
-            message: 'Bug deleted successfully.',
+            message: 'Note deleted successfully.',
             options: {
               key: new Date().getTime() + Math.random(),
               variant: 'success',
@@ -31,7 +36,7 @@ function deleteNote(projectId: string | string[], id: number, closeDialog: () =>
         );
       },
       (error) => {
-        dispatch(failure(error.toString()));
+        dispatch(failure(bugId, error.toString()));
         dispatch(
           alertActions.enqueueSnackbar({
             message: error.toString(),
@@ -71,7 +76,7 @@ function createNote(
         if (closeDialog) closeDialog();
         dispatch(
           alertActions.enqueueSnackbar({
-            message: `Bug "${data.title}" created successfully.`,
+            message: `Note created successfully.`,
             options: {
               key: new Date().getTime() + Math.random(),
               variant: 'success',
@@ -97,6 +102,7 @@ function createNote(
 
 function updateNote(
   projectId: string | string[],
+  bugId: string | string[],
   id: number,
   payload: string,
   closeDialog: () => void
@@ -114,13 +120,13 @@ function updateNote(
   return (dispatch) => {
     dispatch(request());
 
-    noteService.updateNote(projectId, id, payload).then(
+    noteService.updateNote(projectId, bugId, id, payload).then(
       (data) => {
         dispatch(success(data));
         if (closeDialog) closeDialog();
         dispatch(
           alertActions.enqueueSnackbar({
-            message: `Bug updated.`,
+            message: `Note updated.`,
             options: {
               key: new Date().getTime() + Math.random(),
               variant: 'success',

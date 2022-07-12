@@ -13,7 +13,8 @@ const useNoteFormController = (
   closeDialog: () => void
 ) => {
   const dispatch = useDispatch();
-  const { creating, updating } = useSelector((state: AppState) => state.notes);
+  const { data: bugs } = useSelector((state: AppState) => state.bugs);
+  const { creatingNote, updatingNote } = bugs.find((b) => b.id === bugId);
 
   const validationSchema = Yup.object().shape({
     body: Yup.string().required('Bug description is required'),
@@ -21,7 +22,7 @@ const useNoteFormController = (
 
   const handleSubmit = (payload: string) => {
     if (isEditMode) {
-      dispatch(noteActions.updateNote(projectId, noteId, payload, closeDialog));
+      dispatch(noteActions.updateNote(projectId, bugId, noteId, payload, closeDialog));
     } else {
       dispatch(noteActions.createNote(projectId, bugId, payload, closeDialog));
     }
@@ -37,6 +38,6 @@ const useNoteFormController = (
     },
   });
 
-  return { creating, updating, formik };
+  return { creatingNote, updatingNote, formik };
 };
 export default useNoteFormController;
