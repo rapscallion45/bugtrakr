@@ -9,8 +9,8 @@ const RegisterController = () => {
   const registering = useSelector((state: AppState) => state.registration.registering);
 
   const validationSchema = Yup.object().shape({
-    first_name: Yup.string().required('First Name is required'),
-    last_name: Yup.string().required('Last Name is required'),
+    firstName: Yup.string().required('First Name is required'),
+    lastName: Yup.string().required('Last Name is required'),
     username: Yup.string().required('Username is required'),
     email: Yup.string().email('Email is invalid').required('Email is required'),
     password: Yup.string()
@@ -24,8 +24,8 @@ const RegisterController = () => {
 
   const formik = useFormik({
     initialValues: {
-      first_name: '',
-      last_name: '',
+      firstName: '',
+      lastName: '',
       username: '',
       email: '',
       password: '',

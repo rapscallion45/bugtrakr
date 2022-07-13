@@ -45,14 +45,14 @@ const RegisterForm: FC = function RegisterForm() {
               fullWidth
               variant="outlined"
               margin="normal"
-              id="first_name"
-              name="first_name"
+              id="firstName"
+              name="firstName"
               label="First Name"
-              type="first_name"
-              value={formik.values.first_name}
+              type="firstName"
+              value={formik.values.firstName}
               onChange={formik.handleChange}
-              error={formik.touched.first_name && Boolean(formik.errors.first_name)}
-              helperText={formik.touched.first_name && formik.errors.first_name}
+              error={formik.touched.firstName && Boolean(formik.errors.firstName)}
+              helperText={formik.touched.firstName && formik.errors.firstName}
               autoComplete="on"
             />
           </Grid>
@@ -61,14 +61,14 @@ const RegisterForm: FC = function RegisterForm() {
               fullWidth
               variant="outlined"
               margin="normal"
-              id="last_name"
-              name="last_name"
+              id="lastName"
+              name="lastName"
               label="Last Name"
-              type="last_name"
-              value={formik.values.last_name}
+              type="lastName"
+              value={formik.values.lastName}
               onChange={formik.handleChange}
-              error={formik.touched.last_name && Boolean(formik.errors.last_name)}
-              helperText={formik.touched.last_name && formik.errors.last_name}
+              error={formik.touched.lastName && Boolean(formik.errors.lastName)}
+              helperText={formik.touched.lastName && formik.errors.lastName}
               autoComplete="on"
             />
           </Grid>

@@ -29,7 +29,7 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
         username: data.username,
       });
     }
-    return res.status(401).json({ message: 'Login failed, please check your credentials' });
+    return res.status(401).json({ message: data.message });
   } catch (error) {
     return res.status(501).json({
       message: 'Oops, something went wrong with the request.',

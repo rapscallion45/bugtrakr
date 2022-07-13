@@ -34,7 +34,7 @@ export default async function demoLogin(req: NextApiRequest, res: NextApiRespons
         username,
       });
     }
-    return res.status(401).json({ message: 'Demo login unavailable.' });
+    return res.status(401).json({ message: 'Demo login unavailable at this time.' });
   } catch (error) {
     return res.status(501).json({
       message: 'Oops, something went wrong with the request.',
