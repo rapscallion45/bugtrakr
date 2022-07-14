@@ -28,6 +28,7 @@ function authentication(state: any = initialState, action: any) {
         ...state,
         authenticating: false,
         loggedIn: true,
+        demo: !ISSERVER && Boolean(localStorage.getItem('demoMode')),
       };
     case accountConstants.LOGIN_REQUEST:
     case accountConstants.LOGIN_GOOGLE_REQUEST:
@@ -51,6 +52,7 @@ function authentication(state: any = initialState, action: any) {
         user: action.userData,
       };
     case accountConstants.DEMO_LOGIN_SUCCESS:
+      if (!ISSERVER) localStorage.setItem('demoMode', 'yes');
       return {
         loggedIn: true,
         demo: true,
@@ -64,7 +66,7 @@ function authentication(state: any = initialState, action: any) {
     case accountConstants.LOGOUT:
       if (!ISSERVER) {
         localStorage.removeItem('user');
-        localStorage.removeItem('fplLogin');
+        localStorage.removeItem('demoMode');
       }
       return {};
     default:
