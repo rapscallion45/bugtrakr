@@ -2,6 +2,15 @@ import { IBugPayload, IUser } from '../redux/types/types';
 
 const { API_REST_URL } = process.env;
 
+export async function authenticateUser(token: string) {
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+  };
+
+  return fetch(`${API_REST_URL}/authenticate`, requestOptions);
+}
+
 export async function loginUser({ username, password }) {
   const requestOptions = {
     method: 'POST',
