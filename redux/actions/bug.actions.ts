@@ -26,6 +26,27 @@ function getBugs(projectId: string) {
   };
 }
 
+function getBugsByUser(userId: string) {
+  function request() {
+    return { type: bugConstants.GET_REQUEST };
+  }
+  function success(bugsData: any) {
+    return { type: bugConstants.GET_SUCCESS, bugsData };
+  }
+  function failure(error: string) {
+    return { type: bugConstants.GET_FAILURE, error };
+  }
+
+  return (dispatch) => {
+    dispatch(request());
+
+    bugService.getBugByUser(userId).then(
+      (bugs) => dispatch(success(bugs)),
+      (error) => dispatch(failure(error.toString()))
+    );
+  };
+}
+
 function deleteBug(projectId: string | string[], id: string, closeDialog: () => void) {
   function request(bugId: string) {
     return { type: bugConstants.DELETE_REQUEST, bugId };
@@ -298,6 +319,7 @@ function reopenBug(projectId: string | string[], id: string, closeDialog: () => 
 
 const bugActions = {
   getBugs,
+  getBugsByUser,
   createBug,
   deleteBug,
   updateBug,

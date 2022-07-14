@@ -37,10 +37,11 @@ const TableRowStyle = styled(TableRow)(({ theme }) => ({
 
 interface BugsTableProps {
   bugs: IBugState[];
-  projectId: string | string[];
+  projectId?: string | string[];
+  isMyBugs?: boolean;
 }
 
-const BugsTable: FC<BugsTableProps> = function BugsTable({ bugs, projectId }) {
+const BugsTable: FC<BugsTableProps> = function BugsTable({ bugs, projectId, isMyBugs }) {
   return (
     <Paper>
       <TableStyle>
@@ -91,7 +92,7 @@ const BugsTable: FC<BugsTableProps> = function BugsTable({ bugs, projectId }) {
                   currentData={{ title: b.title, description: b.description, priority: b.priority }}
                   isResolved={b.isResolved}
                   isMobile={false}
-                  projectId={projectId}
+                  projectId={b.projectId}
                 />
               </TableCell>
             </TableRowStyle>
@@ -103,16 +104,18 @@ const BugsTable: FC<BugsTableProps> = function BugsTable({ bugs, projectId }) {
           <Typography pb={1} variant="h6">
             No bugs to show.
           </Typography>
-          <FormDialog
-            triggerBtn={{
-              type: 'normal',
-              icon: AddIcon,
-              text: 'Create New Bug',
-            }}
-            title="Create New Bug"
-          >
-            <BugForm isEditMode={false} projectId={projectId} />
-          </FormDialog>
+          {!isMyBugs && (
+            <FormDialog
+              triggerBtn={{
+                type: 'normal',
+                icon: AddIcon,
+                text: 'Create New Bug',
+              }}
+              title="Create New Bug"
+            >
+              <BugForm isEditMode={false} projectId={projectId} />
+            </FormDialog>
+          )}
         </Box>
       )}
     </Paper>

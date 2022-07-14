@@ -12,10 +12,15 @@ import { IBugState } from '../../redux/types/types';
 
 interface BugsTableMobileProps {
   bugs: IBugState[];
-  projectId: string | string[];
+  projectId?: string | string[];
+  isMyBugs?: boolean;
 }
 
-const BugsTableMobile: FC<BugsTableMobileProps> = function BugsTableMobile({ bugs, projectId }) {
+const BugsTableMobile: FC<BugsTableMobileProps> = function BugsTableMobile({
+  bugs,
+  projectId,
+  isMyBugs,
+}) {
   return (
     <Box pb={14}>
       <Divider />
@@ -103,31 +108,35 @@ const BugsTableMobile: FC<BugsTableMobileProps> = function BugsTableMobile({ bug
           <Typography pb={1} variant="h6">
             No bugs to show.
           </Typography>
-          <FormDialog
-            triggerBtn={{
-              type: 'normal',
-              icon: AddIcon,
-              text: 'Create New Bug',
-            }}
-            title="Create New Bug"
-          >
-            <BugForm isEditMode={false} projectId={projectId} />
-          </FormDialog>
+          {isMyBugs && (
+            <FormDialog
+              triggerBtn={{
+                type: 'normal',
+                icon: AddIcon,
+                text: 'Create New Bug',
+              }}
+              title="Create New Bug"
+            >
+              <BugForm isEditMode={false} projectId={projectId} />
+            </FormDialog>
+          )}
         </Box>
       )}
-      <HideOnScroll>
-        <Box position="fixed" sx={{ bottom: '100px', right: '25px', maxWidth: '170px' }}>
-          <FormDialog
-            triggerBtn={{
-              type: 'fab',
-              icon: AddIcon,
-            }}
-            title="Create New Bug"
-          >
-            <BugForm isEditMode={false} projectId={projectId} />
-          </FormDialog>
-        </Box>
-      </HideOnScroll>
+      {!isMyBugs && (
+        <HideOnScroll>
+          <Box position="fixed" sx={{ bottom: '100px', right: '25px', maxWidth: '170px' }}>
+            <FormDialog
+              triggerBtn={{
+                type: 'fab',
+                icon: AddIcon,
+              }}
+              title="Create New Bug"
+            >
+              <BugForm isEditMode={false} projectId={projectId} />
+            </FormDialog>
+          </Box>
+        </HideOnScroll>
+      )}
     </Box>
   );
 };
