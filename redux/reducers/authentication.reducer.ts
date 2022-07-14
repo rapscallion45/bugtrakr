@@ -14,6 +14,7 @@ function authentication(state: any = { authenticating: true }, action: any) {
         ...state,
         authenticating: false,
         loggedIn: true,
+        user: action.userData,
         demo: !ISSERVER && Boolean(localStorage.getItem('demoMode')),
       };
     case accountConstants.LOGIN_REQUEST:

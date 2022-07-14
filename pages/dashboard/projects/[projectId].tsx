@@ -1,7 +1,7 @@
 import { FC, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { Divider, useMediaQuery } from '@mui/material';
+import { Divider, Skeleton, useMediaQuery } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -67,7 +67,7 @@ const ProjectTabPanel: FC<ProjectTabPanelProps> = function AssetStatisticsTabPan
 const ProjectDetails = function ProjectDetails() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { id } = router.query;
+  const { projectId } = router.query;
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [tab, setTab] = useState<number>(0);
@@ -86,23 +86,30 @@ const ProjectDetails = function ProjectDetails() {
     error: bugsError,
     data: bugs,
   } = useSelector((state: AppState) => state.bugs);
-  const projectData = projects?.find((project) => project.id === id);
+  const projectData = projects?.find((project) => project.id === projectId);
   const isAdmin = user.id === projectData?.createdBy.id;
 
   useEffect(() => {
-    dispatch(bugActions.getBugs(projectData?.id));
+    if (!projectsLoaded) dispatch(projectActions.getProjects());
   }, []);
+
+  useEffect(() => {
+    /* if user navigates direct to this page, ensure bug data laoded */
+    if (projectsLoaded && !bugsLoaded) {
+      dispatch(bugActions.getBugs(projectId));
+    }
+  }, [projects]);
 
   const handleTabChange = (e: any, newValue: number) => {
     setTab(newValue);
   };
 
   const handleLeaveProject = (closeDialog: () => void) => {
-    dispatch(projectActions.leaveProject(id.toString(), closeDialog));
+    dispatch(projectActions.leaveProject(projectId.toString(), closeDialog));
   };
 
   const handleDeleteProject = (closeDialog: () => void) => {
-    dispatch(projectActions.deleteProject(id.toString(), closeDialog));
+    dispatch(projectActions.deleteProject(projectId.toString(), closeDialog));
   };
 
   const a11yProps = (index: string) => ({
@@ -123,67 +130,90 @@ const ProjectDetails = function ProjectDetails() {
             <AppsIcon sx={{ mr: 0.5 }} fontSize="inherit" />
             All Projects
           </Link>
+
           <Typography
             sx={{ display: 'flex', alignItems: 'center', fontSize: '0.9rem' }}
             color="text.primary"
           >
-            {projectData?.name}
+            {projectsLoaded ? projectData?.name : <Skeleton width={100} />}
           </Typography>
         </Breadcrumbs>
         <Box display="flex" flexDirection="column" sx={{ pt: 2, pb: 5 }}>
           <Box display="flex" pb={1}>
-            <Typography variant="h3">{projectData?.name}</Typography>
-            <Box display="flex" justifyContent="end" sx={{ flexGrow: 1 }}>
-              {!isAdmin ? (
-                <ConfirmDialog
-                  title="Confirm Leave Project"
-                  contentText={`Are you sure you want to leave project "${projectData?.name}"?`}
-                  actionBtnText="Leave"
-                  triggerBtn={{
-                    type: isMobile ? 'fab' : 'normal',
-                    text: 'Leave Project',
-                    icon: ExitToAppIcon,
-                  }}
-                  processing={leaving}
-                  actionFunc={(closeDialog) => handleLeaveProject(closeDialog)}
-                />
-              ) : (
-                <Box display="flex" justifyContent="center" alignItems="center">
+            <Typography variant="h3">
+              {projectsLoaded ? projectData?.name : <Skeleton width={200} />}
+            </Typography>
+            {projectsLoaded ? (
+              <Box display="flex" justifyContent="end" sx={{ flexGrow: 1 }}>
+                {!isAdmin ? (
                   <ConfirmDialog
-                    title="Confirm Delete Project"
-                    contentText={`Are you sure you want to permanently delete project "${projectData?.name}"?`}
-                    actionBtnText="Delete"
+                    title="Confirm Leave Project"
+                    contentText={`Are you sure you want to leave project "${projectData?.name}"?`}
+                    actionBtnText="Leave"
                     triggerBtn={{
-                      type: 'icon',
-                      icon: DeleteIcon,
-                      color: 'inherit',
+                      type: isMobile ? 'fab' : 'normal',
+                      text: 'Leave Project',
+                      icon: ExitToAppIcon,
                     }}
-                    processing={deleting}
-                    actionFunc={(closeDialog) => handleDeleteProject(closeDialog)}
+                    processing={leaving}
+                    actionFunc={(closeDialog) => handleLeaveProject(closeDialog)}
                   />
-                  <ProjectMenu
-                    projectId={projectData?.id}
-                    currentName={projectData?.name}
-                    currentMembers={projectData?.members.map((m) => m.member.id)}
-                    isAdmin={isAdmin}
-                  />
-                </Box>
-              )}
-            </Box>
+                ) : (
+                  <Box display="flex" justifyContent="center" alignItems="center">
+                    <ConfirmDialog
+                      title="Confirm Delete Project"
+                      contentText={`Are you sure you want to permanently delete project "${projectData?.name}"?`}
+                      actionBtnText="Delete"
+                      triggerBtn={{
+                        type: 'icon',
+                        icon: DeleteIcon,
+                        color: 'inherit',
+                      }}
+                      processing={deleting}
+                      actionFunc={(closeDialog) => handleDeleteProject(closeDialog)}
+                    />
+                    <ProjectMenu
+                      projectId={projectData?.id}
+                      currentName={projectData?.name}
+                      currentMembers={projectData?.members.map((m) => m.member.id)}
+                      isAdmin={isAdmin}
+                    />
+                  </Box>
+                )}
+              </Box>
+            ) : (
+              <Box display="flex" justifyContent="end" sx={{ flexGrow: 1 }}>
+                <Skeleton
+                  variant="rectangular"
+                  width={80}
+                  height={35}
+                  sx={{ borderRadius: '8px' }}
+                />
+              </Box>
+            )}
           </Box>
           <Divider />
-          <Typography pt={1} variant="body1">
-            Admin: <span style={{ fontWeight: 'bold' }}>{projectData?.createdBy.username}</span>
-          </Typography>
-          <Typography variant="body1">
-            Created on:{' '}
-            <span style={{ fontWeight: 'bold' }}>
-              {formatDateTime(projectData?.createdAt || 0)}
-            </span>
-          </Typography>
+          {projectsLoaded ? (
+            <>
+              <Typography pt={1} variant="body1">
+                Admin: <span style={{ fontWeight: 'bold' }}>{projectData?.createdBy.username}</span>
+              </Typography>
+              <Typography variant="body1">
+                Created on:{' '}
+                <span style={{ fontWeight: 'bold' }}>
+                  {formatDateTime(projectData?.createdAt || 0)}
+                </span>
+              </Typography>
+            </>
+          ) : (
+            <>
+              <Skeleton width={230} />
+              <Skeleton width={230} />
+            </>
+          )}
         </Box>
         <Loader
-          dataLoading={projectsLoading || bugsLoading}
+          dataLoading={projectsLoading || bugsLoading || !projectsLoaded || !bugsLoaded}
           dataError={Boolean(projectsError) || Boolean(bugsError)}
           dataLoaded={projectsLoaded && bugsLoaded}
           loadingText="Fetching project data..."
@@ -231,8 +261,8 @@ const ProjectDetails = function ProjectDetails() {
                 </Box>
               </MHidden>
             </Box>
-            {!isMobile && <BugsTable bugs={bugs} projectId={id} />}
-            {isMobile && <BugsTableMobile bugs={bugs} projectId={id} />}
+            {!isMobile && <BugsTable bugs={bugs} projectId={projectId} />}
+            {isMobile && <BugsTableMobile bugs={bugs} projectId={projectId} />}
           </ProjectTabPanel>
           <ProjectTabPanel value={tab} index={1}>
             <Box display="flex" sx={{ pt: 2, pb: 5 }}>

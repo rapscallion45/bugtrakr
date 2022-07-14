@@ -5,7 +5,7 @@ import { bugService } from '../services';
 import { IBugPayload } from '../types/types';
 import alertActions from './alert.actions';
 
-function getBugs(projectId: string) {
+function getBugs(projectId: string | string[]) {
   function request() {
     return { type: bugConstants.GET_REQUEST };
   }

@@ -31,7 +31,7 @@ const BugsTableMobile: FC<BugsTableMobileProps> = function BugsTableMobile({
               <Box display="flex" alignItems="center">
                 <Box
                   component={Link}
-                  href={`/dashboard/bugs/${b.id}`}
+                  href={`/dashboard/projects/${b.projectId}/bugs/${b.id}`}
                   sx={{ flexGrow: 1, textDecoration: 'none' }}
                 >
                   <Typography variant="h4" color="text.primary">

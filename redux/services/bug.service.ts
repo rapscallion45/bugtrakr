@@ -1,7 +1,7 @@
 import { handleResponse } from '../../utils';
 import { IBugPayload } from '../types/types';
 
-function getBug(projectId: string) {
+function getBug(projectId: string | string[]) {
   const requestOptions = {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },

@@ -31,11 +31,9 @@ export default async function authenticate(req: NextApiRequest, res: NextApiResp
             }),
           ]);
 
-          return res.status(200).json({ success: true });
+          return res.status(200).json({ id: data?.id, username: data?.username });
         }
-        return res
-          .status(401)
-          .json({ success: false, message: 'Session expired, please login again' });
+        return res.status(401).json({ message: 'Session expired, please login again' });
       } catch (error) {
         return res.status(501).json({
           message: 'Oops, something went wrong with the request.',

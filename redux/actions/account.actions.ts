@@ -2,16 +2,14 @@ import Router from 'next/router';
 import { accountConstants } from '../constants';
 import { accountService } from '../services';
 import alertActions from './alert.actions';
-import { IAccount } from '../types/types';
-
-const ISSERVER = typeof window === 'undefined';
+import { IAccount, IUser } from '../types/types';
 
 function authenticate() {
   function request() {
     return { type: accountConstants.AUTHENTICATE_REQUEST };
   }
-  function success() {
-    return { type: accountConstants.AUTHENTICATE_SUCCESS };
+  function success(userData: IUser) {
+    return { type: accountConstants.AUTHENTICATE_SUCCESS, userData };
   }
   function failure(error: string) {
     return { type: accountConstants.AUTHENTICATE_FAILURE, error };
@@ -21,21 +19,20 @@ function authenticate() {
     dispatch(request());
 
     accountService.authenticate().then(
-      () => {
-        dispatch(success());
+      (data) => {
+        dispatch(success(data));
       },
       (error) => {
         dispatch(failure(error.toString()));
-        if (!ISSERVER && localStorage.getItem('user'))
-          dispatch(
-            alertActions.enqueueSnackbar({
-              message: 'Your user session has expired. Please login again.',
-              options: {
-                key: new Date().getTime() + Math.random(),
-                variant: 'error',
-              },
-            })
-          );
+        dispatch(
+          alertActions.enqueueSnackbar({
+            message: 'Your user session has expired. Please login again.',
+            options: {
+              key: new Date().getTime() + Math.random(),
+              variant: 'error',
+            },
+          })
+        );
       }
     );
   };
