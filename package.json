@@ -1,5 +1,10 @@
 {
   "private": true,
+  "name": "bugtrakr",
+  "version": "0.0.3",
+  "description": "BugTrakr SPA frontend",
+  "author": "Carl Scrivener",
+  "license": "ISC",
   "scripts": {
     "dev": "next",
     "build": "next build",

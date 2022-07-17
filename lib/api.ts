@@ -2,6 +2,15 @@ import { IBugPayload, IUser } from '../redux/types/types';
 
 const { API_REST_URL } = process.env;
 
+export async function authenticateUser(token: string) {
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+  };
+
+  return fetch(`${API_REST_URL}/authenticate`, requestOptions);
+}
+
 export async function loginUser({ username, password }) {
   const requestOptions = {
     method: 'POST',
@@ -135,6 +144,15 @@ export async function getBugs(token: string, projectId: string | string[]) {
   };
 
   return fetch(`${API_REST_URL}/projects/${projectId}/bugs`, requestOptions);
+}
+
+export async function getBugsByUser(token: string, userId: string | string[]) {
+  const requestOptions = {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+  };
+
+  return fetch(`${API_REST_URL}/users/${userId}/bugs`, requestOptions);
 }
 
 export async function createBug(token: string, projectId: string | string[], payload: IBugPayload) {

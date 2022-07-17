@@ -1,28 +1,21 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import cookie from 'cookie';
-import { loginUser } from '../../lib/api';
+import { authenticateUser } from '../../lib/api';
 
-export default async function login(req: NextApiRequest, res: NextApiResponse) {
-  /* get req params */
-  const { method, body } = req;
-  const { username, password } = body ?? {};
-
-  if (!username || !password) {
-    /* no account username or password provided, return error */
-    return res
-      .status(422)
-      .json({ message: 'Unproccesable request, please provide the required fields.' });
-  }
+export default async function authenticate(req: NextApiRequest, res: NextApiResponse) {
+  const { method } = req;
+  const cookies = cookie.parse(req.headers.cookie);
+  const authToken = cookies?.bugTrakrAuth || '';
 
   /* determine which request type this is */
   switch (method) {
     case 'POST':
       /* call api */
       try {
-        const response = await loginUser({ username, password });
+        const response = await authenticateUser(authToken);
         const data = await response.json();
 
-        /* Only send back message with successful or not - don't send JWT to client! */
+        /* Signal user auth token is valid */
         if (response.status === 201) {
           /**
            * Set secure false when running on local host (http), and set
@@ -38,12 +31,9 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
             }),
           ]);
 
-          return res.status(200).json({
-            id: data.id,
-            username: data.username,
-          });
+          return res.status(200).json({ id: data?.id, username: data?.username });
         }
-        return res.status(response.status).json({ message: data.message });
+        return res.status(401).json({ message: 'Session expired, please login again' });
       } catch (error) {
         return res.status(501).json({
           message: 'Oops, something went wrong with the request.',

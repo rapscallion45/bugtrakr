@@ -1,13 +1,22 @@
 import { handleResponse } from '../../utils';
 import { IBugPayload } from '../types/types';
 
-function getBug(projectId: string) {
+function getBug(projectId: string | string[]) {
   const requestOptions = {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
   };
 
   return fetch(`/api/projects/${projectId}/bugs`, requestOptions).then(handleResponse);
+}
+
+function getBugByUser(userId: string) {
+  const requestOptions = {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+  };
+
+  return fetch(`/api/users/${userId}/bugs`, requestOptions).then(handleResponse);
 }
 
 function deleteBug(projectId: string | string[], id: string) {
@@ -69,6 +78,7 @@ function reopenBug(projectId: string | string[], id: string) {
 
 const bugService = {
   getBug,
+  getBugByUser,
   deleteBug,
   createBug,
   updateBug,

@@ -5,7 +5,7 @@ import { bugService } from '../services';
 import { IBugPayload } from '../types/types';
 import alertActions from './alert.actions';
 
-function getBugs(projectId: string) {
+function getBugs(projectId: string | string[]) {
   function request() {
     return { type: bugConstants.GET_REQUEST };
   }
@@ -20,6 +20,27 @@ function getBugs(projectId: string) {
     dispatch(request());
 
     bugService.getBug(projectId).then(
+      (bugs) => dispatch(success(bugs)),
+      (error) => dispatch(failure(error.toString()))
+    );
+  };
+}
+
+function getBugsByUser(userId: string) {
+  function request() {
+    return { type: bugConstants.GET_REQUEST };
+  }
+  function success(bugsData: any) {
+    return { type: bugConstants.GET_SUCCESS, bugsData };
+  }
+  function failure(error: string) {
+    return { type: bugConstants.GET_FAILURE, error };
+  }
+
+  return (dispatch) => {
+    dispatch(request());
+
+    bugService.getBugByUser(userId).then(
       (bugs) => dispatch(success(bugs)),
       (error) => dispatch(failure(error.toString()))
     );
@@ -298,6 +319,7 @@ function reopenBug(projectId: string | string[], id: string, closeDialog: () => 
 
 const bugActions = {
   getBugs,
+  getBugsByUser,
   createBug,
   deleteBug,
   updateBug,

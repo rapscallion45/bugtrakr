@@ -37,7 +37,6 @@ const DashboardSideBar: FC<DashboardSideBarProps> = function DashboardSideBar({
   onCloseSidebar,
 }) {
   const { pathname } = useRouter();
-  const userAuth = useSelector((state: AppState) => state.authentication?.user);
   const loggedIn = useSelector((state: AppState) => state.authentication?.loggedIn);
   const isDemo = useSelector((state: AppState) => state.authentication?.demo);
   const user = useSelector((state: AppState) => state.account?.user);
@@ -69,13 +68,13 @@ const DashboardSideBar: FC<DashboardSideBarProps> = function DashboardSideBar({
         <AccountStyle>
           {loggedIn && !isDemo && (
             <MuiLink underline="none" component={Link} href="/dashboard/my-account">
-              <Avatar src={user?.avatar?.url} alt={userAuth?.firstName} />
+              <Avatar src={user?.avatar?.url} alt={user?.firstName} />
             </MuiLink>
           )}
           <Box sx={{ ml: 2 }}>
             <Typography variant="h4" sx={{ color: 'text.primary' }}>
               {loggedIn && !isDemo
-                ? `Hi, ${userAuth?.firstName}! 👋`
+                ? `Hi, ${user?.firstName}! 👋 Welcome back!`
                 : `Hi! Welcome to ${process.env.APP_NAME}! 👋`}
             </Typography>
           </Box>

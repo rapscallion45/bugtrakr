@@ -1,89 +1,53 @@
-// import { useMediaQuery } from '@mui/material';
-// import { useTheme } from '@mui/material/styles';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Page from '../../components/Page/Page';
 import DashboardLayout from '../../layouts/DashboardLayout/DashboardLayout';
-// import Loader from '../../components/Loader/Loader';
-// import BugsTable from '../../components/BugsTable/BugsTable';
-// import BugsTableMobile from '../../components/BugsTable/BugsTableMobile';
-
-// const bugData = [
-//   {
-//     id: '1',
-//     projectId: '1',
-//     title: 'Bug 1',
-//     description: 'Bug test 1',
-//     priority: 'low',
-//     isResolved: false,
-//     createdAt: Date.now(),
-//     createdBy: { username: 'testuser1' },
-//     updatedAt: null,
-//     updatedBy: { username: 'testuser1' },
-//     notes: [],
-//   },
-//   {
-//     id: '2',
-//     projectId: '2',
-//     title: 'Bug 2',
-//     description: 'Bug test 2',
-//     priority: 'low',
-//     isResolved: true,
-//     createdAt: Date.now(),
-//     createdBy: { username: 'testuser2' },
-//     updatedAt: null,
-//     updatedBy: { username: 'testuser1' },
-//     notes: 6,
-//   },
-//   {
-//     id: '3',
-//     projectId: '3',
-//     title: 'Bug 3',
-//     description: 'Bug test 3',
-//     priority: 'low',
-//     isResolved: false,
-//     createdAt: Date.now(),
-//     createdBy: { username: 'testuser3' },
-//     updatedAt: null,
-//     updatedBy: { username: 'testuser1' },
-//     notes: 2,
-//   },
-//   {
-//     id: '4',
-//     projectId: '4',
-//     title: 'Bug 4',
-//     description: 'Bug test 4',
-//     priority: 'low',
-//     isResolved: true,
-//     createdAt: Date.now(),
-//     createdBy: { username: 'testuser4' },
-//     updatedAt: null,
-//     updatedBy: { username: 'testuser1' },
-//     notes: 10,
-//   },
-// ];
+import Loader from '../../components/Loader/Loader';
+import BugsTable from '../../components/BugsTable/BugsTable';
+import BugsTableMobile from '../../components/BugsTable/BugsTableMobile';
+import { bugActions } from '../../redux/actions';
+import { AppState } from '../../redux/reducers';
 
 const MyBugs = function MyBugs() {
-  // const theme = useTheme();
-  // const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const dispatch = useDispatch();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const { user } = useSelector((state: AppState) => state.authentication);
+  const {
+    loading: bugsLoading,
+    loaded: bugsLoaded,
+    error: bugsError,
+    data: bugs,
+  } = useSelector((state: AppState) => state.bugs);
+
+  useEffect(() => {
+    dispatch(bugActions.getBugsByUser(user?.id));
+  }, []);
 
   return (
     <Page title="Dashboard | My Bugs">
       <Container maxWidth="xl">
-        <Box sx={{ pb: 5 }}>
-          <Typography variant="h4">My Bugs</Typography>
+        <Box display="flex" sx={{ pb: 5 }}>
+          <Box pb={1}>
+            <Typography variant="h3">My Bugs</Typography>
+            <Typography variant="body1">List of all bugs created and updated by you</Typography>
+          </Box>
         </Box>
-        {/* <Loader
-          dataLoading={false}
-          dataError={false}
-          dataLoaded
-          loadingText="Fetching bug data..."
-          errorText="Failed to load bug data."
+        <Loader
+          dataLoading={bugsLoading}
+          dataError={Boolean(bugsError)}
+          dataLoaded={bugsLoaded}
+          loadingText="Fetching your bug data..."
+          errorText="Failed to load your bug data."
         >
-          {!isMobile && <BugsTable bugs={bugData} />}
-          {isMobile && <BugsTableMobile bugs={bugData} />}
-        </Loader> */}
+          {!isMobile && <BugsTable bugs={bugs} isMyBugs />}
+          {isMobile && <BugsTableMobile bugs={bugs} isMyBugs />}
+        </Loader>
       </Container>
     </Page>
   );
