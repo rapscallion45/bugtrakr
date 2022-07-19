@@ -1,7 +1,7 @@
 import { FC, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { Divider, Skeleton, useMediaQuery } from '@mui/material';
+import { Divider, Skeleton, useMediaQuery, SelectChangeEvent } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -22,6 +22,7 @@ import DashboardLayout from '../../../layouts/DashboardLayout/DashboardLayout';
 import Loader from '../../../components/Loader/Loader';
 import BugsTable from '../../../components/BugsTable/BugsTable';
 import BugsTableMobile from '../../../components/BugsTable/BugsTableMobile';
+import SortBar from '../../../components/SortBar/SortBar';
 import MHidden from '../../../components/@MUI-Extended/MHidden';
 import FormDialog from '../../../components/FormDialog/FormDialog';
 import ConfirmDialog from '../../../components/ConfirmDialog/ConfirmDialog';
@@ -33,13 +34,28 @@ import Link from '../../../components/Link/Link';
 import ProjectMenu from '../../../components/ProjectMenu/ProjectMenu';
 import { bugActions, projectActions } from '../../../redux/actions';
 import { AppState } from '../../../redux/reducers';
-import { formatDateTime } from '../../../utils';
+import { formatDateTime, sortBugs } from '../../../utils';
+import { BugSortValues } from '../../../redux/types/types';
 
 const TabStyle = styled(Tab)({
   display: 'flex',
   flexDirection: 'row',
   minHeight: '60px',
 });
+
+const menuItems = [
+  { value: 'newest', label: 'Newest' },
+  { value: 'oldest', label: 'Oldest' },
+  { value: 'a-z', label: 'Name (A - Z)' },
+  { value: 'z-a', label: 'Name (Z - A)' },
+  { value: 'h-l', label: 'Priority (High - Low)' },
+  { value: 'l-h', label: 'Priority (Low - High)' },
+  { value: 'closed', label: 'Recently Closed' },
+  { value: 'reopened', label: 'Recently Reopened' },
+  { value: 'updated', label: 'Recently Updated' },
+  { value: 'most-notes', label: 'Most Notes' },
+  { value: 'least-notes', label: 'Least Notes' },
+];
 
 interface ProjectTabPanelProps {
   children: any;
@@ -86,7 +102,9 @@ const ProjectDetails = function ProjectDetails() {
     error: bugsError,
     data: bugs,
   } = useSelector((state: AppState) => state.bugs);
+  const [sortBy, setSortBy] = useState<BugSortValues>('newest');
   const projectData = projects?.find((project) => project.id === projectId);
+  const sortedBugs = sortBugs(bugs || [], sortBy);
   const isAdmin = user.id === projectData?.createdBy.id;
 
   useEffect(() => {
@@ -110,6 +128,10 @@ const ProjectDetails = function ProjectDetails() {
 
   const handleDeleteProject = (closeDialog: () => void) => {
     dispatch(projectActions.deleteProject(projectId.toString(), closeDialog));
+  };
+
+  const handleSortChange = (e: SelectChangeEvent) => {
+    setSortBy(e.target.value as BugSortValues);
   };
 
   const a11yProps = (index: string) => ({
@@ -260,9 +282,20 @@ const ProjectDetails = function ProjectDetails() {
                   </FormDialog>
                 </Box>
               </MHidden>
+              <Box pl={2} display="flex" justifyContent="end" sx={{ flexGrow: isMobile ? 1 : 0 }}>
+                <Box sx={{ minWidth: '190px' }}>
+                  <SortBar
+                    sortBy={sortBy}
+                    handleSortChange={handleSortChange}
+                    menuItems={menuItems}
+                    label="Notes"
+                    size="small"
+                  />
+                </Box>
+              </Box>
             </Box>
-            {!isMobile && <BugsTable bugs={bugs} projectId={projectId} />}
-            {isMobile && <BugsTableMobile bugs={bugs} projectId={projectId} />}
+            {!isMobile && <BugsTable bugs={sortedBugs} projectId={projectId} />}
+            {isMobile && <BugsTableMobile bugs={sortedBugs} projectId={projectId} />}
           </ProjectTabPanel>
           <ProjectTabPanel value={tab} index={1}>
             <Box display="flex" sx={{ pt: 2, pb: 5 }}>
