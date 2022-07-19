@@ -108,7 +108,7 @@ const BugsTableMobile: FC<BugsTableMobileProps> = function BugsTableMobile({
           <Typography pb={1} variant="h6">
             No bugs to show.
           </Typography>
-          {isMyBugs && (
+          {!isMyBugs && (
             <FormDialog
               triggerBtn={{
                 type: 'normal',
