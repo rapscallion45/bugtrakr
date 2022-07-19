@@ -95,7 +95,7 @@ const ProjectDetails = function ProjectDetails() {
 
   useEffect(() => {
     /* if user navigates direct to this page, ensure bug data laoded */
-    if (projectsLoaded && !bugsLoaded) {
+    if (projectsLoaded) {
       dispatch(bugActions.getBugs(projectId));
     }
   }, [projects]);
