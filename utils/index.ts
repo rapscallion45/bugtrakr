@@ -10,6 +10,7 @@ export { default as formatDateTime } from './formatDateTime';
 export { default as formatDateInWords } from './formatDateInWords';
 export { default as formatTimeAgo } from './formatTimeAgo';
 export { default as getBugPriorityColor } from './getBugPriorityColor';
+export { default as sortProjects } from './sortProjects';
 export { default as sortBugs } from './sortBugs';
 export { default as filterBugs } from './filterBugs';
 export { default as sortNotes } from './sortNotes';

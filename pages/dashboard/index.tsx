@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useMediaQuery } from '@mui/material';
+import { useMediaQuery, SelectChangeEvent } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -14,18 +14,52 @@ import ProjectsTable from '../../components/ProjectsTable/ProjectsTable';
 import ProjectsTableMobile from '../../components/ProjectsTable/ProjectsTableMobile';
 import FormDialog from '../../components/FormDialog/FormDialog';
 import ProjectForm from '../../components/ProjectForm/ProjectForm';
+import SortBar from '../../components/SortBar/SortBar';
+import SearchBar from '../../components/SearchBar/SearchBar';
+import { sortProjects } from '../../utils';
 import { projectActions } from '../../redux/actions';
+import { ProjectSortValues } from '../../redux/types/types';
 import { AppState } from '../../redux/reducers';
+
+const menuItems = [
+  { value: 'newest', label: 'Newest' },
+  { value: 'oldest', label: 'Oldest' },
+  { value: 'a-z', label: 'Name (A - Z)' },
+  { value: 'z-a', label: 'Name (Z - A)' },
+  { value: 'most-bugs', label: 'Most Bugs' },
+  { value: 'least-bugs', label: 'Least Bugs' },
+  { value: 'most-members', label: 'Most Members' },
+  { value: 'least-members', label: 'Least Members' },
+];
 
 const Dashboard = function Dashboard() {
   const dispatch = useDispatch();
-  const { loaded, loading, error, data } = useSelector((state: AppState) => state.projects);
+  const {
+    loaded,
+    loading,
+    error,
+    data: projects,
+  } = useSelector((state: AppState) => state.projects);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [sortBy, setSortBy] = useState<ProjectSortValues>('newest');
+  const [searchVal, setSearchVal] = useState<string>('');
+  const sortedProjects = sortProjects(
+    projects?.filter((p) => p.name.toLowerCase().includes(searchVal.toLowerCase())) || [],
+    sortBy
+  );
 
   useEffect(() => {
     dispatch(projectActions.getProjects());
   }, []);
+
+  const handleSortChange = (e: SelectChangeEvent) => {
+    setSortBy(e.target.value as ProjectSortValues);
+  };
+
+  const handleSearchChange = (searchValue: string) => {
+    setSearchVal(searchValue);
+  };
 
   return (
     <Page title="Dashboard | All Projects">
@@ -49,6 +83,27 @@ const Dashboard = function Dashboard() {
               </FormDialog>
             </Box>
           </MHidden>
+          <Box pl={2} display="flex" justifyContent="end" sx={{ flexGrow: isMobile ? 1 : 0 }}>
+            <Box sx={{ minWidth: '190px' }}>
+              <SearchBar
+                searchValue={searchVal}
+                setSearchValue={handleSearchChange}
+                label="Projects"
+                size="small"
+              />
+            </Box>
+          </Box>
+          <Box pl={2} display="flex" justifyContent="end" sx={{ flexGrow: isMobile ? 1 : 0 }}>
+            <Box sx={{ minWidth: '190px' }}>
+              <SortBar
+                sortBy={sortBy}
+                handleSortChange={handleSortChange}
+                menuItems={menuItems}
+                label="Projects"
+                size="small"
+              />
+            </Box>
+          </Box>
         </Box>
         <Loader
           dataLoading={loading}
@@ -57,8 +112,8 @@ const Dashboard = function Dashboard() {
           loadingText="Fetching project data..."
           errorText="Failed to load project data."
         >
-          {!isMobile && <ProjectsTable projects={data} />}
-          {isMobile && <ProjectsTableMobile projects={data} />}
+          {!isMobile && <ProjectsTable projects={sortedProjects} />}
+          {isMobile && <ProjectsTableMobile projects={sortedProjects} />}
         </Loader>
       </Container>
     </Page>
