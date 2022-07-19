@@ -13,8 +13,9 @@ import BugsTable from '../../components/BugsTable/BugsTable';
 import BugsTableMobile from '../../components/BugsTable/BugsTableMobile';
 import { bugActions } from '../../redux/actions';
 import { AppState } from '../../redux/reducers';
-import { sortBugs } from '../../utils';
+import { sortBugs, filterBugs } from '../../utils';
 import { BugSortValues } from '../../redux/types/types';
+import SearchBar from '../../components/SearchBar/SearchBar';
 
 const menuItems = [
   { value: 'newest', label: 'Newest' },
@@ -42,7 +43,13 @@ const MyBugs = function MyBugs() {
     data: bugs,
   } = useSelector((state: AppState) => state.bugs);
   const [sortBy, setSortBy] = useState<BugSortValues>('newest');
-  const sortedBugs = sortBugs(bugs || [], sortBy);
+  const [searchVal, setSearchVal] = useState<string>('');
+  const sortedBugs = sortBugs(
+    bugs?.filter(
+      (b) => b.title.toLowerCase().includes(searchVal.toLowerCase()) && filterBugs('all', b)
+    ) || [],
+    sortBy
+  );
 
   useEffect(() => {
     dispatch(bugActions.getBugsByUser(user?.id));
@@ -50,6 +57,10 @@ const MyBugs = function MyBugs() {
 
   const handleSortChange = (e: SelectChangeEvent) => {
     setSortBy(e.target.value as BugSortValues);
+  };
+
+  const handleSearchChange = (searchValue: string) => {
+    setSearchVal(searchValue);
   };
 
   return (
@@ -62,11 +73,21 @@ const MyBugs = function MyBugs() {
           </Box>
           <Box pl={2} display="flex" justifyContent="end" sx={{ flexGrow: isMobile ? 1 : 0 }}>
             <Box sx={{ minWidth: '190px' }}>
+              <SearchBar
+                searchValue={searchVal}
+                setSearchValue={handleSearchChange}
+                label="Bugs"
+                size="small"
+              />
+            </Box>
+          </Box>
+          <Box pl={2} display="flex" justifyContent="end" sx={{ flexGrow: isMobile ? 1 : 0 }}>
+            <Box sx={{ minWidth: '190px' }}>
               <SortBar
                 sortBy={sortBy}
                 handleSortChange={handleSortChange}
                 menuItems={menuItems}
-                label="Notes"
+                label="Bugs"
                 size="small"
               />
             </Box>

@@ -32,9 +32,10 @@ import ProjectForm from '../../../components/ProjectForm/ProjectForm';
 import BugForm from '../../../components/BugForm/BugForm';
 import Link from '../../../components/Link/Link';
 import ProjectMenu from '../../../components/ProjectMenu/ProjectMenu';
+import SearchBar from '../../../components/SearchBar/SearchBar';
 import { bugActions, projectActions } from '../../../redux/actions';
 import { AppState } from '../../../redux/reducers';
-import { formatDateTime, sortBugs } from '../../../utils';
+import { formatDateTime, sortBugs, filterBugs } from '../../../utils';
 import { BugSortValues } from '../../../redux/types/types';
 
 const TabStyle = styled(Tab)({
@@ -102,9 +103,15 @@ const ProjectDetails = function ProjectDetails() {
     error: bugsError,
     data: bugs,
   } = useSelector((state: AppState) => state.bugs);
-  const [sortBy, setSortBy] = useState<BugSortValues>('newest');
   const projectData = projects?.find((project) => project.id === projectId);
-  const sortedBugs = sortBugs(bugs || [], sortBy);
+  const [sortBy, setSortBy] = useState<BugSortValues>('newest');
+  const [searchVal, setSearchVal] = useState<string>('');
+  const sortedBugs = sortBugs(
+    bugs?.filter(
+      (b) => b.title.toLowerCase().includes(searchVal.toLowerCase()) && filterBugs('all', b)
+    ) || [],
+    sortBy
+  );
   const isAdmin = user.id === projectData?.createdBy.id;
 
   useEffect(() => {
@@ -132,6 +139,10 @@ const ProjectDetails = function ProjectDetails() {
 
   const handleSortChange = (e: SelectChangeEvent) => {
     setSortBy(e.target.value as BugSortValues);
+  };
+
+  const handleSearchChange = (searchValue: string) => {
+    setSearchVal(searchValue);
   };
 
   const a11yProps = (index: string) => ({
@@ -284,11 +295,21 @@ const ProjectDetails = function ProjectDetails() {
               </MHidden>
               <Box pl={2} display="flex" justifyContent="end" sx={{ flexGrow: isMobile ? 1 : 0 }}>
                 <Box sx={{ minWidth: '190px' }}>
+                  <SearchBar
+                    searchValue={searchVal}
+                    setSearchValue={handleSearchChange}
+                    label="Bugs"
+                    size="small"
+                  />
+                </Box>
+              </Box>
+              <Box pl={2} display="flex" justifyContent="end" sx={{ flexGrow: isMobile ? 1 : 0 }}>
+                <Box sx={{ minWidth: '190px' }}>
                   <SortBar
                     sortBy={sortBy}
                     handleSortChange={handleSortChange}
                     menuItems={menuItems}
-                    label="Notes"
+                    label="Bugs"
                     size="small"
                   />
                 </Box>
