@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useMediaQuery, SelectChangeEvent } from '@mui/material';
+import { useMediaQuery, SelectChangeEvent, SortDirection } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -43,6 +43,7 @@ const Dashboard = function Dashboard() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [sortBy, setSortBy] = useState<ProjectSortValues>('newest');
+  const [sortDir, setSortDir] = useState<SortDirection>('desc');
   const [searchVal, setSearchVal] = useState<string>('');
   const sortedProjects = sortProjects(
     projects?.filter((p) => p.name.toLowerCase().includes(searchVal.toLowerCase())) || [],
@@ -55,6 +56,11 @@ const Dashboard = function Dashboard() {
 
   const handleSortChange = (e: SelectChangeEvent) => {
     setSortBy(e.target.value as ProjectSortValues);
+  };
+
+  const handleTHeadSortChange = (value: string) => {
+    setSortBy(value as ProjectSortValues);
+    setSortDir(sortDir === 'asc' ? 'desc' : 'asc');
   };
 
   const handleSearchChange = (searchValue: string) => {
@@ -112,7 +118,14 @@ const Dashboard = function Dashboard() {
           loadingText="Fetching project data..."
           errorText="Failed to load project data."
         >
-          {!isMobile && <ProjectsTable projects={sortedProjects} />}
+          {!isMobile && (
+            <ProjectsTable
+              projects={sortedProjects}
+              sortBy={sortBy}
+              sortDir={sortDir}
+              sortChange={handleTHeadSortChange}
+            />
+          )}
           {isMobile && <ProjectsTableMobile projects={sortedProjects} />}
         </Loader>
       </Container>

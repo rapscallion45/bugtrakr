@@ -11,15 +11,38 @@ import {
   Box,
   Paper,
   Typography,
+  SortDirection,
 } from '@mui/material';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import AddIcon from '@mui/icons-material/Add';
 import ActionsPopover from './ActionsPopover/ActionsPopover';
 import FormDialog from '../FormDialog/FormDialog';
 import ProjectForm from '../ProjectForm/ProjectForm';
 import { formatDateTime, truncateString } from '../../utils';
 import { AppState } from '../../redux/reducers';
+import { IProjectState } from '../../redux/types/types';
 
-const tableHeaders = ['Name', 'Bugs', 'Members', 'Admin', 'Added', 'Actions'];
+interface ITableHeader {
+  label: string;
+  value: string;
+  sortAsc: string | null;
+  sortDesc: string | null;
+}
+
+const tableHeaders: ITableHeader[] = [
+  { label: 'Name', value: 'name', sortAsc: 'a-z', sortDesc: 'z-a' },
+  {
+    label: 'Bugs',
+    value: 'bugs',
+    sortAsc: 'most-bugs',
+    sortDesc: 'least-bugs',
+  },
+  { label: 'Members', value: 'members', sortAsc: 'most-members', sortDesc: 'least-members' },
+  { label: 'Admin', value: 'admin', sortAsc: null, sortDesc: null },
+  { label: 'Added', value: 'added', sortAsc: 'newest', sortDesc: 'oldest' },
+  { label: 'Actions', value: 'actions', sortAsc: null, sortDesc: null },
+];
 
 const TableStyle = styled(Table)(({ theme }) => ({
   '& thead th': {
@@ -36,11 +59,26 @@ const TableRowStyle = styled(TableRow)(({ theme }) => ({
 }));
 
 interface ProjectsTableProps {
-  projects: any[];
+  projects: IProjectState[];
+  sortBy: string;
+  sortDir: SortDirection;
+  sortChange: (value: string) => void;
 }
 
-const ProjectsTable: FC<ProjectsTableProps> = function ProjectsTable({ projects }) {
+const ProjectsTable: FC<ProjectsTableProps> = function ProjectsTable({
+  projects,
+  sortBy,
+  sortDir,
+  sortChange,
+}) {
   const { user } = useSelector((state: AppState) => state.authentication);
+
+  const handleTHeadClick = (value: string) => {
+    const type = tableHeaders.find((header) => header.value === value);
+    if (type.sortAsc && type.sortDesc) {
+      sortChange(sortDir === 'asc' ? type.sortAsc : type.sortDesc);
+    }
+  };
 
   return (
     <Paper>
@@ -48,8 +86,19 @@ const ProjectsTable: FC<ProjectsTableProps> = function ProjectsTable({ projects 
         <TableHead>
           <TableRow>
             {tableHeaders.map((t) => (
-              <TableCell key={t} align="center">
-                {t}
+              <TableCell key={t.value} align="center" onClick={() => handleTHeadClick(t.value)}>
+                <Box
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  sx={{ cursor: t.sortAsc && t.sortAsc ? 'pointer' : '' }}
+                >
+                  {t.label}
+                  {Boolean(sortBy) && sortBy === t.sortAsc && (
+                    <ArrowDropDownIcon fontSize="small" />
+                  )}
+                  {Boolean(sortBy) && sortBy === t.sortDesc && <ArrowDropUpIcon fontSize="small" />}
+                </Box>
               </TableCell>
             ))}
           </TableRow>
