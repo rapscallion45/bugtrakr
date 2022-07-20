@@ -1,21 +1,25 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useMediaQuery, SelectChangeEvent } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import { useMediaQuery, SelectChangeEvent, SortDirection, Collapse } from '@mui/material';
+import IconButton, { IconButtonProps } from '@mui/material/IconButton';
+import { useTheme, styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import FilterListOffIcon from '@mui/icons-material/FilterListOff';
 import Page from '../../components/Page/Page';
+import MHidden from '../../components/@MUI-Extended/MHidden';
 import DashboardLayout from '../../layouts/DashboardLayout/DashboardLayout';
 import Loader from '../../components/Loader/Loader';
 import SortBar from '../../components/SortBar/SortBar';
 import BugsTable from '../../components/BugsTable/BugsTable';
 import BugsTableMobile from '../../components/BugsTable/BugsTableMobile';
+import SearchBar from '../../components/SearchBar/SearchBar';
 import { bugActions } from '../../redux/actions';
 import { AppState } from '../../redux/reducers';
 import { sortBugs, filterBugs } from '../../utils';
 import { BugSortValues } from '../../redux/types/types';
-import SearchBar from '../../components/SearchBar/SearchBar';
 
 const menuItems = [
   { value: 'newest', label: 'Newest' },
@@ -31,6 +35,21 @@ const menuItems = [
   { value: 'least-notes', label: 'Least Notes' },
 ];
 
+interface ExpandMoreProps extends IconButtonProps {
+  expand: boolean;
+}
+
+const ExpandMore = styled((props: ExpandMoreProps) => {
+  const { expand, ...other } = props;
+  return <IconButton {...other} />;
+})(({ theme, expand }) => ({
+  transform: !expand ? 'rotate(0deg)' : 'rotate(360deg)',
+  marginLeft: 'auto',
+  transition: theme.transitions.create('transform', {
+    duration: theme.transitions.duration.shortest,
+  }),
+}));
+
 const MyBugs = function MyBugs() {
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -43,7 +62,9 @@ const MyBugs = function MyBugs() {
     data: bugs,
   } = useSelector((state: AppState) => state.bugs);
   const [sortBy, setSortBy] = useState<BugSortValues>('newest');
+  const [sortDir, setSortDir] = useState<SortDirection>('desc');
   const [searchVal, setSearchVal] = useState<string>('');
+  const [expanded, setExpanded] = useState<boolean>(false);
   const sortedBugs = sortBugs(
     bugs?.filter(
       (b) => b.title.toLowerCase().includes(searchVal.toLowerCase()) && filterBugs('all', b)
@@ -59,39 +80,66 @@ const MyBugs = function MyBugs() {
     setSortBy(e.target.value as BugSortValues);
   };
 
+  const handleTHeadSortChange = (value: string) => {
+    setSortBy(value as BugSortValues);
+    setSortDir(sortDir === 'asc' ? 'desc' : 'asc');
+  };
+
   const handleSearchChange = (searchValue: string) => {
     setSearchVal(searchValue);
+  };
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
   };
 
   return (
     <Page title="Dashboard | My Bugs">
       <Container maxWidth="xl">
-        <Box display="flex" sx={{ pb: 5 }}>
+        <Box display="flex" sx={{ pb: isMobile ? 3 : 5 }}>
           <Box pb={1}>
             <Typography variant="h3">My Bugs</Typography>
             <Typography variant="body1">List of all bugs created and updated by you</Typography>
           </Box>
-          <Box pl={2} display="flex" justifyContent="end" sx={{ flexGrow: isMobile ? 1 : 0 }}>
-            <Box sx={{ minWidth: '190px' }}>
-              <SearchBar
-                searchValue={searchVal}
-                setSearchValue={handleSearchChange}
-                label="Bugs"
-                size="small"
-              />
+          <MHidden width="mdUp">
+            <ExpandMore
+              expand={expanded}
+              onClick={handleExpandClick}
+              aria-expanded={expanded}
+              aria-label="show filters"
+            >
+              {expanded ? <FilterListOffIcon /> : <FilterListIcon />}
+            </ExpandMore>
+          </MHidden>
+          <MHidden width="mdDown">
+            <Box
+              pl={2}
+              display="flex"
+              justifyContent="end"
+              alignItems="center"
+              sx={{ flexGrow: 1 }}
+            >
+              <Box sx={{ minWidth: '190px' }}>
+                <SearchBar
+                  searchValue={searchVal}
+                  setSearchValue={handleSearchChange}
+                  label="My Bugs"
+                  size="small"
+                />
+              </Box>
             </Box>
-          </Box>
-          <Box pl={2} display="flex" justifyContent="end" sx={{ flexGrow: isMobile ? 1 : 0 }}>
-            <Box sx={{ minWidth: '190px' }}>
-              <SortBar
-                sortBy={sortBy}
-                handleSortChange={handleSortChange}
-                menuItems={menuItems}
-                label="Bugs"
-                size="small"
-              />
+            <Box pl={2} display="flex" justifyContent="end" alignItems="center">
+              <Box sx={{ minWidth: '190px' }}>
+                <SortBar
+                  sortBy={sortBy}
+                  handleSortChange={handleSortChange}
+                  menuItems={menuItems}
+                  label="My Bugs"
+                  size="small"
+                />
+              </Box>
             </Box>
-          </Box>
+          </MHidden>
         </Box>
         <Loader
           dataLoading={bugsLoading}
@@ -100,8 +148,78 @@ const MyBugs = function MyBugs() {
           loadingText="Fetching your bug data..."
           errorText="Failed to load your bug data."
         >
-          {!isMobile && <BugsTable bugs={sortedBugs} isMyBugs />}
-          {isMobile && <BugsTableMobile bugs={sortedBugs} isMyBugs />}
+          {!isMobile && (
+            <>
+              <Collapse in={expanded} unmountOnExit>
+                <MHidden width="mdUp">
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    flexDirection="column"
+                    sx={{ width: '100%' }}
+                    pb={4}
+                  >
+                    <Box pt={1} pb={2} sx={{ minWidth: '190px' }}>
+                      <SearchBar
+                        searchValue={searchVal}
+                        setSearchValue={handleSearchChange}
+                        label="My Bugs"
+                        size="small"
+                      />
+                    </Box>
+                    <Box sx={{ minWidth: '190px' }}>
+                      <SortBar
+                        sortBy={sortBy}
+                        handleSortChange={handleSortChange}
+                        menuItems={menuItems}
+                        label="My Bugs"
+                        size="small"
+                      />
+                    </Box>
+                  </Box>
+                </MHidden>
+              </Collapse>
+              <BugsTable
+                bugs={sortedBugs}
+                isMyBugs
+                sortBy={sortBy}
+                sortDir={sortDir}
+                sortChange={handleTHeadSortChange}
+              />
+            </>
+          )}
+          {isMobile && (
+            <>
+              <Collapse in={expanded} unmountOnExit>
+                <Box
+                  display="flex"
+                  justifyContent="center"
+                  flexDirection="column"
+                  sx={{ width: '100%' }}
+                  pb={4}
+                >
+                  <Box pt={1} pb={2} sx={{ minWidth: '190px' }}>
+                    <SearchBar
+                      searchValue={searchVal}
+                      setSearchValue={handleSearchChange}
+                      label="My Bugs"
+                      size="small"
+                    />
+                  </Box>
+                  <Box sx={{ minWidth: '190px' }}>
+                    <SortBar
+                      sortBy={sortBy}
+                      handleSortChange={handleSortChange}
+                      menuItems={menuItems}
+                      label="My Bugs"
+                      size="small"
+                    />
+                  </Box>
+                </Box>
+              </Collapse>
+              <BugsTableMobile bugs={sortedBugs} isMyBugs />
+            </>
+          )}
         </Loader>
       </Container>
     </Page>

@@ -11,7 +11,10 @@ import {
   Paper,
   Typography,
   Chip,
+  SortDirection,
 } from '@mui/material';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import AddIcon from '@mui/icons-material/Add';
 import ActionsPopover from './ActionsPopover/ActionsPopover';
 import FormDialog from '../FormDialog/FormDialog';
@@ -19,7 +22,22 @@ import BugForm from '../BugForm/BugForm';
 import { formatDateTime, getBugPriorityColor, truncateString } from '../../utils';
 import { IBugState } from '../../redux/types/types';
 
-const tableHeaders = ['Name', 'Priority', 'Status', 'Added', 'Updated', 'Notes', 'Actions'];
+interface ITableHeader {
+  label: string;
+  value: string;
+  sortAsc: string | null;
+  sortDesc: string | null;
+}
+
+const tableHeaders: ITableHeader[] = [
+  { label: 'Name', value: 'name', sortAsc: 'a-z', sortDesc: 'z-a' },
+  { label: 'Priority', value: 'priority', sortAsc: 'h-l', sortDesc: 'l-h' },
+  { label: 'Status', value: 'status', sortAsc: 'closed', sortDesc: 'reopened' },
+  { label: 'Added', value: 'added', sortAsc: 'newest', sortDesc: 'oldest' },
+  { label: 'Updated', value: 'updated', sortAsc: 'updated', sortDesc: null },
+  { label: 'Notes', value: 'notes', sortAsc: 'most-notes', sortDesc: 'least-notes' },
+  { label: 'Actions', value: 'actions', sortAsc: null, sortDesc: null },
+];
 
 const TableStyle = styled(Table)(({ theme }) => ({
   '& thead th': {
@@ -39,17 +57,47 @@ interface BugsTableProps {
   bugs: IBugState[];
   projectId?: string | string[];
   isMyBugs?: boolean;
+  sortBy: string;
+  sortDir: SortDirection;
+  sortChange: (value: string) => void;
 }
 
-const BugsTable: FC<BugsTableProps> = function BugsTable({ bugs, projectId, isMyBugs }) {
+const BugsTable: FC<BugsTableProps> = function BugsTable({
+  bugs,
+  projectId,
+  isMyBugs,
+  sortBy,
+  sortDir,
+  sortChange,
+}) {
+  const handleTHeadClick = (value: string) => {
+    const type = tableHeaders.find((header) => header.value === value);
+    if (type.sortAsc && type.sortDesc) {
+      sortChange(sortDir === 'asc' ? type.sortAsc : type.sortDesc);
+    } else if (type.sortAsc && !type.sortDesc) {
+      sortChange(type.sortAsc);
+    }
+  };
+
   return (
     <Paper>
       <TableStyle>
         <TableHead>
           <TableRow>
             {tableHeaders.map((t) => (
-              <TableCell key={t} align="center">
-                {t}
+              <TableCell key={t.value} align="center" onClick={() => handleTHeadClick(t.value)}>
+                <Box
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  sx={{ cursor: t.sortAsc && t.sortAsc ? 'pointer' : '' }}
+                >
+                  {t.label}
+                  {Boolean(sortBy) && sortBy === t.sortAsc && (
+                    <ArrowDropDownIcon fontSize="small" />
+                  )}
+                  {Boolean(sortBy) && sortBy === t.sortDesc && <ArrowDropUpIcon fontSize="small" />}
+                </Box>
               </TableCell>
             ))}
           </TableRow>

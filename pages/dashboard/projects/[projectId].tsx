@@ -1,11 +1,21 @@
 import { FC, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { Divider, Skeleton, useMediaQuery, SelectChangeEvent } from '@mui/material';
+import {
+  Divider,
+  Collapse,
+  Skeleton,
+  useMediaQuery,
+  SelectChangeEvent,
+  SortDirection,
+} from '@mui/material';
+import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import { useTheme, styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import FilterListOffIcon from '@mui/icons-material/FilterListOff';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -58,6 +68,21 @@ const menuItems = [
   { value: 'least-notes', label: 'Least Notes' },
 ];
 
+interface ExpandMoreProps extends IconButtonProps {
+  expand: boolean;
+}
+
+const ExpandMore = styled((props: ExpandMoreProps) => {
+  const { expand, ...other } = props;
+  return <IconButton {...other} />;
+})(({ theme, expand }) => ({
+  transform: !expand ? 'rotate(0deg)' : 'rotate(360deg)',
+  marginLeft: 'auto',
+  transition: theme.transitions.create('transform', {
+    duration: theme.transitions.duration.shortest,
+  }),
+}));
+
 interface ProjectTabPanelProps {
   children: any;
   index: number;
@@ -105,7 +130,9 @@ const ProjectDetails = function ProjectDetails() {
   } = useSelector((state: AppState) => state.bugs);
   const projectData = projects?.find((project) => project.id === projectId);
   const [sortBy, setSortBy] = useState<BugSortValues>('newest');
+  const [sortDir, setSortDir] = useState<SortDirection>('desc');
   const [searchVal, setSearchVal] = useState<string>('');
+  const [expanded, setExpanded] = useState<boolean>(false);
   const sortedBugs = sortBugs(
     bugs?.filter(
       (b) => b.title.toLowerCase().includes(searchVal.toLowerCase()) && filterBugs('all', b)
@@ -141,8 +168,17 @@ const ProjectDetails = function ProjectDetails() {
     setSortBy(e.target.value as BugSortValues);
   };
 
+  const handleTHeadSortChange = (value: string) => {
+    setSortBy(value as BugSortValues);
+    setSortDir(sortDir === 'asc' ? 'desc' : 'asc');
+  };
+
   const handleSearchChange = (searchValue: string) => {
     setSearchVal(searchValue);
+  };
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
   };
 
   const a11yProps = (index: string) => ({
@@ -293,29 +329,78 @@ const ProjectDetails = function ProjectDetails() {
                   </FormDialog>
                 </Box>
               </MHidden>
-              <Box pl={2} display="flex" justifyContent="end" sx={{ flexGrow: isMobile ? 1 : 0 }}>
-                <Box sx={{ minWidth: '190px' }}>
-                  <SearchBar
-                    searchValue={searchVal}
-                    setSearchValue={handleSearchChange}
-                    label="Bugs"
-                    size="small"
-                  />
+              <MHidden width="mdUp">
+                <ExpandMore
+                  expand={expanded}
+                  onClick={handleExpandClick}
+                  aria-expanded={expanded}
+                  aria-label="show filters"
+                >
+                  {expanded ? <FilterListOffIcon /> : <FilterListIcon />}
+                </ExpandMore>
+              </MHidden>
+              <MHidden width="mdDown">
+                <Box pl={2} display="flex" justifyContent="end" sx={{ flexGrow: isMobile ? 1 : 0 }}>
+                  <Box sx={{ minWidth: '190px' }}>
+                    <SearchBar
+                      searchValue={searchVal}
+                      setSearchValue={handleSearchChange}
+                      label="Bugs"
+                      size="small"
+                    />
+                  </Box>
                 </Box>
-              </Box>
-              <Box pl={2} display="flex" justifyContent="end" sx={{ flexGrow: isMobile ? 1 : 0 }}>
-                <Box sx={{ minWidth: '190px' }}>
-                  <SortBar
-                    sortBy={sortBy}
-                    handleSortChange={handleSortChange}
-                    menuItems={menuItems}
-                    label="Bugs"
-                    size="small"
-                  />
+                <Box pl={2} display="flex" justifyContent="end" sx={{ flexGrow: isMobile ? 1 : 0 }}>
+                  <Box sx={{ minWidth: '190px' }}>
+                    <SortBar
+                      sortBy={sortBy}
+                      handleSortChange={handleSortChange}
+                      menuItems={menuItems}
+                      label="Bugs"
+                      size="small"
+                    />
+                  </Box>
                 </Box>
-              </Box>
+              </MHidden>
             </Box>
-            {!isMobile && <BugsTable bugs={sortedBugs} projectId={projectId} />}
+            {!isMobile && (
+              <>
+                <Collapse in={expanded} unmountOnExit>
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    flexDirection="column"
+                    sx={{ width: '100%' }}
+                    pb={4}
+                  >
+                    <Box pt={1} pb={2} sx={{ minWidth: '190px' }}>
+                      <SearchBar
+                        searchValue={searchVal}
+                        setSearchValue={handleSearchChange}
+                        label="My Bugs"
+                        size="small"
+                      />
+                    </Box>
+                    <Box sx={{ minWidth: '190px' }}>
+                      <SortBar
+                        sortBy={sortBy}
+                        handleSortChange={handleSortChange}
+                        menuItems={menuItems}
+                        label="My Bugs"
+                        size="small"
+                      />
+                    </Box>
+                  </Box>
+                </Collapse>
+                <BugsTable
+                  bugs={sortedBugs}
+                  projectId={projectId}
+                  sortBy={sortBy}
+                  sortDir={sortDir}
+                  sortChange={handleTHeadSortChange}
+                />
+              </>
+            )}
             {isMobile && <BugsTableMobile bugs={sortedBugs} projectId={projectId} />}
           </ProjectTabPanel>
           <ProjectTabPanel value={tab} index={1}>
