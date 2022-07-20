@@ -1,8 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { Chip, Divider, Grid, Skeleton, useMediaQuery, SelectChangeEvent } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import {
+  Chip,
+  Divider,
+  Grid,
+  Skeleton,
+  useMediaQuery,
+  SelectChangeEvent,
+  Collapse,
+} from '@mui/material';
+import IconButton, { IconButtonProps } from '@mui/material/IconButton';
+import { useTheme, styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
@@ -12,6 +21,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AppsIcon from '@mui/icons-material/Apps';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import FilterListOffIcon from '@mui/icons-material/FilterListOff';
 import Page from '../../../../../components/Page/Page';
 import DashboardLayout from '../../../../../layouts/DashboardLayout/DashboardLayout';
 import Loader from '../../../../../components/Loader/Loader';
@@ -35,6 +46,21 @@ const menuItems = [
   { value: 'updated', label: 'Recently Updated' },
 ];
 
+interface ExpandMoreProps extends IconButtonProps {
+  expand: boolean;
+}
+
+const ExpandMore = styled((props: ExpandMoreProps) => {
+  const { expand, ...other } = props;
+  return <IconButton {...other} />;
+})(({ theme, expand }) => ({
+  transform: !expand ? 'rotate(0deg)' : 'rotate(360deg)',
+  marginLeft: 'auto',
+  transition: theme.transitions.create('transform', {
+    duration: theme.transitions.duration.shortest,
+  }),
+}));
+
 const BugDetails = function BugDetails() {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -56,6 +82,7 @@ const BugDetails = function BugDetails() {
     data: bugs,
   } = useSelector((state: AppState) => state.bugs);
   const [sortBy, setSortBy] = useState<NoteSortValues>('newest');
+  const [expanded, setExpanded] = useState<boolean>(false);
   const bugData = bugs?.find((b) => b.id === id);
   const projectData = projects?.find((p) => p.id === bugData?.projectId);
   const sortedNotes = sortNotes(bugData?.notes || [], sortBy);
@@ -78,6 +105,10 @@ const BugDetails = function BugDetails() {
 
   const handleDeleteBug = (closeDialog: () => void) => {
     dispatch(bugActions.deleteBug(bugData.projectId, id.toString(), closeDialog));
+  };
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
   };
 
   return (
@@ -258,7 +289,7 @@ const BugDetails = function BugDetails() {
           loadingText="Fetching bug data..."
           errorText="Failed to load bug details."
         >
-          <Box display="flex" sx={{ pt: 2, pb: 5 }}>
+          <Box display="flex" sx={{ pt: 2, pb: isMobile ? 2 : 5 }}>
             <ForumOutlinedIcon fontSize="large" style={{ marginRight: '0.2em' }} />
             <Typography variant="h4">Notes</Typography>
             <MHidden width="smDown">
@@ -275,18 +306,51 @@ const BugDetails = function BugDetails() {
                 </FormDialog>
               </Box>
             </MHidden>
-            <Box pl={2} display="flex" justifyContent="end" sx={{ flexGrow: isMobile ? 1 : 0 }}>
-              <Box sx={{ minWidth: '190px' }}>
-                <SortBar
-                  sortBy={sortBy}
-                  handleSortChange={handleSortChange}
-                  menuItems={menuItems}
-                  label="Notes"
-                  size="small"
-                />
+            <MHidden width="mdUp">
+              <ExpandMore
+                expand={expanded}
+                onClick={handleExpandClick}
+                aria-expanded={expanded}
+                aria-label="show filters"
+              >
+                {expanded ? <FilterListOffIcon /> : <FilterListIcon />}
+              </ExpandMore>
+            </MHidden>
+            <MHidden width="mdDown">
+              <Box pl={2} display="flex" justifyContent="end" sx={{ flexGrow: isMobile ? 1 : 0 }}>
+                <Box sx={{ minWidth: '190px' }}>
+                  <SortBar
+                    sortBy={sortBy}
+                    handleSortChange={handleSortChange}
+                    menuItems={menuItems}
+                    label="Notes"
+                    size="small"
+                  />
+                </Box>
               </Box>
-            </Box>
+            </MHidden>
           </Box>
+          <MHidden width="mdUp">
+            <Collapse in={expanded} unmountOnExit>
+              <Box
+                display="flex"
+                justifyContent="center"
+                flexDirection="column"
+                sx={{ width: '100%' }}
+                pb={4}
+              >
+                <Box pt={1} sx={{ minWidth: '190px' }}>
+                  <SortBar
+                    sortBy={sortBy}
+                    handleSortChange={handleSortChange}
+                    menuItems={menuItems}
+                    label="Notes"
+                    size="small"
+                  />
+                </Box>
+              </Box>
+            </Collapse>
+          </MHidden>
           <NotesTable
             notes={sortedNotes}
             bugId={bugData?.id}

@@ -312,7 +312,7 @@ const ProjectDetails = function ProjectDetails() {
             </Tabs>
           </Box>
           <ProjectTabPanel value={tab} index={0}>
-            <Box display="flex" sx={{ pt: 2, pb: 5 }}>
+            <Box display="flex" sx={{ pt: 2, pb: isMobile ? 2 : 5 }}>
               <BugReportIcon fontSize="large" style={{ marginRight: '0.2em' }} />
               <Typography variant="h4">Bug List</Typography>
               <MHidden width="smDown">
@@ -365,6 +365,46 @@ const ProjectDetails = function ProjectDetails() {
             </Box>
             {!isMobile && (
               <>
+                <MHidden width="mdUp">
+                  <Collapse in={expanded} unmountOnExit>
+                    <Box
+                      display="flex"
+                      justifyContent="center"
+                      flexDirection="column"
+                      sx={{ width: '100%' }}
+                      pb={4}
+                    >
+                      <Box pt={1} pb={2} sx={{ minWidth: '190px' }}>
+                        <SearchBar
+                          searchValue={searchVal}
+                          setSearchValue={handleSearchChange}
+                          label="Bugs"
+                          size="small"
+                        />
+                      </Box>
+                      <Box sx={{ minWidth: '190px' }}>
+                        <SortBar
+                          sortBy={sortBy}
+                          handleSortChange={handleSortChange}
+                          menuItems={menuItems}
+                          label="Bugs"
+                          size="small"
+                        />
+                      </Box>
+                    </Box>
+                  </Collapse>
+                </MHidden>
+                <BugsTable
+                  bugs={sortedBugs}
+                  projectId={projectId}
+                  sortBy={sortBy}
+                  sortDir={sortDir}
+                  sortChange={handleTHeadSortChange}
+                />
+              </>
+            )}
+            {isMobile && (
+              <>
                 <Collapse in={expanded} unmountOnExit>
                   <Box
                     display="flex"
@@ -377,7 +417,7 @@ const ProjectDetails = function ProjectDetails() {
                       <SearchBar
                         searchValue={searchVal}
                         setSearchValue={handleSearchChange}
-                        label="My Bugs"
+                        label="Bugs"
                         size="small"
                       />
                     </Box>
@@ -386,22 +426,15 @@ const ProjectDetails = function ProjectDetails() {
                         sortBy={sortBy}
                         handleSortChange={handleSortChange}
                         menuItems={menuItems}
-                        label="My Bugs"
+                        label="Bugs"
                         size="small"
                       />
                     </Box>
                   </Box>
                 </Collapse>
-                <BugsTable
-                  bugs={sortedBugs}
-                  projectId={projectId}
-                  sortBy={sortBy}
-                  sortDir={sortDir}
-                  sortChange={handleTHeadSortChange}
-                />
+                <BugsTableMobile bugs={sortedBugs} projectId={projectId} />
               </>
             )}
-            {isMobile && <BugsTableMobile bugs={sortedBugs} projectId={projectId} />}
           </ProjectTabPanel>
           <ProjectTabPanel value={tab} index={1}>
             <Box display="flex" sx={{ pt: 2, pb: 5 }}>
