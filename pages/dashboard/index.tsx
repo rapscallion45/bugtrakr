@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useMediaQuery, SelectChangeEvent, SortDirection } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import { useMediaQuery, SelectChangeEvent, SortDirection, Collapse } from '@mui/material';
+import IconButton, { IconButtonProps } from '@mui/material/IconButton';
+import { useTheme, styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import AddIcon from '@mui/icons-material/Add';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import FilterListOffIcon from '@mui/icons-material/FilterListOff';
 import Page from '../../components/Page/Page';
 import MHidden from '../../components/@MUI-Extended/MHidden';
 import DashboardLayout from '../../layouts/DashboardLayout/DashboardLayout';
@@ -32,6 +35,21 @@ const menuItems = [
   { value: 'least-members', label: 'Least Members' },
 ];
 
+interface ExpandMoreProps extends IconButtonProps {
+  expand: boolean;
+}
+
+const ExpandMore = styled((props: ExpandMoreProps) => {
+  const { expand, ...other } = props;
+  return <IconButton {...other} />;
+})(({ theme, expand }) => ({
+  transform: !expand ? 'rotate(0deg)' : 'rotate(360deg)',
+  marginLeft: 'auto',
+  transition: theme.transitions.create('transform', {
+    duration: theme.transitions.duration.shortest,
+  }),
+}));
+
 const Dashboard = function Dashboard() {
   const dispatch = useDispatch();
   const {
@@ -45,6 +63,7 @@ const Dashboard = function Dashboard() {
   const [sortBy, setSortBy] = useState<ProjectSortValues>('newest');
   const [sortDir, setSortDir] = useState<SortDirection>('desc');
   const [searchVal, setSearchVal] = useState<string>('');
+  const [expanded, setExpanded] = useState<boolean>(false);
   const sortedProjects = sortProjects(
     projects?.filter((p) => p.name.toLowerCase().includes(searchVal.toLowerCase())) || [],
     sortBy
@@ -67,13 +86,17 @@ const Dashboard = function Dashboard() {
     setSearchVal(searchValue);
   };
 
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
+
   return (
     <Page title="Dashboard | All Projects">
       <Container maxWidth="xl">
-        <Box display="flex" sx={{ pb: 5 }}>
+        <Box display="flex" alignItems="center" sx={{ pb: isMobile ? 3 : 5 }}>
           <Box>
             <Typography variant="h3">All Projects</Typography>
-            <Typography variant="body1">List of all projects created and joined by you</Typography>
+            <Typography variant="body1">List of all accessible projects</Typography>
           </Box>
           <MHidden width="smDown">
             <Box display="flex" justifyContent="end" sx={{ flexGrow: 1 }}>
@@ -81,7 +104,7 @@ const Dashboard = function Dashboard() {
                 triggerBtn={{
                   type: 'normal',
                   icon: AddIcon,
-                  text: 'Create New Project',
+                  text: 'New Project',
                 }}
                 title="Create New Project"
               >
@@ -89,27 +112,39 @@ const Dashboard = function Dashboard() {
               </FormDialog>
             </Box>
           </MHidden>
-          <Box pl={2} display="flex" justifyContent="end" sx={{ flexGrow: isMobile ? 1 : 0 }}>
-            <Box sx={{ minWidth: '190px' }}>
-              <SearchBar
-                searchValue={searchVal}
-                setSearchValue={handleSearchChange}
-                label="Projects"
-                size="small"
-              />
+          <MHidden width="mdUp">
+            <ExpandMore
+              expand={expanded}
+              onClick={handleExpandClick}
+              aria-expanded={expanded}
+              aria-label="show filters"
+            >
+              {expanded ? <FilterListOffIcon /> : <FilterListIcon />}
+            </ExpandMore>
+          </MHidden>
+          <MHidden width="mdDown">
+            <Box pl={2} display="flex" justifyContent="end" sx={{ flexGrow: isMobile ? 1 : 0 }}>
+              <Box sx={{ minWidth: '190px' }}>
+                <SearchBar
+                  searchValue={searchVal}
+                  setSearchValue={handleSearchChange}
+                  label="Projects"
+                  size="small"
+                />
+              </Box>
             </Box>
-          </Box>
-          <Box pl={2} display="flex" justifyContent="end" sx={{ flexGrow: isMobile ? 1 : 0 }}>
-            <Box sx={{ minWidth: '190px' }}>
-              <SortBar
-                sortBy={sortBy}
-                handleSortChange={handleSortChange}
-                menuItems={menuItems}
-                label="Projects"
-                size="small"
-              />
+            <Box pl={2} display="flex" justifyContent="end" sx={{ flexGrow: isMobile ? 1 : 0 }}>
+              <Box sx={{ minWidth: '190px' }}>
+                <SortBar
+                  sortBy={sortBy}
+                  handleSortChange={handleSortChange}
+                  menuItems={menuItems}
+                  label="Projects"
+                  size="small"
+                />
+              </Box>
             </Box>
-          </Box>
+          </MHidden>
         </Box>
         <Loader
           dataLoading={loading}
@@ -119,14 +154,76 @@ const Dashboard = function Dashboard() {
           errorText="Failed to load project data."
         >
           {!isMobile && (
-            <ProjectsTable
-              projects={sortedProjects}
-              sortBy={sortBy}
-              sortDir={sortDir}
-              sortChange={handleTHeadSortChange}
-            />
+            <>
+              <Collapse in={expanded} unmountOnExit>
+                <MHidden width="mdUp">
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    flexDirection="column"
+                    sx={{ width: '100%' }}
+                    pb={4}
+                  >
+                    <Box pt={1} pb={2} sx={{ minWidth: '190px' }}>
+                      <SearchBar
+                        searchValue={searchVal}
+                        setSearchValue={handleSearchChange}
+                        label="Projects"
+                        size="small"
+                      />
+                    </Box>
+                    <Box sx={{ minWidth: '190px' }}>
+                      <SortBar
+                        sortBy={sortBy}
+                        handleSortChange={handleSortChange}
+                        menuItems={menuItems}
+                        label="Projects"
+                        size="small"
+                      />
+                    </Box>
+                  </Box>
+                </MHidden>
+              </Collapse>
+              <ProjectsTable
+                projects={sortedProjects}
+                sortBy={sortBy}
+                sortDir={sortDir}
+                sortChange={handleTHeadSortChange}
+              />
+            </>
           )}
-          {isMobile && <ProjectsTableMobile projects={sortedProjects} />}
+          {isMobile && (
+            <>
+              <Collapse in={expanded} unmountOnExit>
+                <Box
+                  display="flex"
+                  justifyContent="center"
+                  flexDirection="column"
+                  sx={{ width: '100%' }}
+                  pb={4}
+                >
+                  <Box pt={1} pb={2} sx={{ minWidth: '190px' }}>
+                    <SearchBar
+                      searchValue={searchVal}
+                      setSearchValue={handleSearchChange}
+                      label="Projects"
+                      size="small"
+                    />
+                  </Box>
+                  <Box sx={{ minWidth: '190px' }}>
+                    <SortBar
+                      sortBy={sortBy}
+                      handleSortChange={handleSortChange}
+                      menuItems={menuItems}
+                      label="Projects"
+                      size="small"
+                    />
+                  </Box>
+                </Box>
+              </Collapse>
+              <ProjectsTableMobile projects={sortedProjects} />
+            </>
+          )}
         </Loader>
       </Container>
     </Page>
