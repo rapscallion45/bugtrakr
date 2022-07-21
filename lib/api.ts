@@ -1,4 +1,11 @@
-import { IBugPayload, IAccount } from '../redux/types/types';
+import {
+  IBugPayload,
+  IAccount,
+  IVerifyEmailPayload,
+  IChangePasswordPayload,
+  IResetPasswordPayload,
+  IValidateResetTokenPayload,
+} from '../redux/types/types';
 
 const { API_REST_URL } = process.env;
 
@@ -31,44 +38,44 @@ export async function registerUser(body: any) {
   return fetch(`${API_REST_URL}/signup`, requestOptions);
 }
 
-export async function verifyEmail(body: any) {
+export async function verifyEmail(payload: IVerifyEmailPayload) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
+    body: JSON.stringify(payload),
   };
 
-  return fetch(`${API_REST_URL}/users/verify-email`, requestOptions);
+  return fetch(`${API_REST_URL}/verify-email`, requestOptions);
 }
 
-export async function forgotPassword(body: any) {
+export async function changePassword(payload: IChangePasswordPayload) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
+    body: JSON.stringify(payload),
   };
 
-  return fetch(`${API_REST_URL}/users/forgot-password`, requestOptions);
+  return fetch(`${API_REST_URL}/change-password`, requestOptions);
 }
 
-export async function resetPassword(body: any) {
+export async function resetPassword(payload: IResetPasswordPayload) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
+    body: JSON.stringify(payload),
   };
 
-  return fetch(`${API_REST_URL}/users/reset-password`, requestOptions);
+  return fetch(`${API_REST_URL}/reset-password`, requestOptions);
 }
 
-export async function validatePasswordReset(body: any) {
+export async function validatePasswordReset(payload: IValidateResetTokenPayload) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
+    body: JSON.stringify(payload),
   };
 
-  return fetch(`${API_REST_URL}/users/validate-reset-token`, requestOptions);
+  return fetch(`${API_REST_URL}/validate-reset-token`, requestOptions);
 }
 
 export async function getProjects(token: string) {

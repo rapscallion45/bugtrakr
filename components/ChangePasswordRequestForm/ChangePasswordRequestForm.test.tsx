@@ -11,6 +11,25 @@ import accountMock from '../../__mocks__/accountMock';
 
 const middleware = [thunkMiddleware];
 
+const mockRouteValue = '/dashboard/my-account';
+jest.mock('next/router', () => ({
+  useRouter() {
+    return {
+      route: mockRouteValue,
+      pathname: mockRouteValue,
+      query: '',
+      asPath: '',
+      push: jest.fn(),
+      events: {
+        on: jest.fn(),
+        off: jest.fn(),
+      },
+      beforePopState: jest.fn(() => null),
+      prefetch: jest.fn(() => null),
+    };
+  },
+}));
+
 describe('Change Password Request Form', () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -24,6 +43,8 @@ describe('Change Password Request Form', () => {
         authentication: {
           authenticating: false,
           loggedIn: true,
+        },
+        account: {
           user: {
             email: accountMock.email,
           },
@@ -44,7 +65,7 @@ describe('Change Password Request Form', () => {
   });
 
   describe('Form Submission', () => {
-    it('Should be disabled and spinner should be rendered when forgot password API called', () => {
+    it('Should be disabled and spinner should be rendered when change password API called', () => {
       /* Arrange */
       const testStore = createStore(
         rootReducer,
@@ -53,6 +74,8 @@ describe('Change Password Request Form', () => {
             authenticating: false,
             loggedIn: true,
             demo: false,
+          },
+          account: {
             user: {
               email: accountMock.email,
             },
@@ -76,7 +99,7 @@ describe('Change Password Request Form', () => {
       expect(view.find('circle').length).toBe(1);
     });
 
-    it('Should be enabled with no spinner once forgot password API call completed', async () => {
+    it('Should be enabled with no spinner once change password API call completed', async () => {
       /* Arrange */
       const testStore = createStore(
         rootReducer,
@@ -85,6 +108,8 @@ describe('Change Password Request Form', () => {
             authenticating: false,
             loggedIn: true,
             demo: false,
+          },
+          account: {
             user: {
               email: accountMock.email,
             },
@@ -121,6 +146,8 @@ describe('Change Password Request Form', () => {
             authenticating: false,
             loggedIn: true,
             demo: true,
+          },
+          account: {
             user: {
               email: accountMock.email,
             },
@@ -148,7 +175,7 @@ describe('Change Password Request Form', () => {
   describe('Events', () => {
     beforeAll(() => jest.spyOn(window, 'fetch'));
 
-    it('Should call forgot password API on button click, passing logged in user email', async () => {
+    it('Should call change password API on button click, passing logged in user email', async () => {
       /* Arrange */
       const testStore = createStore(
         rootReducer,
@@ -156,6 +183,8 @@ describe('Change Password Request Form', () => {
           authentication: {
             authenticating: false,
             loggedIn: true,
+          },
+          account: {
             user: {
               email: accountMock.email,
             },
@@ -181,7 +210,7 @@ describe('Change Password Request Form', () => {
         expect(window.fetch).toHaveBeenCalledTimes(1);
       });
       expect(window.fetch).toHaveBeenCalledWith(
-        '/api/forgot-password',
+        '/api/change-password',
         expect.objectContaining({
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

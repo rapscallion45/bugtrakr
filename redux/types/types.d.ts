@@ -148,3 +148,20 @@ export interface IClosedReopenedBugData {
   reopenedAt: Date;
   reopenedBy: IUser;
 }
+
+export interface IVerifyEmailPayload {
+  token: string;
+}
+
+export interface IChangePasswordPayload {
+  email: string;
+}
+
+export interface IResetPasswordPayload {
+  resetToken: string;
+  password: string;
+}
+
+export interface IValidateResetTokenPayload {
+  resetToken: string;
+}

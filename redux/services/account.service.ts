@@ -1,5 +1,10 @@
 import { handleResponse } from '../../utils';
-import { IAccount } from '../types/types';
+import {
+  IAccount,
+  IChangePasswordPayload,
+  IValidateResetTokenPayload,
+  IResetPasswordPayload,
+} from '../types/types';
 
 function authenticate() {
   const requestOptions = {
@@ -58,11 +63,11 @@ function logout() {
   return fetch(`/api/logout`, requestOptions).then(handleResponse);
 }
 
-function register(user: IAccount) {
+function register(payload: IAccount) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(user),
+    body: JSON.stringify(payload),
   };
 
   return fetch(`/api/register`, requestOptions).then(handleResponse);
@@ -78,31 +83,31 @@ function verifyEmail(token: string | string[]) {
   return fetch(`/api/verify-email`, requestOptions).then(handleResponse);
 }
 
-function forgotPassword(email: string) {
+function changePassword(payload: IChangePasswordPayload) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email }),
+    body: JSON.stringify(payload),
   };
 
-  return fetch(`/api/forgot-password`, requestOptions).then(handleResponse);
+  return fetch(`/api/change-password`, requestOptions).then(handleResponse);
 }
 
-function resetPassword(token: string, password: string) {
+function resetPassword(payload: IResetPasswordPayload) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ token, password }),
+    body: JSON.stringify(payload),
   };
 
   return fetch(`/api/reset-password`, requestOptions).then(handleResponse);
 }
 
-function validateResetToken(token: string | string[]) {
+function validateResetToken(payload: IValidateResetTokenPayload) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ token }),
+    body: JSON.stringify(payload),
   };
 
   return fetch(`/api/validate-reset-token`, requestOptions).then(handleResponse);
@@ -147,7 +152,7 @@ const accountService = {
   logout,
   register,
   verifyEmail,
-  forgotPassword,
+  changePassword,
   resetPassword,
   validateResetToken,
   update: updateAccount,

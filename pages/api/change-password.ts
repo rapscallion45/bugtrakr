@@ -1,11 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { validatePasswordReset } from '../../lib/api';
+import { changePassword } from '../../lib/api';
 
-export default async function validateResetToken(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { method, body } = req;
 
-  if (!body.resetToken) {
-    /* no token provided, return error */
+  if (!body.email) {
+    /* no account email provided, return error */
     return res
       .status(422)
       .json({ message: 'Unproccesable request, please provide the required fields.' });
@@ -16,7 +16,7 @@ export default async function validateResetToken(req: NextApiRequest, res: NextA
     case 'POST':
       /* call api */
       try {
-        const response = await validatePasswordReset(body);
+        const response = await changePassword(body);
         const data = await response.json();
 
         /* send back server response */

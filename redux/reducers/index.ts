@@ -3,7 +3,6 @@ import { combineReducers } from 'redux';
 import authentication from './authentication.reducer';
 import registration from './registration.reducer';
 import verifyEmail from './verifyEmail.reducer';
-import forgotPassword from './forgotPassword.reducer';
 import changePassword from './changePassword.reducer';
 import resetPassword from './resetPassword.reducer';
 import validateResetToken from './validateResetToken.reducer';
@@ -18,7 +17,6 @@ const rootReducer = combineReducers({
   authentication,
   registration,
   verifyEmail,
-  forgotPassword,
   changePassword,
   resetPassword,
   validateResetToken,

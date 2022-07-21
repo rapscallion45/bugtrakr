@@ -1,25 +1,39 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { resetPassword } from '../../lib/api';
 
-export default async function passwordReset(req: NextApiRequest, res: NextApiResponse) {
-  try {
-    /* simply act as proxy between client and backend */
-    const data = await resetPassword(req?.body ?? {})
-      .then((response) => response.text())
-      .then((text) => JSON.parse(text));
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const { method, body } = req;
 
-    /* send back server response */
-    if (!data.data) {
-      return res.status(data.code).json({ message: data.message });
-    } 
-      return res.status(400).json({
-        message: data.message,
-      });
-    
-  } catch (error) {
-    return res.status(501).json({
-      message: 'Oops, something went wrong with the request.',
-      error,
-    });
+  if (!body.resetToken || !body.password) {
+    /* no account reset token or new password provided, return error */
+    return res
+      .status(422)
+      .json({ message: 'Unproccesable request, please provide the required fields.' });
+  }
+
+  /* determine which request type this is */
+  switch (method) {
+    case 'POST':
+      /* call api */
+      try {
+        const response = await resetPassword(body);
+        const data = await response.json();
+
+        /* send back server response */
+        if (response.status === 200) {
+          return res.status(200).json({ message: data.message });
+        }
+        return res.status(401).json({
+          message: data.message,
+        });
+      } catch (error) {
+        return res.status(501).json({
+          message: 'Oops, something went wrong with the request.',
+          error,
+        });
+      }
+    default:
+      /* Return 404 if someone pings the API with an unsupported method */
+      return res.status(404).send('Not found');
   }
 }

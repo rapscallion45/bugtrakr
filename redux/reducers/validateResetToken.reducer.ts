@@ -15,6 +15,10 @@ function validateResetToken(state: any = {}, action: any) {
         error: action.error,
         tokenValid: 'Invalid',
       };
+    case accountConstants.VALIDATE_RESET_TOKEN_RESET:
+      return {
+        tokenValid: '',
+      };
     default:
       return state;
   }

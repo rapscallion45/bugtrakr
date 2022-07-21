@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { useRouter } from 'next/router';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Container from '@mui/material/Container';
@@ -8,12 +9,14 @@ import Link from '../Link/Link';
 import useResetPasswordFormController from './ResetPasswordFormController';
 
 const ResetPasswordForm: FC = function ResetPasswordForm() {
-  const { resettingPassword, tokenStatus, formik } = useResetPasswordFormController();
+  const router = useRouter();
+  const { resettingPassword, tokenStatus, formik, formikResetCode } =
+    useResetPasswordFormController();
 
   const getForm = () => (
     <Container>
       <Typography variant="body1" component="p" sx={{ paddingBottom: '15px', textAlign: 'center' }}>
-        Please enter your new password below
+        Please now enter your new password below
       </Typography>
       <form onSubmit={formik.handleSubmit}>
         <TextField
@@ -58,8 +61,7 @@ const ResetPasswordForm: FC = function ResetPasswordForm() {
           fullWidth
           variant="contained"
           color="secondary"
-          component={Link}
-          href="/login"
+          onClick={() => router.back()}
           disabled={resettingPassword}
         >
           Go Back
@@ -71,52 +73,107 @@ const ResetPasswordForm: FC = function ResetPasswordForm() {
   const getBody = () => {
     switch (tokenStatus) {
       case 'Valid':
-        return getForm();
+        return (
+          <>
+            <Typography variant="h4" component="h4" sx={{ textAlign: 'center' }}>
+              Password Reset Code Verified Successfully!
+            </Typography>
+            {getForm()}
+          </>
+        );
       case 'Invalid':
         return (
+          <>
+            <Typography variant="h4" component="h4" sx={{ textAlign: 'center' }}>
+              We couldn&apos;t reset your password! 😢
+            </Typography>
+            <Container>
+              <div style={{ textAlign: 'center', padding: '20px 0' }}>
+                {
+                  'This is most likely because your verification code has expired. You can get a new code at the '
+                }
+                <Link href="/forgot-password">
+                  <b>Forgot Password</b>
+                </Link>
+                {' page.'}
+              </div>
+              <Button fullWidth variant="contained" color="secondary" onClick={() => router.back()}>
+                Go Back
+              </Button>
+            </Container>
+          </>
+        );
+      case 'Validating':
+        return (
           <Container>
+            <Typography variant="h4" component="h4" sx={{ textAlign: 'center' }}>
+              Please wait a moment, we&apos;re just verifiy your code...
+            </Typography>
+            <div style={{ textAlign: 'center', padding: '40px 0' }}>
+              <CircularProgress disableShrink />
+              <Typography variant="h6" component="h6" sx={{ textAlign: 'center' }}>
+                Verifying reset code...
+              </Typography>
+            </div>
+          </Container>
+        );
+      case 'Waiting':
+      default:
+        return (
+          <Container>
+            <Typography variant="h4" component="h4" sx={{ textAlign: 'center' }}>
+              Please enter your password reset verification code
+            </Typography>
             <div style={{ textAlign: 'center', padding: '20px 0' }}>
-              {'There was a problem resetting your password. You can get a new link at the '}
+              {
+                'Your password reset verification code should have been emailed to you, at your registered email address. You can get a new code at the '
+              }
               <Link href="/forgot-password">
                 <b>Forgot Password</b>
               </Link>
               {' page.'}
             </div>
-            <Button fullWidth variant="contained" color="secondary" component={Link} href="/login">
-              Go Back
-            </Button>
-          </Container>
-        );
-      case 'Validating':
-        return (
-          <Container>
-            <div style={{ textAlign: 'center', padding: '20px 0' }}>
-              <CircularProgress disableShrink />
-              <Typography variant="h6" component="h6" sx={{ textAlign: 'center' }}>
-                Verifying...
-              </Typography>
-            </div>
-          </Container>
-        );
-      default:
-        return (
-          <Container>
-            <div className="text-center mb-5">Ooops! Something went wrong!</div>
-            <Button fullWidth variant="contained" color="secondary" component={Link} href="/login">
-              Go Back
-            </Button>
+            <form onSubmit={formikResetCode.handleSubmit}>
+              <TextField
+                fullWidth
+                autoFocus
+                variant="outlined"
+                margin="normal"
+                id="token"
+                name="token"
+                label="Enter code"
+                type="token"
+                value={formikResetCode.values.token}
+                onChange={formikResetCode.handleChange}
+                error={formikResetCode.touched.token && Boolean(formikResetCode.errors.token)}
+                helperText={formikResetCode.touched.token && formikResetCode.errors.token}
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                disabled={resettingPassword}
+                sx={{ margin: '10px 0' }}
+              >
+                {!resettingPassword && 'Submit Code'}
+                {resettingPassword && <CircularProgress size={25} color="inherit" />}
+              </Button>
+              <Button
+                fullWidth
+                variant="contained"
+                color="secondary"
+                onClick={() => router.back()}
+                disabled={resettingPassword}
+              >
+                Cancel
+              </Button>
+            </form>
           </Container>
         );
     }
   };
 
-  return (
-    <Container maxWidth="xs">
-      <Typography variant="h4" component="h4" sx={{ textAlign: 'center' }}>
-        Reset Your Password
-      </Typography>
-      {getBody()}
-    </Container>
-  );
+  return <Container maxWidth="xs">{getBody()}</Container>;
 };
 export default ResetPasswordForm;

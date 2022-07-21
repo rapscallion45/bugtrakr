@@ -2,7 +2,13 @@ import Router from 'next/router';
 import { accountConstants } from '../constants';
 import { accountService } from '../services';
 import alertActions from './alert.actions';
-import { IAccount, IUser } from '../types/types';
+import {
+  IAccount,
+  IUser,
+  IValidateResetTokenPayload,
+  IResetPasswordPayload,
+  IChangePasswordPayload,
+} from '../types/types';
 
 function authenticate() {
   function request() {
@@ -270,51 +276,7 @@ function verifyEmail(verificationToken: string | string[]) {
   };
 }
 
-function forgotPassword(email: string) {
-  function request() {
-    return { type: accountConstants.FORGOT_PASSWORD_REQUEST };
-  }
-  function success(message: string) {
-    return { type: accountConstants.FORGOT_PASSWORD_SUCCESS, message };
-  }
-  function failure(error: string) {
-    return { type: accountConstants.FORGOT_PASSWORD_FAILURE, error };
-  }
-
-  return (dispatch) => {
-    dispatch(request());
-
-    accountService.forgotPassword(email).then(
-      (message) => {
-        dispatch(success(message.toString()));
-        Router.push('/login');
-        dispatch(
-          alertActions.enqueueSnackbar({
-            message: message.toString(),
-            options: {
-              key: new Date().getTime() + Math.random(),
-              variant: 'success',
-            },
-          })
-        );
-      },
-      (error) => {
-        dispatch(failure(error.toString()));
-        dispatch(
-          alertActions.enqueueSnackbar({
-            message: error.toString(),
-            options: {
-              key: new Date().getTime() + Math.random(),
-              variant: 'error',
-            },
-          })
-        );
-      }
-    );
-  };
-}
-
-function changePassword(email: string) {
+function changePassword(payload: IChangePasswordPayload, nextPage: () => void) {
   function request() {
     return { type: accountConstants.CHANGE_PASSWORD_REQUEST };
   }
@@ -328,7 +290,7 @@ function changePassword(email: string) {
   return (dispatch) => {
     dispatch(request());
 
-    accountService.forgotPassword(email).then(
+    accountService.changePassword(payload).then(
       (message) => {
         dispatch(success(message.toString()));
         dispatch(
@@ -336,10 +298,11 @@ function changePassword(email: string) {
             message: message.toString(),
             options: {
               key: new Date().getTime() + Math.random(),
-              variant: 'success',
+              variant: 'info',
             },
           })
         );
+        if (nextPage) nextPage();
       },
       (error) => {
         dispatch(failure(error.toString()));
@@ -357,7 +320,7 @@ function changePassword(email: string) {
   };
 }
 
-function resetPassword(resetToken: string, password: string) {
+function resetPassword(payload: IResetPasswordPayload, nextPage: () => void) {
   function request() {
     return { type: accountConstants.RESET_PASSWORD_REQUEST };
   }
@@ -371,10 +334,9 @@ function resetPassword(resetToken: string, password: string) {
   return (dispatch) => {
     dispatch(request());
 
-    accountService.resetPassword(resetToken, password).then(
+    accountService.resetPassword(payload).then(
       (message) => {
         dispatch(success(message.toString()));
-        Router.push('/login');
         dispatch(
           alertActions.enqueueSnackbar({
             message: message.toString(),
@@ -384,6 +346,7 @@ function resetPassword(resetToken: string, password: string) {
             },
           })
         );
+        if (nextPage) nextPage();
       },
       (error) => {
         dispatch(failure(error.toString()));
@@ -401,7 +364,7 @@ function resetPassword(resetToken: string, password: string) {
   };
 }
 
-function validateResetToken(resetToken: string | string[]) {
+function validateResetToken(payload: IValidateResetTokenPayload) {
   function request() {
     return { type: accountConstants.VALIDATE_RESET_TOKEN_REQUEST };
   }
@@ -415,7 +378,7 @@ function validateResetToken(resetToken: string | string[]) {
   return (dispatch) => {
     dispatch(request());
 
-    accountService.validateResetToken(resetToken).then(
+    accountService.validateResetToken(payload).then(
       () => {
         dispatch(success());
       },
@@ -433,6 +396,10 @@ function validateResetToken(resetToken: string | string[]) {
       }
     );
   };
+}
+
+function resetTokenValidation() {
+  return { type: accountConstants.VALIDATE_RESET_TOKEN_RESET };
 }
 
 function updateAccount(id: string, user: IAccount) {
@@ -529,10 +496,10 @@ const accountActions = {
   logout,
   register,
   verifyEmail,
-  forgotPassword,
   changePassword,
   resetPassword,
   validateResetToken,
+  resetTokenValidation,
   update: updateAccount,
   get: getAccount,
   delete: deleteAccount,
