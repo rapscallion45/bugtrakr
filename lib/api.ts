@@ -1,4 +1,4 @@
-import { IBugPayload, IUser } from '../redux/types/types';
+import { IBugPayload, IAccount } from '../redux/types/types';
 
 const { API_REST_URL } = process.env;
 
@@ -276,7 +276,7 @@ export async function getUserById(token: string, id: string) {
   return fetch(`${API_REST_URL}/users/${id}`, requestOptions);
 }
 
-export async function updateUserById(token: string, id: string, payload: IUser) {
+export async function updateUserById(token: string, id: string, payload: IAccount) {
   const requestOptions = {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
