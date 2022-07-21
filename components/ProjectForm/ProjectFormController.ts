@@ -30,7 +30,7 @@ const useProjectFormController = (
         dispatch(projectActions.updateProject(projectId, name, closeDialog));
         break;
       default:
-        dispatch(projectActions.createProject(name, selectedMembers, closeDialog));
+        dispatch(projectActions.createProject({ name, members: selectedMembers }, closeDialog));
         break;
     }
   };

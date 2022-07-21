@@ -172,12 +172,16 @@ const ProjectDetails = function ProjectDetails() {
     setTab(newValue);
   };
 
+  const goToDashboard = () => {
+    router.push('/dashboard');
+  };
+
   const handleLeaveProject = (closeDialog: () => void) => {
-    dispatch(projectActions.leaveProject(projectId.toString(), closeDialog));
+    dispatch(projectActions.leaveProject(projectId.toString(), closeDialog, goToDashboard));
   };
 
   const handleDeleteProject = (closeDialog: () => void) => {
-    dispatch(projectActions.deleteProject(projectId.toString(), closeDialog));
+    dispatch(projectActions.deleteProject(projectId.toString(), closeDialog, goToDashboard));
   };
 
   const handleSortChange = (e: SelectChangeEvent) => {

@@ -125,6 +125,15 @@ export interface ICredentialsPayload {
   password: string;
 }
 
+export interface IGoogleCredentialsPayload {
+  tokenId: string;
+}
+
+export interface IFacebookCredentialsPayload {
+  facebookId: string;
+  authToken: string;
+}
+
 export interface IProjectPayload {
   name: string;
   members: string[];

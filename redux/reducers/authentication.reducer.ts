@@ -22,7 +22,6 @@ function authentication(state: any = { authenticating: true }, action: any) {
     case accountConstants.LOGIN_FACEBOOK_REQUEST:
       return {
         loggingIn: true,
-        user: action.userData,
       };
     case accountConstants.DEMO_LOGIN_REQUEST:
       return {

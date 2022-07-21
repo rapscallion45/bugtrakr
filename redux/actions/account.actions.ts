@@ -1,13 +1,16 @@
-import Router from 'next/router';
 import { accountConstants } from '../constants';
 import { accountService } from '../services';
 import alertActions from './alert.actions';
 import {
   IAccount,
   IUser,
+  ICredentialsPayload,
   IValidateResetTokenPayload,
   IResetPasswordPayload,
   IChangePasswordPayload,
+  IGoogleCredentialsPayload,
+  IFacebookCredentialsPayload,
+  IVerifyEmailPayload,
 } from '../types/types';
 
 function authenticate() {
@@ -44,11 +47,11 @@ function authenticate() {
   };
 }
 
-function login(username: string, password: string) {
-  function request(userData: IAccount) {
-    return { type: accountConstants.LOGIN_REQUEST, userData };
+function login(payload: ICredentialsPayload, nextPage: () => void) {
+  function request() {
+    return { type: accountConstants.LOGIN_REQUEST };
   }
-  function success(userData: IAccount) {
+  function success(userData: IUser) {
     return { type: accountConstants.LOGIN_SUCCESS, userData };
   }
   function failure(error: string) {
@@ -56,12 +59,12 @@ function login(username: string, password: string) {
   }
 
   return (dispatch) => {
-    dispatch(request({ username }));
+    dispatch(request());
 
-    accountService.login(username, password).then(
+    accountService.login(payload).then(
       (user) => {
         dispatch(success(user));
-        Router.push('/dashboard');
+        if (nextPage) nextPage();
       },
       (error) => {
         dispatch(failure(error.toString()));
@@ -79,11 +82,11 @@ function login(username: string, password: string) {
   };
 }
 
-function demoLogin() {
+function demoLogin(nextPage: () => void) {
   function request() {
     return { type: accountConstants.DEMO_LOGIN_REQUEST };
   }
-  function success(userData: IAccount) {
+  function success(userData: IUser) {
     return { type: accountConstants.DEMO_LOGIN_SUCCESS, userData };
   }
   function failure(error: string) {
@@ -96,7 +99,7 @@ function demoLogin() {
     accountService.demoLogin().then(
       (user) => {
         dispatch(success(user));
-        Router.push('/dashboard');
+        if (nextPage) nextPage();
       },
       (error) => {
         dispatch(failure(error.toString()));
@@ -114,7 +117,7 @@ function demoLogin() {
   };
 }
 
-function loginWithGoogle(idToken: string) {
+function loginWithGoogle(payload: IGoogleCredentialsPayload, nextPage: () => void) {
   function request() {
     return { type: accountConstants.LOGIN_FACEBOOK_REQUEST };
   }
@@ -128,10 +131,10 @@ function loginWithGoogle(idToken: string) {
   return (dispatch) => {
     dispatch(request());
 
-    accountService.loginWithGoogle(idToken).then(
+    accountService.loginWithGoogle(payload).then(
       (user) => {
         dispatch(success(user));
-        Router.push('/dashboard');
+        if (nextPage) nextPage();
       },
       (error) => {
         dispatch(failure(error.toString()));
@@ -149,7 +152,7 @@ function loginWithGoogle(idToken: string) {
   };
 }
 
-function loginWithFacebook(facebookId: string, accessToken: string) {
+function loginWithFacebook(payload: IFacebookCredentialsPayload, nextPage: () => void) {
   function request() {
     return { type: accountConstants.LOGIN_FACEBOOK_REQUEST };
   }
@@ -163,10 +166,10 @@ function loginWithFacebook(facebookId: string, accessToken: string) {
   return (dispatch) => {
     dispatch(request());
 
-    accountService.loginWithFacebook(facebookId, accessToken).then(
+    accountService.loginWithFacebook(payload).then(
       (user) => {
         dispatch(success(user));
-        Router.push('/dashboard');
+        if (nextPage) nextPage();
       },
       (error) => {
         dispatch(failure(error.toString()));
@@ -189,7 +192,7 @@ function logout() {
   return { type: accountConstants.LOGOUT };
 }
 
-function register(user: IAccount) {
+function register(payload: IAccount, nextPage: () => void) {
   function request() {
     return { type: accountConstants.REGISTER_REQUEST };
   }
@@ -203,10 +206,9 @@ function register(user: IAccount) {
   return (dispatch) => {
     dispatch(request());
 
-    accountService.register(user).then(
+    accountService.register(payload).then(
       (message) => {
         dispatch(success(message.toString()));
-        Router.push('/login');
         dispatch(
           alertActions.enqueueSnackbar({
             message: message.toString(),
@@ -216,6 +218,7 @@ function register(user: IAccount) {
             },
           })
         );
+        if (nextPage) nextPage();
       },
       (error) => {
         dispatch(failure(error.toString()));
@@ -233,7 +236,7 @@ function register(user: IAccount) {
   };
 }
 
-function verifyEmail(verificationToken: string | string[]) {
+function verifyEmail(payload: IVerifyEmailPayload, nextPage: () => void) {
   function request() {
     return { type: accountConstants.VERIFY_EMAIL_REQUEST };
   }
@@ -246,10 +249,9 @@ function verifyEmail(verificationToken: string | string[]) {
 
   return (dispatch) => {
     dispatch(request());
-    accountService.verifyEmail(verificationToken).then(
+    accountService.verifyEmail(payload).then(
       (message) => {
         dispatch(success(message.toString()));
-        Router.push('/login');
         dispatch(
           alertActions.enqueueSnackbar({
             message: message.toString(),
@@ -259,6 +261,7 @@ function verifyEmail(verificationToken: string | string[]) {
             },
           })
         );
+        if (nextPage) nextPage();
       },
       (error) => {
         dispatch(failure(error.toString()));

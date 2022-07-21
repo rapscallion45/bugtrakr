@@ -5,6 +5,7 @@ import {
   IChangePasswordPayload,
   IResetPasswordPayload,
   IValidateResetTokenPayload,
+  IProjectPayload,
 } from '../redux/types/types';
 
 const { API_REST_URL } = process.env;
@@ -96,11 +97,11 @@ export async function deleteProject(token: string, id: string) {
   return fetch(`${API_REST_URL}/projects/${id}`, requestOptions);
 }
 
-export async function createProject(token: string, body: any) {
+export async function createProject(token: string, payload: IProjectPayload) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
-    body: JSON.stringify(body),
+    body: JSON.stringify(payload),
   };
 
   return fetch(`${API_REST_URL}/projects`, requestOptions);

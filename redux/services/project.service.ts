@@ -1,4 +1,5 @@
 import { handleResponse } from '../../utils';
+import { IProjectPayload } from "../types/types";
 
 function getProject() {
   const requestOptions = {
@@ -19,11 +20,11 @@ function deleteProject(id: string) {
   return fetch(`/api/projects`, requestOptions).then(handleResponse);
 }
 
-function createProject(name: string, members: string[]) {
+function createProject(payload: IProjectPayload) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, members }),
+    body: JSON.stringify(payload),
   };
 
   return fetch(`/api/projects`, requestOptions).then(handleResponse);

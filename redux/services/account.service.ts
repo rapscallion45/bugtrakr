@@ -1,9 +1,13 @@
 import { handleResponse } from '../../utils';
 import {
   IAccount,
+  ICredentialsPayload,
+  IGoogleCredentialsPayload,
+  IFacebookCredentialsPayload,
   IChangePasswordPayload,
   IValidateResetTokenPayload,
   IResetPasswordPayload,
+  IVerifyEmailPayload,
 } from '../types/types';
 
 function authenticate() {
@@ -15,11 +19,11 @@ function authenticate() {
   return fetch(`/api/authenticate`, requestOptions).then(handleResponse);
 }
 
-function login(username: string, password: string) {
+function login(payload: ICredentialsPayload) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password }),
+    body: JSON.stringify(payload),
   };
 
   return fetch(`/api/login`, requestOptions).then(handleResponse);
@@ -34,21 +38,21 @@ function demoLogin() {
   return fetch(`/api/demo-login`, requestOptions).then(handleResponse);
 }
 
-function loginWithGoogle(idToken: string) {
+function loginWithGoogle(payload: IGoogleCredentialsPayload) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ idToken }),
+    body: JSON.stringify(payload),
   };
 
   return fetch(`/api/login-google`, requestOptions).then(handleResponse);
 }
 
-function loginWithFacebook(facebookId: string, accessToken: string) {
+function loginWithFacebook(payload: IFacebookCredentialsPayload) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ facebookId, accessToken }),
+    body: JSON.stringify(payload),
   };
 
   return fetch(`/api/login-facebook`, requestOptions).then(handleResponse);
@@ -73,11 +77,11 @@ function register(payload: IAccount) {
   return fetch(`/api/register`, requestOptions).then(handleResponse);
 }
 
-function verifyEmail(token: string | string[]) {
+function verifyEmail(payload: IVerifyEmailPayload) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ token }),
+    body: JSON.stringify(payload),
   };
 
   return fetch(`/api/verify-email`, requestOptions).then(handleResponse);

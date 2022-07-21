@@ -1,7 +1,6 @@
-// @ts-ignore
-import { router } from 'next/router';
 import { projectConstants } from '../constants';
 import { projectService } from '../services';
+import { IProjectPayload } from '../types/types';
 import alertActions from './alert.actions';
 
 function getProjects() {
@@ -25,7 +24,7 @@ function getProjects() {
   };
 }
 
-function deleteProject(id: string, closeDialog: () => void) {
+function deleteProject(id: string, closeDialog: () => void, nextPage: () => void) {
   function request(projectId: string) {
     return { type: projectConstants.DELETE_REQUEST, projectId };
   }
@@ -43,7 +42,6 @@ function deleteProject(id: string, closeDialog: () => void) {
       () => {
         dispatch(success(id));
         if (closeDialog) closeDialog();
-        router.push('/dashboard');
         dispatch(
           alertActions.enqueueSnackbar({
             message: 'Project deleted successfully.',
@@ -53,6 +51,7 @@ function deleteProject(id: string, closeDialog: () => void) {
             },
           })
         );
+        if (nextPage) nextPage();
       },
       (error) => {
         dispatch(failure(id, error.toString()));
@@ -70,7 +69,7 @@ function deleteProject(id: string, closeDialog: () => void) {
   };
 }
 
-function createProject(name: string, members: string[], closeDialog: () => void) {
+function createProject(payload: IProjectPayload, closeDialog: () => void) {
   function request() {
     return { type: projectConstants.CREATE_REQUEST };
   }
@@ -84,7 +83,7 @@ function createProject(name: string, members: string[], closeDialog: () => void)
   return (dispatch) => {
     dispatch(request());
 
-    projectService.createProject(name, members).then(
+    projectService.createProject(payload).then(
       (data) => {
         dispatch(success(data));
         if (closeDialog) closeDialog();
@@ -246,7 +245,7 @@ function removeProjectMember(id: string, memberId: string, closeDialog: () => vo
   };
 }
 
-function leaveProject(id: string, closeDialog: () => void) {
+function leaveProject(id: string, closeDialog: () => void, nextPage: () => void) {
   function request() {
     return { type: projectConstants.LEAVE_REQUEST };
   }
@@ -264,7 +263,6 @@ function leaveProject(id: string, closeDialog: () => void) {
       () => {
         dispatch(success());
         if (closeDialog) closeDialog();
-        router.push('/dashboard');
         dispatch(
           alertActions.enqueueSnackbar({
             message: `You have been removed from the project.`,
@@ -274,6 +272,7 @@ function leaveProject(id: string, closeDialog: () => void) {
             },
           })
         );
+        if (nextPage) nextPage();
       },
       (error) => {
         dispatch(failure(error.toString()));
