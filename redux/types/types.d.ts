@@ -104,6 +104,8 @@ export type ProjectSortValues =
   | 'most-members'
   | 'least-members';
 
+export type ProjectMemberSortValues = 'newest' | 'oldest' | 'a-z' | 'z-a';
+
 export type BugSortValues =
   | 'newest'
   | 'oldest'

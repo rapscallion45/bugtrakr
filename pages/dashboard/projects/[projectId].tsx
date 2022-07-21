@@ -45,8 +45,8 @@ import ProjectMenu from '../../../components/ProjectMenu/ProjectMenu';
 import SearchBar from '../../../components/SearchBar/SearchBar';
 import { bugActions, projectActions } from '../../../redux/actions';
 import { AppState } from '../../../redux/reducers';
-import { formatDateTime, sortBugs, filterBugs } from '../../../utils';
-import { BugSortValues } from '../../../redux/types/types';
+import { formatDateTime, sortBugs, filterBugs, sortProjectMembers } from '../../../utils';
+import { BugSortValues, ProjectMemberSortValues } from '../../../redux/types/types';
 
 const TabStyle = styled(Tab)({
   display: 'flex',
@@ -66,6 +66,13 @@ const menuItems = [
   { value: 'updated', label: 'Recently Updated' },
   { value: 'most-notes', label: 'Most Notes' },
   { value: 'least-notes', label: 'Least Notes' },
+];
+
+const userMenuItems = [
+  { value: 'newest', label: 'Newest' },
+  { value: 'oldest', label: 'Oldest' },
+  { value: 'a-z', label: 'Username (A - Z)' },
+  { value: 'z-a', label: 'Username (Z - A)' },
 ];
 
 interface ExpandMoreProps extends IconButtonProps {
@@ -130,14 +137,23 @@ const ProjectDetails = function ProjectDetails() {
   } = useSelector((state: AppState) => state.bugs);
   const projectData = projects?.find((project) => project.id === projectId);
   const [sortBy, setSortBy] = useState<BugSortValues>('newest');
+  const [sortMembersBy, setSortMembersBy] = useState<ProjectMemberSortValues>('newest');
   const [sortDir, setSortDir] = useState<SortDirection>('desc');
   const [searchVal, setSearchVal] = useState<string>('');
+  const [searchMembersVal, setSearchMembersVal] = useState<string>('');
   const [expanded, setExpanded] = useState<boolean>(false);
+  const [usersFiltExpanded, setUsersFiltExpanded] = useState<boolean>(false);
   const sortedBugs = sortBugs(
     bugs?.filter(
       (b) => b.title.toLowerCase().includes(searchVal.toLowerCase()) && filterBugs('all', b)
     ) || [],
     sortBy
+  );
+  const sortedMembers = sortProjectMembers(
+    projectData?.members?.filter((u) =>
+      u.member.username.toLowerCase().includes(searchMembersVal.toLowerCase())
+    ) || [],
+    sortMembersBy
   );
   const isAdmin = user.id === projectData?.createdBy.id;
 
@@ -168,6 +184,10 @@ const ProjectDetails = function ProjectDetails() {
     setSortBy(e.target.value as BugSortValues);
   };
 
+  const handleMembersSortChange = (e: SelectChangeEvent) => {
+    setSortMembersBy(e.target.value as ProjectMemberSortValues);
+  };
+
   const handleTHeadSortChange = (value: string) => {
     setSortBy(value as BugSortValues);
     setSortDir(sortDir === 'asc' ? 'desc' : 'asc');
@@ -177,8 +197,16 @@ const ProjectDetails = function ProjectDetails() {
     setSearchVal(searchValue);
   };
 
+  const handleMembersSearchChange = (searchValue: string) => {
+    setSearchMembersVal(searchValue);
+  };
+
   const handleExpandClick = () => {
     setExpanded(!expanded);
+  };
+
+  const handleUsersFiltExpandClick = () => {
+    setUsersFiltExpanded(!usersFiltExpanded);
   };
 
   const a11yProps = (index: string) => ({
@@ -437,7 +465,7 @@ const ProjectDetails = function ProjectDetails() {
             )}
           </ProjectTabPanel>
           <ProjectTabPanel value={tab} index={1}>
-            <Box display="flex" sx={{ pt: 2, pb: 5 }}>
+            <Box display="flex" sx={{ pt: 2, pb: isMobile ? 2 : 5 }}>
               <GroupIcon fontSize="large" style={{ marginRight: '0.2em' }} />
               <Typography variant="h4">Users List</Typography>
               {isAdmin && (
@@ -461,20 +489,113 @@ const ProjectDetails = function ProjectDetails() {
                   </Box>
                 </MHidden>
               )}
+              <MHidden width="mdUp">
+                <ExpandMore
+                  expand={usersFiltExpanded}
+                  onClick={handleUsersFiltExpandClick}
+                  aria-expanded={usersFiltExpanded}
+                  aria-label="show user filters"
+                >
+                  {usersFiltExpanded ? <FilterListOffIcon /> : <FilterListIcon />}
+                </ExpandMore>
+              </MHidden>
+              <MHidden width="mdDown">
+                <Box pl={2} display="flex" justifyContent="end" sx={{ flexGrow: isMobile ? 1 : 0 }}>
+                  <Box sx={{ minWidth: '190px' }}>
+                    <SearchBar
+                      searchValue={searchMembersVal}
+                      setSearchValue={handleMembersSearchChange}
+                      label="Users"
+                      size="small"
+                    />
+                  </Box>
+                </Box>
+                <Box pl={2} display="flex" justifyContent="end" sx={{ flexGrow: isMobile ? 1 : 0 }}>
+                  <Box sx={{ minWidth: '190px' }}>
+                    <SortBar
+                      sortBy={sortMembersBy}
+                      handleSortChange={handleMembersSortChange}
+                      menuItems={userMenuItems}
+                      label="Users"
+                      size="small"
+                    />
+                  </Box>
+                </Box>
+              </MHidden>
             </Box>
             {!isMobile ? (
-              <MembersTable
-                members={projectData?.members}
-                projectId={projectData?.id}
-                adminId={projectData?.createdBy?.id}
-              />
+              <>
+                <MHidden width="mdUp">
+                  <Collapse in={usersFiltExpanded} unmountOnExit>
+                    <Box
+                      display="flex"
+                      justifyContent="center"
+                      flexDirection="column"
+                      sx={{ width: '100%' }}
+                      pb={4}
+                    >
+                      <Box pt={1} pb={2} sx={{ minWidth: '190px' }}>
+                        <SearchBar
+                          searchValue={searchMembersVal}
+                          setSearchValue={handleMembersSearchChange}
+                          label="Users"
+                          size="small"
+                        />
+                      </Box>
+                      <Box sx={{ minWidth: '190px' }}>
+                        <SortBar
+                          sortBy={sortMembersBy}
+                          handleSortChange={handleMembersSortChange}
+                          menuItems={userMenuItems}
+                          label="Users"
+                          size="small"
+                        />
+                      </Box>
+                    </Box>
+                  </Collapse>
+                </MHidden>
+                <MembersTable
+                  members={sortedMembers}
+                  projectId={projectData?.id}
+                  adminId={projectData?.createdBy?.id}
+                />
+              </>
             ) : (
-              <MembersTableMobile
-                members={projectData?.members}
-                projectId={projectData?.id}
-                projectName={projectData?.name}
-                adminId={projectData?.createdBy?.id}
-              />
+              <>
+                <Collapse in={usersFiltExpanded} unmountOnExit>
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    flexDirection="column"
+                    sx={{ width: '100%' }}
+                    pb={4}
+                  >
+                    <Box pt={1} pb={2} sx={{ minWidth: '190px' }}>
+                      <SearchBar
+                        searchValue={searchMembersVal}
+                        setSearchValue={handleMembersSearchChange}
+                        label="Users"
+                        size="small"
+                      />
+                    </Box>
+                    <Box sx={{ minWidth: '190px' }}>
+                      <SortBar
+                        sortBy={sortMembersBy}
+                        handleSortChange={handleMembersSortChange}
+                        menuItems={userMenuItems}
+                        label="Users"
+                        size="small"
+                      />
+                    </Box>
+                  </Box>
+                </Collapse>
+                <MembersTableMobile
+                  members={sortedMembers}
+                  projectId={projectData?.id}
+                  projectName={projectData?.name}
+                  adminId={projectData?.createdBy?.id}
+                />
+              </>
             )}
           </ProjectTabPanel>
         </Loader>
