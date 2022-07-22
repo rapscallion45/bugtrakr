@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFormik } from 'formik';
@@ -7,20 +6,20 @@ import { accountActions } from '../../redux/actions';
 import { AppState } from '../../redux/reducers';
 
 const useResetPasswordController = () => {
-  const router = useRouter();
-  const resettingPassword = useSelector((state: AppState) => state.resetPassword.resettingPassword);
+  const { resettingPassword, passwordReset } = useSelector(
+    (state: AppState) => state.resetPassword
+  );
   const tokenStatus = useSelector((state: AppState) => state.validateResetToken.tokenValid);
+  const { email: requestedEmail } = useSelector((state: AppState) => state.changePassword);
   const [resetToken, setResetToken] = useState<string | null>(null);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
     /* each time page loads, reset the validation process */
     dispatch(accountActions.resetTokenValidation());
+    dispatch(accountActions.resetPasswordReset());
   }, []);
-
-  const goToLoginPage = () => {
-    router.push('/login');
-  };
 
   const validationSchema = Yup.object().shape({
     password: Yup.string()
@@ -38,27 +37,31 @@ const useResetPasswordController = () => {
     },
     validationSchema,
     onSubmit: ({ password }) => {
-      dispatch(accountActions.resetPassword({ resetToken, password }, goToLoginPage));
+      dispatch(accountActions.resetPassword({ resetToken, password, email: userEmail }));
     },
   });
 
   const validationSchemaResetCode = Yup.object().shape({
     token: Yup.string()
       .matches(/^\d+$/, 'Verification code is a 6 digit number')
-      .length(6, 'Password verification is 6 characters long'),
+      .length(6, 'Password verification is 6 characters long')
+      .required('Verification code required.'),
+    email: Yup.string().email('Email is invalid').required('Email is required'),
   });
 
   const formikResetCode = useFormik({
     initialValues: {
       token: '',
+      email: requestedEmail || '',
     },
     validationSchema: validationSchemaResetCode,
-    onSubmit: ({ token }) => {
-      dispatch(accountActions.validateResetToken({ resetToken: token }));
+    onSubmit: ({ token, email }) => {
+      dispatch(accountActions.validateResetToken({ resetToken: token, email }));
       setResetToken(token);
+      setUserEmail(email);
     },
   });
 
-  return { resettingPassword, tokenStatus, formik, formikResetCode };
+  return { resettingPassword, passwordReset, tokenStatus, formik, formikResetCode };
 };
 export default useResetPasswordController;

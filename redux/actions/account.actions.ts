@@ -196,8 +196,8 @@ function register(payload: IAccount, nextPage: () => void) {
   function request() {
     return { type: accountConstants.REGISTER_REQUEST };
   }
-  function success(message: string) {
-    return { type: accountConstants.REGISTER_SUCCESS, message };
+  function success(email: string) {
+    return { type: accountConstants.REGISTER_SUCCESS, email };
   }
   function failure(error: string) {
     return { type: accountConstants.REGISTER_FAILURE, error };
@@ -207,11 +207,11 @@ function register(payload: IAccount, nextPage: () => void) {
     dispatch(request());
 
     accountService.register(payload).then(
-      (message) => {
-        dispatch(success(message.toString()));
+      (data) => {
+        dispatch(success(data?.email));
         dispatch(
           alertActions.enqueueSnackbar({
-            message: message.toString(),
+            message: data?.info?.toString(),
             options: {
               key: new Date().getTime() + Math.random(),
               variant: 'info',
@@ -236,7 +236,7 @@ function register(payload: IAccount, nextPage: () => void) {
   };
 }
 
-function verifyEmail(payload: IVerifyEmailPayload, nextPage: () => void) {
+function verifyEmail(payload: IVerifyEmailPayload) {
   function request() {
     return { type: accountConstants.VERIFY_EMAIL_REQUEST };
   }
@@ -261,7 +261,6 @@ function verifyEmail(payload: IVerifyEmailPayload, nextPage: () => void) {
             },
           })
         );
-        if (nextPage) nextPage();
       },
       (error) => {
         dispatch(failure(error.toString()));
@@ -279,12 +278,16 @@ function verifyEmail(payload: IVerifyEmailPayload, nextPage: () => void) {
   };
 }
 
+function resetEmailVerification() {
+  return { type: accountConstants.VERIFY_EMAIL_RESET };
+}
+
 function changePassword(payload: IChangePasswordPayload, nextPage: () => void) {
   function request() {
     return { type: accountConstants.CHANGE_PASSWORD_REQUEST };
   }
-  function success(message: string) {
-    return { type: accountConstants.CHANGE_PASSWORD_SUCCESS, message };
+  function success(email: string) {
+    return { type: accountConstants.CHANGE_PASSWORD_SUCCESS, email };
   }
   function failure(error: string) {
     return { type: accountConstants.CHANGE_PASSWORD_FAILURE, error };
@@ -294,11 +297,11 @@ function changePassword(payload: IChangePasswordPayload, nextPage: () => void) {
     dispatch(request());
 
     accountService.changePassword(payload).then(
-      (message) => {
-        dispatch(success(message.toString()));
+      (data) => {
+        dispatch(success(data?.email));
         dispatch(
           alertActions.enqueueSnackbar({
-            message: message.toString(),
+            message: data?.info?.toString(),
             options: {
               key: new Date().getTime() + Math.random(),
               variant: 'info',
@@ -323,7 +326,7 @@ function changePassword(payload: IChangePasswordPayload, nextPage: () => void) {
   };
 }
 
-function resetPassword(payload: IResetPasswordPayload, nextPage: () => void) {
+function resetPassword(payload: IResetPasswordPayload) {
   function request() {
     return { type: accountConstants.RESET_PASSWORD_REQUEST };
   }
@@ -349,7 +352,6 @@ function resetPassword(payload: IResetPasswordPayload, nextPage: () => void) {
             },
           })
         );
-        if (nextPage) nextPage();
       },
       (error) => {
         dispatch(failure(error.toString()));
@@ -365,6 +367,10 @@ function resetPassword(payload: IResetPasswordPayload, nextPage: () => void) {
       }
     );
   };
+}
+
+function resetPasswordReset() {
+  return { type: accountConstants.RESET_PASSWORD_RESET };
 }
 
 function validateResetToken(payload: IValidateResetTokenPayload) {
@@ -499,8 +505,10 @@ const accountActions = {
   logout,
   register,
   verifyEmail,
+  resetEmailVerification,
   changePassword,
   resetPassword,
+  resetPasswordReset,
   validateResetToken,
   resetTokenValidation,
   update: updateAccount,

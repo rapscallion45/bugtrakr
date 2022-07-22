@@ -4,13 +4,15 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Container from '@mui/material/Container';
 import CircularProgress from '@mui/material/CircularProgress';
+import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 import Link from '../Link/Link';
 import useResetPasswordFormController from './ResetPasswordFormController';
 
 const ResetPasswordForm: FC = function ResetPasswordForm() {
   const router = useRouter();
-  const { resettingPassword, tokenStatus, formik, formikResetCode } =
+  const { resettingPassword, passwordReset, tokenStatus, formik, formikResetCode } =
     useResetPasswordFormController();
 
   const getForm = () => (
@@ -73,7 +75,21 @@ const ResetPasswordForm: FC = function ResetPasswordForm() {
   const getBody = () => {
     switch (tokenStatus) {
       case 'Valid':
-        return (
+        return passwordReset ? (
+          <>
+            <Typography variant="h4" component="h4" sx={{ textAlign: 'center' }}>
+              You&apos;re password has been reset successfully!
+            </Typography>
+            <Container>
+              <Box sx={{ textAlign: 'center', padding: '20px 0' }}>
+                <DoneOutlineIcon fontSize="large" sx={{ textAlign: 'center' }} />
+              </Box>
+              <Button fullWidth variant="contained" color="primary" component={Link} href="/login">
+                Login
+              </Button>
+            </Container>
+          </>
+        ) : (
           <>
             <Typography variant="h4" component="h4" sx={{ textAlign: 'center' }}>
               Password Reset Code Verified Successfully!
@@ -122,7 +138,7 @@ const ResetPasswordForm: FC = function ResetPasswordForm() {
         return (
           <Container>
             <Typography variant="h4" component="h4" sx={{ textAlign: 'center' }}>
-              Please enter your password reset verification code
+              Please enter your email and password reset verification code
             </Typography>
             <div style={{ textAlign: 'center', padding: '20px 0' }}>
               {
@@ -139,9 +155,23 @@ const ResetPasswordForm: FC = function ResetPasswordForm() {
                 autoFocus
                 variant="outlined"
                 margin="normal"
+                id="email"
+                name="email"
+                label="Email"
+                type="email"
+                value={formikResetCode.values.email}
+                onChange={formikResetCode.handleChange}
+                error={formikResetCode.touched.email && Boolean(formikResetCode.errors.email)}
+                helperText={formikResetCode.touched.email && formikResetCode.errors.email}
+              />
+              <TextField
+                fullWidth
+                autoFocus
+                variant="outlined"
+                margin="normal"
                 id="token"
                 name="token"
-                label="Enter code"
+                label="6-Digit Verification Code"
                 type="token"
                 value={formikResetCode.values.token}
                 onChange={formikResetCode.handleChange}

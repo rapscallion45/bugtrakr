@@ -160,6 +160,7 @@ export interface IClosedReopenedBugData {
 
 export interface IVerifyEmailPayload {
   token: string;
+  email: string;
 }
 
 export interface IChangePasswordPayload {
@@ -169,8 +170,10 @@ export interface IChangePasswordPayload {
 export interface IResetPasswordPayload {
   resetToken: string;
   password: string;
+  email: string;
 }
 
 export interface IValidateResetTokenPayload {
   resetToken: string;
+  email: string;
 }

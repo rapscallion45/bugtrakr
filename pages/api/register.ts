@@ -11,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     /* send back server response */
     if (response.status === 201) {
-      return res.status(200).json({ message: data.message });
+      return res.status(200).json({ info: data.message, email: data.email });
     }
     return res.status(400).json({ message: data.message });
   } catch (error) {

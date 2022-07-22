@@ -7,7 +7,10 @@ function registration(state: any = {}, action: any) {
         registering: true,
       };
     case accountConstants.REGISTER_SUCCESS:
-      return {};
+      return {
+        registered: true,
+        email: action.email,
+      };
     case accountConstants.REGISTER_FAILURE:
       return {
         error: action.error,

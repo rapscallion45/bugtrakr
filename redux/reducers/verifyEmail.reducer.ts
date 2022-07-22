@@ -15,6 +15,8 @@ function verifyEmail(state: any = {}, action: any) {
         error: action.error,
         emailVerified: 'Failed',
       };
+    case accountConstants.VERIFY_EMAIL_RESET:
+      return {};
     default:
       return state;
   }
