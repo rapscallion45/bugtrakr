@@ -23,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (response.status === 200) {
           return res.status(200).json({ message: data.message });
         }
-        return res.status(401).json({
+        return res.status(response.status).json({
           message: data.message,
         });
       } catch (error) {

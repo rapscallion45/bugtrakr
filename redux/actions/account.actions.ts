@@ -214,7 +214,7 @@ function register(payload: IAccount, nextPage: () => void) {
             message: message.toString(),
             options: {
               key: new Date().getTime() + Math.random(),
-              variant: 'success',
+              variant: 'info',
             },
           })
         );

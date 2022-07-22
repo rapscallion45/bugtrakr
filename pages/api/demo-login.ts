@@ -4,7 +4,7 @@ import { loginUser } from '../../lib/api';
 
 const { DEMO_LOGIN_USERNAME, DEMO_LOGIN_PASSWORD } = process.env;
 
-export default async function demoLogin(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   /* get req params */
   const { method } = req;
 

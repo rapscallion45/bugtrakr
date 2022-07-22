@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { registerUser } from '../../lib/api';
 
-export default async function register(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   /* simply act as proxy between client and backend */
   const user = req?.body ?? {};
 
@@ -11,7 +11,7 @@ export default async function register(req: NextApiRequest, res: NextApiResponse
 
     /* send back server response */
     if (response.status === 201) {
-      return res.status(200).json({ message: 'Registration successful! You can now login!' });
+      return res.status(200).json({ message: data.message });
     }
     return res.status(400).json({ message: data.message });
   } catch (error) {

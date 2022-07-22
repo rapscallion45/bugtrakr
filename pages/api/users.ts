@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import cookie from 'cookie';
 import { getUsers } from '../../lib/api';
 
-export default async function users(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   /* get req params */
   const { method } = req;
   const cookies = cookie.parse(req.headers.cookie);
@@ -20,7 +20,7 @@ export default async function users(req: NextApiRequest, res: NextApiResponse) {
         if (response.status === 200) {
           return res.status(200).json(data);
         }
-        return res.status(400).json({ message: data.message });
+        return res.status(response.status).json({ message: data.message });
       } catch (error) {
         return res.status(501).json({
           message: 'Oops, something went wrong with the request.',

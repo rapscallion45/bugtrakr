@@ -10,8 +10,8 @@ const RegisterController = () => {
   const dispatch = useDispatch();
   const registering = useSelector((state: AppState) => state.registration.registering);
 
-  const goToLogin = () => {
-    router.push('login');
+  const goToVerifyEmail = () => {
+    router.push('/verify-email');
   };
 
   const validationSchema = Yup.object().shape({
@@ -41,7 +41,7 @@ const RegisterController = () => {
     validationSchema,
     onSubmit: ({ firstName, lastName, email, username, password }) => {
       dispatch(
-        accountActions.register({ firstName, lastName, email, username, password }, goToLogin)
+        accountActions.register({ firstName, lastName, email, username, password }, goToVerifyEmail)
       );
     },
   });
