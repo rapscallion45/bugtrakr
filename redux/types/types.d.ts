@@ -43,6 +43,12 @@ export interface IUserState {
   token: string;
 }
 
+export interface IUserAuth {
+  demo: boolean;
+  id: string;
+  username: string;
+}
+
 export interface IUser {
   id: string;
   username: string;

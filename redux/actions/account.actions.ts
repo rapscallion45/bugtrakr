@@ -4,6 +4,7 @@ import alertActions from './alert.actions';
 import {
   IAccount,
   IUser,
+  IUserAuth,
   ICredentialsPayload,
   IValidateResetTokenPayload,
   IResetPasswordPayload,
@@ -17,7 +18,7 @@ function authenticate() {
   function request() {
     return { type: accountConstants.AUTHENTICATE_REQUEST };
   }
-  function success(userData: IUser) {
+  function success(userData: IUserAuth) {
     return { type: accountConstants.AUTHENTICATE_SUCCESS, userData };
   }
   function failure(error: string) {

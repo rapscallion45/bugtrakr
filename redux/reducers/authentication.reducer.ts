@@ -1,7 +1,5 @@
 import { accountConstants } from '../constants';
 
-const ISSERVER = typeof window === 'undefined';
-
 function authentication(state: any = { authenticating: true }, action: any) {
   switch (action.type) {
     case accountConstants.AUTHENTICATE_REQUEST:
@@ -15,7 +13,7 @@ function authentication(state: any = { authenticating: true }, action: any) {
         authenticating: false,
         loggedIn: true,
         user: action.userData,
-        demo: !ISSERVER && Boolean(localStorage.getItem('demoMode')),
+        demo: action.userData.demo,
       };
     case accountConstants.LOGIN_REQUEST:
     case accountConstants.LOGIN_GOOGLE_REQUEST:
@@ -37,10 +35,9 @@ function authentication(state: any = { authenticating: true }, action: any) {
         user: action.userData,
       };
     case accountConstants.DEMO_LOGIN_SUCCESS:
-      if (!ISSERVER) localStorage.setItem('demoMode', 'yes');
       return {
         loggedIn: true,
-        demo: true,
+        demo: action.userData.demo,
         user: action.userData,
       };
     case accountConstants.AUTHENTICATE_FAILURE:
@@ -49,7 +46,6 @@ function authentication(state: any = { authenticating: true }, action: any) {
     case accountConstants.LOGIN_GOOGLE_FAILURE:
     case accountConstants.LOGIN_FACEBOOK_FAILURE:
     case accountConstants.LOGOUT:
-      if (!ISSERVER) localStorage.removeItem('demoMode');
       return {};
     default:
       return state;

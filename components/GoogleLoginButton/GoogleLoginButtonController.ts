@@ -17,7 +17,7 @@ const useGoogleLoginButtonController = () => {
   const onFailure = (resp) => {
     dispatch(
       alertActions.enqueueSnackbar({
-        message: resp.details,
+        message: resp.details || 'There was a problem with Google signin.',
         options: {
           key: new Date().getTime() + Math.random(),
           variant: 'error',
