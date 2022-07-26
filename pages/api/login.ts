@@ -36,13 +36,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               maxAge: 60 * 60 * 24 * 2 /* 48 hours for auth token */,
               sameSite: 'strict',
             }),
-            cookie.serialize('bugTrakrDemo', String(''), {
-              httpOnly: true,
-              secure: process.env.NODE_ENV !== 'development',
-              path: '/',
-              maxAge: 60 * 60 * 24 * 2 /* 48 hours for demo token */,
-              sameSite: 'strict',
-            }),
           ]);
 
           return res.status(200).json({
