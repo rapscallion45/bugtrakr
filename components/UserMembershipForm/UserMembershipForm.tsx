@@ -81,7 +81,7 @@ const UserMemerbershipForm: FC = function UserMemerbershipForm() {
                         </ListItemIcon>
                         <ListItemText
                           primary={
-                            <Typography variant="body1" color="text.secondary" py={1}>
+                            <Typography variant="body1" color="text.secondary">
                               Team member bug assignment
                             </Typography>
                           }
@@ -95,7 +95,7 @@ const UserMemerbershipForm: FC = function UserMemerbershipForm() {
                         </ListItemIcon>
                         <ListItemText
                           primary={
-                            <Typography variant="body1" color="text.secondary" py={1}>
+                            <Typography variant="body1" color="text.secondary">
                               Bug/project push notifications
                             </Typography>
                           }
@@ -174,13 +174,7 @@ const UserMemerbershipForm: FC = function UserMemerbershipForm() {
                         <ListItemIcon>
                           <CheckIcon />
                         </ListItemIcon>
-                        <ListItemText
-                          primary={
-                            <Typography variant="body1" color="text.secondary" py={1}>
-                              Team member bug assignment
-                            </Typography>
-                          }
-                        />
+                        <ListItemText primary="Team member bug assignment" />
                       </ListItemButton>
                     </ListItem>
                     <ListItem disablePadding>
@@ -188,13 +182,7 @@ const UserMemerbershipForm: FC = function UserMemerbershipForm() {
                         <ListItemIcon>
                           <CheckIcon />
                         </ListItemIcon>
-                        <ListItemText
-                          primary={
-                            <Typography variant="body1" color="text.secondary" py={1}>
-                              Bug/project push notifications
-                            </Typography>
-                          }
-                        />
+                        <ListItemText primary="Bug/project push notifications" />
                       </ListItemButton>
                     </ListItem>
                   </List>
