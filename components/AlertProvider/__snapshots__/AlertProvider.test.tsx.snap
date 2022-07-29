@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Alert Provider Renders correctly enzyme 1`] = `
+<ContextProvider
+  value={
+    Object {
+      "store": Object {
+        "@@observable": [Function],
+        "dispatch": [Function],
+        "getState": [Function],
+        "replaceReducer": [Function],
+        "subscribe": [Function],
+      },
+      "subscription": Object {
+        "addNestedSub": [Function],
+        "getListeners": [Function],
+        "handleChangeWrapper": [Function],
+        "isSubscribed": [Function],
+        "notifyNestedSubs": [Function],
+        "trySubscribe": [Function],
+        "tryUnsubscribe": [Function],
+      },
+    }
+  }
+>
+  <ThemeConfig
+    emotionCache={
+      Object {
+        "insert": [Function],
+        "inserted": Object {},
+        "key": "css",
+        "nonce": undefined,
+        "registered": Object {},
+        "sheet": StyleSheet {
+          "_insertTag": [Function],
+          "before": null,
+          "container": <head />,
+          "ctr": 0,
+          "insertionPoint": undefined,
+          "isSpeedy": false,
+          "key": "css",
+          "nonce": undefined,
+          "prepend": undefined,
+          "tags": Array [],
+        },
+      }
+    }
+  >
+    <AlertProvider>
+      <TestChild />
+    </AlertProvider>
+  </ThemeConfig>
+</ContextProvider>
+`;
