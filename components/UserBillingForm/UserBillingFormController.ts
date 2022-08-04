@@ -6,26 +6,59 @@ import { AppState } from '../../redux/reducers';
 const useUserProfileFormController = () => {
   const { updating } = useSelector((state: AppState) => state.account);
 
-  const validationSchema = Yup.object().shape({
-    nameOnCard: Yup.string().required('Cardholder name is required'),
+  const paymentValidationSchema = Yup.object().shape({
+    nameOnCard: Yup.string()
+      .matches(/^[aA-zZ\s]+$/, 'Only string characters are allowed in this field')
+      .required('Cardholder name is required'),
     cardNumber: Yup.number().required('Cardnumber is required'),
-    expireDate: Yup.string(),
-    cvc: Yup.string(),
+    expireDate: Yup.string().required('Expiry date is required'),
+    cvc: Yup.string().required('CVC is required'),
   });
 
-  const formik = useFormik({
+  const formikPayment = useFormik({
     initialValues: {
       nameOnCard: '',
       cardNumber: '',
       expireDate: '',
       cvc: '',
     },
-    validationSchema,
+    validationSchema: paymentValidationSchema,
+    onSubmit: () => {},
+  });
+
+  const addressValidationSchema = Yup.object().shape({
+    address: Yup.string()
+      .matches(/^[aA-zZ\s]+$/, 'Only string characters are allowed in this field')
+      .required('Address name is required'),
+    town: Yup.string()
+      .matches(/^[aA-zZ\s]+$/, 'Only string characters are allowed in this field')
+      .required('Town is required'),
+    county: Yup.string()
+      .matches(/^[aA-zZ\s]+$/, 'Only string characters are allowed in this field')
+      .required('County is required'),
+    country: Yup.string()
+      .matches(/^[aA-zZ\s]+$/, 'Only string characters are allowed in this field')
+      .required('Country is required'),
+    postcode: Yup.string()
+      .matches(/^[aA-zZ\s]+$/, 'Only string characters are allowed in this field')
+      .required('Postcode is required'),
+  });
+
+  const formikAddress = useFormik({
+    initialValues: {
+      address: '',
+      town: '',
+      county: '',
+      country: '',
+      postcode: '',
+    },
+    validationSchema: addressValidationSchema,
     onSubmit: () => {},
   });
 
   return {
-    formik,
+    formikPayment,
+    formikAddress,
     updating,
   };
 };
