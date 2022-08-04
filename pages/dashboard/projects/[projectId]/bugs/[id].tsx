@@ -1,8 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { Chip, Divider, Grid, Skeleton, useMediaQuery, SelectChangeEvent } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import {
+  Chip,
+  Divider,
+  Grid,
+  Skeleton,
+  useMediaQuery,
+  SelectChangeEvent,
+  Collapse,
+} from '@mui/material';
+import IconButton, { IconButtonProps } from '@mui/material/IconButton';
+import { useTheme, styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
@@ -10,8 +19,12 @@ import Breadcrumbs from '@mui/material/Breadcrumbs';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AppsIcon from '@mui/icons-material/Apps';
+import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
+import ReplayIcon from '@mui/icons-material/Replay';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import FilterListOffIcon from '@mui/icons-material/FilterListOff';
 import Page from '../../../../../components/Page/Page';
 import DashboardLayout from '../../../../../layouts/DashboardLayout/DashboardLayout';
 import Loader from '../../../../../components/Loader/Loader';
@@ -35,6 +48,21 @@ const menuItems = [
   { value: 'updated', label: 'Recently Updated' },
 ];
 
+interface ExpandMoreProps extends IconButtonProps {
+  expand: boolean;
+}
+
+const ExpandMore = styled((props: ExpandMoreProps) => {
+  const { expand, ...other } = props;
+  return <IconButton {...other} />;
+})(({ theme, expand }) => ({
+  transform: !expand ? 'rotate(0deg)' : 'rotate(360deg)',
+  marginLeft: 'auto',
+  transition: theme.transitions.create('transform', {
+    duration: theme.transitions.duration.shortest,
+  }),
+}));
+
 const BugDetails = function BugDetails() {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -50,12 +78,15 @@ const BugDetails = function BugDetails() {
   } = useSelector((state: AppState) => state.projects);
   const {
     deleting,
+    closing,
+    reopening,
     loading: bugsLoading,
     loaded: bugsLoaded,
     error: bugsError,
     data: bugs,
   } = useSelector((state: AppState) => state.bugs);
   const [sortBy, setSortBy] = useState<NoteSortValues>('newest');
+  const [expanded, setExpanded] = useState<boolean>(false);
   const bugData = bugs?.find((b) => b.id === id);
   const projectData = projects?.find((p) => p.id === bugData?.projectId);
   const sortedNotes = sortNotes(bugData?.notes || [], sortBy);
@@ -78,6 +109,18 @@ const BugDetails = function BugDetails() {
 
   const handleDeleteBug = (closeDialog: () => void) => {
     dispatch(bugActions.deleteBug(bugData.projectId, id.toString(), closeDialog));
+  };
+
+  const handleCloseBug = (closeDialog: () => void) => {
+    dispatch(bugActions.closeBug(projectId, id, closeDialog));
+  };
+
+  const handleReopenBug = (closeDialog: () => void) => {
+    dispatch(bugActions.reopenBug(projectId, id, closeDialog));
+  };
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
   };
 
   return (
@@ -117,6 +160,37 @@ const BugDetails = function BugDetails() {
               <Box display="flex" justifyContent="center" alignItems="center">
                 {bugsLoaded ? (
                   <>
+                    <Box pr={isMobile ? 1 : 2}>
+                      {!bugData.isResolved ? (
+                        <ConfirmDialog
+                          title="Confirm Close Bug"
+                          contentText={`Are you sure you want to close "${bugData?.title}"?`}
+                          actionBtnText="Close"
+                          triggerBtn={{
+                            type: isMobile ? 'icon' : 'normal',
+                            icon: DoneOutlineIcon,
+                            color: 'primary',
+                            text: 'Close Bug',
+                          }}
+                          processing={closing}
+                          actionFunc={(closeDialog) => handleCloseBug(closeDialog)}
+                        />
+                      ) : (
+                        <ConfirmDialog
+                          title="Confirm Reopen Bug"
+                          contentText={`Are you sure you want to reopen "${bugData?.title}"?`}
+                          actionBtnText="Reopen"
+                          triggerBtn={{
+                            type: isMobile ? 'icon' : 'normal',
+                            icon: ReplayIcon,
+                            color: 'primary',
+                            text: 'Reopen Bug',
+                          }}
+                          processing={reopening}
+                          actionFunc={(closeDialog) => handleReopenBug(closeDialog)}
+                        />
+                      )}
+                    </Box>
                     <ConfirmDialog
                       title="Confirm Delete Bug"
                       contentText={`Are you sure you want to permanently delete bug "${bugData?.title}"?`}
@@ -258,7 +332,7 @@ const BugDetails = function BugDetails() {
           loadingText="Fetching bug data..."
           errorText="Failed to load bug details."
         >
-          <Box display="flex" sx={{ pt: 2, pb: 5 }}>
+          <Box display="flex" sx={{ pt: 2, pb: isMobile ? 2 : 5 }}>
             <ForumOutlinedIcon fontSize="large" style={{ marginRight: '0.2em' }} />
             <Typography variant="h4">Notes</Typography>
             <MHidden width="smDown">
@@ -275,18 +349,51 @@ const BugDetails = function BugDetails() {
                 </FormDialog>
               </Box>
             </MHidden>
-            <Box pl={2} display="flex" justifyContent="end" sx={{ flexGrow: isMobile ? 1 : 0 }}>
-              <Box sx={{ minWidth: '190px' }}>
-                <SortBar
-                  sortBy={sortBy}
-                  handleSortChange={handleSortChange}
-                  menuItems={menuItems}
-                  label="Notes"
-                  size="small"
-                />
+            <MHidden width="mdUp">
+              <ExpandMore
+                expand={expanded}
+                onClick={handleExpandClick}
+                aria-expanded={expanded}
+                aria-label="show filters"
+              >
+                {expanded ? <FilterListOffIcon /> : <FilterListIcon />}
+              </ExpandMore>
+            </MHidden>
+            <MHidden width="mdDown">
+              <Box pl={2} display="flex" justifyContent="end" sx={{ flexGrow: isMobile ? 1 : 0 }}>
+                <Box sx={{ minWidth: '190px' }}>
+                  <SortBar
+                    sortBy={sortBy}
+                    handleSortChange={handleSortChange}
+                    menuItems={menuItems}
+                    label="Notes"
+                    size="small"
+                  />
+                </Box>
               </Box>
-            </Box>
+            </MHidden>
           </Box>
+          <MHidden width="mdUp">
+            <Collapse in={expanded} unmountOnExit>
+              <Box
+                display="flex"
+                justifyContent="center"
+                flexDirection="column"
+                sx={{ width: '100%' }}
+                pb={4}
+              >
+                <Box pt={1} sx={{ minWidth: '190px' }}>
+                  <SortBar
+                    sortBy={sortBy}
+                    handleSortChange={handleSortChange}
+                    menuItems={menuItems}
+                    label="Notes"
+                    size="small"
+                  />
+                </Box>
+              </Box>
+            </Collapse>
+          </MHidden>
           <NotesTable
             notes={sortedNotes}
             bugId={bugData?.id}

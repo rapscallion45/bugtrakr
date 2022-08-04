@@ -2,11 +2,12 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import cookie from 'cookie';
 import { getUserById, updateUserById } from '../../lib/api';
 
-export default async function account(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   /* get req params */
   const { body, method } = req;
   const cookies = cookie.parse(req.headers.cookie);
   const authToken = cookies?.bugTrakrAuth || '';
+  const demoToken = cookies?.bugTrakrDemo || '';
   const { id, user } = body;
 
   if (!id) {
@@ -38,6 +39,11 @@ export default async function account(req: NextApiRequest, res: NextApiResponse)
     case 'PUT':
       /* call api */
       try {
+        /* check if we're in demo mode, if so deny access */
+        if (demoToken === 'demo') {
+          return res.status(401).json({ message: 'Operation not authorized in demo mode.' });
+        }
+
         const response = await updateUserById(authToken, id, user);
         const data = await response.json();
 

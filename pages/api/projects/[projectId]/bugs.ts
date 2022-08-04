@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import cookie from 'cookie';
 import { getBugs, createBug } from '../../../../lib/api';
 
-export default async function bugs(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   /* get req params */
   const { method, query, body } = req;
   const cookies = cookie.parse(req.headers.cookie);

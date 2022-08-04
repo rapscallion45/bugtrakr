@@ -7,11 +7,15 @@ function resetPassword(state: any = {}, action: any) {
         resettingPassword: true,
       };
     case accountConstants.RESET_PASSWORD_SUCCESS:
-      return {};
+      return {
+        passwordReset: true,
+      };
     case accountConstants.RESET_PASSWORD_FAILURE:
       return {
         error: action.error,
       };
+    case accountConstants.RESET_PASSWORD_RESET:
+      return {};
     default:
       return state;
   }

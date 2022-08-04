@@ -1,8 +1,5 @@
 export { default as useStore } from './store';
 export { default as createEmotionCache } from './createEmotionCache';
-export { default as arraySort } from './arraySort';
-export { default as arraySortAlphabetical } from './arraySortAlphabetical';
-export { default as arraySortByDate } from './arraySortByDate';
 export { default as handleResponse } from './handleResponse';
 export { default as handleResponseHeaders } from './handleResponseHeaders';
 export { default as truncateString } from './truncateString';
@@ -10,4 +7,8 @@ export { default as formatDateTime } from './formatDateTime';
 export { default as formatDateInWords } from './formatDateInWords';
 export { default as formatTimeAgo } from './formatTimeAgo';
 export { default as getBugPriorityColor } from './getBugPriorityColor';
+export { default as sortProjects } from './sortProjects';
+export { default as sortProjectMembers } from './sortProjectMembers';
+export { default as sortBugs } from './sortBugs';
+export { default as filterBugs } from './filterBugs';
 export { default as sortNotes } from './sortNotes';

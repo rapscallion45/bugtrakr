@@ -1,5 +1,6 @@
 import { FC, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 import InfoIcon from '@mui/icons-material/Info';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
@@ -33,6 +34,7 @@ const ActionsPopover: FC<ProjectsMenuProps> = function ActionsPopover({
   isMobile,
   iconSize,
 }) {
+  const router = useRouter();
   const dispatch = useDispatch();
   const { deleting } = useSelector((state: AppState) => state.projects);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -45,8 +47,12 @@ const ActionsPopover: FC<ProjectsMenuProps> = function ActionsPopover({
     setAnchorEl(null);
   };
 
+  const goToDashboard = () => {
+    router.push('/dashboard');
+  };
+
   const handleDelete = (id: string, closeDialog: () => void) => {
-    dispatch(projectActions.deleteProject(id, closeDialog));
+    dispatch(projectActions.deleteProject(id, closeDialog, goToDashboard));
   };
 
   return (

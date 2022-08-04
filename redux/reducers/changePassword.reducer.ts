@@ -7,7 +7,10 @@ function changePassword(state: any = {}, action: any) {
         requestingPassword: true,
       };
     case accountConstants.CHANGE_PASSWORD_SUCCESS:
-      return {};
+      return {
+        requestSuccess: true,
+        email: action.email,
+      };
     case accountConstants.CHANGE_PASSWORD_FAILURE:
       return {
         error: action.error,

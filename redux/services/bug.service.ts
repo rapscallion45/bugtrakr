@@ -58,7 +58,7 @@ function updateBugNotes(projectId: string | string[], id: string, members: strin
   return fetch(`/api/projects/${projectId}/bug-notes`, requestOptions).then(handleResponse);
 }
 
-function closeBug(projectId: string | string[], id: string) {
+function closeBug(projectId: string | string[], id: string | string[]) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -67,7 +67,7 @@ function closeBug(projectId: string | string[], id: string) {
   return fetch(`/api/projects/${projectId}/bugs/${id}/close`, requestOptions).then(handleResponse);
 }
 
-function reopenBug(projectId: string | string[], id: string) {
+function reopenBug(projectId: string | string[], id: string | string[]) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

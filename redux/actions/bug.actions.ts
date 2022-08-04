@@ -229,14 +229,14 @@ function updateBugNotes(projectId: string, id: string, members: string[], closeD
   };
 }
 
-function closeBug(projectId: string | string[], id: string, closeDialog: () => void) {
-  function request(bugId: string) {
+function closeBug(projectId: string | string[], id: string | string[], closeDialog: () => void) {
+  function request(bugId: string | string[]) {
     return { type: bugConstants.CLOSE_REQUEST, bugId };
   }
-  function success(bugId: string) {
+  function success(bugId: string | string[]) {
     return { type: bugConstants.CLOSE_SUCCESS, bugId };
   }
-  function failure(bugId: string, error: string) {
+  function failure(bugId: string | string[], error: string) {
     return { type: bugConstants.CLOSE_FAILURE, bugId, error };
   }
 
@@ -273,14 +273,14 @@ function closeBug(projectId: string | string[], id: string, closeDialog: () => v
   };
 }
 
-function reopenBug(projectId: string | string[], id: string, closeDialog: () => void) {
-  function request(bugId: string) {
+function reopenBug(projectId: string | string[], id: string | string[], closeDialog: () => void) {
+  function request(bugId: string | string[]) {
     return { type: bugConstants.REOPEN_REQUEST, bugId };
   }
-  function success(bugId: string) {
+  function success(bugId: string | string[]) {
     return { type: bugConstants.REOPEN_SUCCESS, bugId };
   }
-  function failure(bugId: string, error: string) {
+  function failure(bugId: string | string[], error: string) {
     return { type: bugConstants.REOPEN_FAILURE, bugId, error };
   }
 

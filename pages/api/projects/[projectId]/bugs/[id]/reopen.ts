@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import cookie from 'cookie';
 import { reopenBug } from '../../../../../../lib/api';
 
-export default async function reopen(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   /* get req params */
   const { method, query } = req;
   const cookies = cookie.parse(req.headers.cookie);

@@ -1,12 +1,18 @@
 import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { accountActions } from '../../redux/actions';
 import { AppState } from '../../redux/reducers';
 
 const RegisterController = () => {
+  const router = useRouter();
   const dispatch = useDispatch();
   const registering = useSelector((state: AppState) => state.registration.registering);
+
+  const goToVerifyEmail = () => {
+    router.push('/verify-email');
+  };
 
   const validationSchema = Yup.object().shape({
     firstName: Yup.string().required('First Name is required'),
@@ -33,8 +39,10 @@ const RegisterController = () => {
       acceptTerms: false,
     },
     validationSchema,
-    onSubmit: (fields) => {
-      dispatch(accountActions.register(fields));
+    onSubmit: ({ firstName, lastName, email, username, password }) => {
+      dispatch(
+        accountActions.register({ firstName, lastName, email, username, password }, goToVerifyEmail)
+      );
     },
   });
 

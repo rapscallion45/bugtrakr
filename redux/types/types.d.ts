@@ -1,7 +1,6 @@
 export interface IAccount {
-  displayName?: string;
-  first_name?: string;
-  last_name?: string;
+  firstName?: string;
+  lastName?: string;
   username?: string;
   email?: string;
   password?: string;
@@ -42,6 +41,12 @@ export interface IUserState {
   id: string;
   username: string;
   token: string;
+}
+
+export interface IUserAuth {
+  demo: boolean;
+  id: string;
+  username: string;
 }
 
 export interface IUser {
@@ -104,6 +109,8 @@ export type ProjectSortValues =
   | 'most-members'
   | 'least-members';
 
+export type ProjectMemberSortValues = 'newest' | 'oldest' | 'a-z' | 'z-a';
+
 export type BugSortValues =
   | 'newest'
   | 'oldest'
@@ -122,6 +129,15 @@ export type BugFilterValues = 'all' | 'closed' | 'open';
 export interface ICredentialsPayload {
   username: string;
   password: string;
+}
+
+export interface IGoogleCredentialsPayload {
+  tokenId: string;
+}
+
+export interface IFacebookCredentialsPayload {
+  facebookId: string;
+  authToken: string;
 }
 
 export interface IProjectPayload {
@@ -146,4 +162,24 @@ export interface IClosedReopenedBugData {
   closedBy: IUser;
   reopenedAt: Date;
   reopenedBy: IUser;
+}
+
+export interface IVerifyEmailPayload {
+  token: string;
+  email: string;
+}
+
+export interface IChangePasswordPayload {
+  email: string;
+}
+
+export interface IResetPasswordPayload {
+  resetToken: string;
+  password: string;
+  email: string;
+}
+
+export interface IValidateResetTokenPayload {
+  resetToken: string;
+  email: string;
 }

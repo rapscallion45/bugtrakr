@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { styled } from '@mui/material/styles';
-import { Card, Link as MuiLink, Container, Typography } from '@mui/material';
+import { Card, Link as MuiLink, Container, Typography, Box } from '@mui/material';
 import Link from '../components/Link/Link';
 import AuthLayout from '../layouts/AuthLayout/AuthLayout';
 import MHidden from '../components/@MUI-Extended/MHidden';
@@ -43,20 +43,35 @@ function Login() {
             Hi! Welcome back to {process.env.APP_NAME}!
           </Typography>
         </SectionStyle>
+
+        <Container maxWidth="sm">
+          <ContentStyle>
+            <LoginForm />
+
+            <Typography variant="body2" align="center" sx={{ mt: 3 }}>
+              Don’t have an account?&nbsp;
+              <MuiLink variant="subtitle2" component={Link} href="/register">
+                Get started
+              </MuiLink>
+            </Typography>
+          </ContentStyle>
+        </Container>
       </MHidden>
 
-      <Container maxWidth="sm">
-        <ContentStyle>
-          <LoginForm />
+      <MHidden width="mdUp">
+        <Container maxWidth="md">
+          <Box sx={{ pt: 10, pb: 5 }}>
+            <LoginForm />
 
-          <Typography variant="body2" align="center" sx={{ mt: 3 }}>
-            Don’t have an account?&nbsp;
-            <MuiLink variant="subtitle2" component={Link} href="/register">
-              Get started
-            </MuiLink>
-          </Typography>
-        </ContentStyle>
-      </Container>
+            <Typography variant="body2" align="center" sx={{ mt: 3 }}>
+              Don’t have an account?&nbsp;
+              <MuiLink variant="subtitle2" component={Link} href="/register">
+                Get started
+              </MuiLink>
+            </Typography>
+          </Box>
+        </Container>
+      </MHidden>
     </>
   );
 }

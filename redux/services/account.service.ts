@@ -1,5 +1,14 @@
 import { handleResponse } from '../../utils';
-import { IAccount } from '../types/types';
+import {
+  IAccount,
+  ICredentialsPayload,
+  IGoogleCredentialsPayload,
+  IFacebookCredentialsPayload,
+  IChangePasswordPayload,
+  IValidateResetTokenPayload,
+  IResetPasswordPayload,
+  IVerifyEmailPayload,
+} from '../types/types';
 
 function authenticate() {
   const requestOptions = {
@@ -10,11 +19,11 @@ function authenticate() {
   return fetch(`/api/authenticate`, requestOptions).then(handleResponse);
 }
 
-function login(username: string, password: string) {
+function login(payload: ICredentialsPayload) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password }),
+    body: JSON.stringify(payload),
   };
 
   return fetch(`/api/login`, requestOptions).then(handleResponse);
@@ -29,21 +38,21 @@ function demoLogin() {
   return fetch(`/api/demo-login`, requestOptions).then(handleResponse);
 }
 
-function loginWithGoogle(idToken: string) {
+function loginWithGoogle(payload: IGoogleCredentialsPayload) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ idToken }),
+    body: JSON.stringify(payload),
   };
 
   return fetch(`/api/login-google`, requestOptions).then(handleResponse);
 }
 
-function loginWithFacebook(facebookId: string, accessToken: string) {
+function loginWithFacebook(payload: IFacebookCredentialsPayload) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ facebookId, accessToken }),
+    body: JSON.stringify(payload),
   };
 
   return fetch(`/api/login-facebook`, requestOptions).then(handleResponse);
@@ -58,51 +67,51 @@ function logout() {
   return fetch(`/api/logout`, requestOptions).then(handleResponse);
 }
 
-function register(user: IAccount) {
+function register(payload: IAccount) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(user),
+    body: JSON.stringify(payload),
   };
 
   return fetch(`/api/register`, requestOptions).then(handleResponse);
 }
 
-function verifyEmail(token: string | string[]) {
+function verifyEmail(payload: IVerifyEmailPayload) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ token }),
+    body: JSON.stringify(payload),
   };
 
   return fetch(`/api/verify-email`, requestOptions).then(handleResponse);
 }
 
-function forgotPassword(email: string) {
+function changePassword(payload: IChangePasswordPayload) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email }),
+    body: JSON.stringify(payload),
   };
 
-  return fetch(`/api/forgot-password`, requestOptions).then(handleResponse);
+  return fetch(`/api/change-password`, requestOptions).then(handleResponse);
 }
 
-function resetPassword(token: string, password: string) {
+function resetPassword(payload: IResetPasswordPayload) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ token, password }),
+    body: JSON.stringify(payload),
   };
 
   return fetch(`/api/reset-password`, requestOptions).then(handleResponse);
 }
 
-function validateResetToken(token: string | string[]) {
+function validateResetToken(payload: IValidateResetTokenPayload) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ token }),
+    body: JSON.stringify(payload),
   };
 
   return fetch(`/api/validate-reset-token`, requestOptions).then(handleResponse);
@@ -147,7 +156,7 @@ const accountService = {
   logout,
   register,
   verifyEmail,
-  forgotPassword,
+  changePassword,
   resetPassword,
   validateResetToken,
   update: updateAccount,

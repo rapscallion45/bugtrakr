@@ -1,11 +1,21 @@
 import { FC, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { Divider, Skeleton, useMediaQuery } from '@mui/material';
+import {
+  Divider,
+  Collapse,
+  Skeleton,
+  useMediaQuery,
+  SelectChangeEvent,
+  SortDirection,
+} from '@mui/material';
+import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import { useTheme, styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import FilterListOffIcon from '@mui/icons-material/FilterListOff';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -22,6 +32,7 @@ import DashboardLayout from '../../../layouts/DashboardLayout/DashboardLayout';
 import Loader from '../../../components/Loader/Loader';
 import BugsTable from '../../../components/BugsTable/BugsTable';
 import BugsTableMobile from '../../../components/BugsTable/BugsTableMobile';
+import SortBar from '../../../components/SortBar/SortBar';
 import MHidden from '../../../components/@MUI-Extended/MHidden';
 import FormDialog from '../../../components/FormDialog/FormDialog';
 import ConfirmDialog from '../../../components/ConfirmDialog/ConfirmDialog';
@@ -31,15 +42,53 @@ import ProjectForm from '../../../components/ProjectForm/ProjectForm';
 import BugForm from '../../../components/BugForm/BugForm';
 import Link from '../../../components/Link/Link';
 import ProjectMenu from '../../../components/ProjectMenu/ProjectMenu';
+import SearchBar from '../../../components/SearchBar/SearchBar';
 import { bugActions, projectActions } from '../../../redux/actions';
 import { AppState } from '../../../redux/reducers';
-import { formatDateTime } from '../../../utils';
+import { formatDateTime, sortBugs, filterBugs, sortProjectMembers } from '../../../utils';
+import { BugSortValues, ProjectMemberSortValues } from '../../../redux/types/types';
 
 const TabStyle = styled(Tab)({
   display: 'flex',
   flexDirection: 'row',
   minHeight: '60px',
 });
+
+const menuItems = [
+  { value: 'newest', label: 'Newest' },
+  { value: 'oldest', label: 'Oldest' },
+  { value: 'a-z', label: 'Name (A - Z)' },
+  { value: 'z-a', label: 'Name (Z - A)' },
+  { value: 'h-l', label: 'Priority (High - Low)' },
+  { value: 'l-h', label: 'Priority (Low - High)' },
+  { value: 'closed', label: 'Recently Closed' },
+  { value: 'reopened', label: 'Recently Reopened' },
+  { value: 'updated', label: 'Recently Updated' },
+  { value: 'most-notes', label: 'Most Notes' },
+  { value: 'least-notes', label: 'Least Notes' },
+];
+
+const userMenuItems = [
+  { value: 'newest', label: 'Newest' },
+  { value: 'oldest', label: 'Oldest' },
+  { value: 'a-z', label: 'Username (A - Z)' },
+  { value: 'z-a', label: 'Username (Z - A)' },
+];
+
+interface ExpandMoreProps extends IconButtonProps {
+  expand: boolean;
+}
+
+const ExpandMore = styled((props: ExpandMoreProps) => {
+  const { expand, ...other } = props;
+  return <IconButton {...other} />;
+})(({ theme, expand }) => ({
+  transform: !expand ? 'rotate(0deg)' : 'rotate(360deg)',
+  marginLeft: 'auto',
+  transition: theme.transitions.create('transform', {
+    duration: theme.transitions.duration.shortest,
+  }),
+}));
 
 interface ProjectTabPanelProps {
   children: any;
@@ -87,6 +136,25 @@ const ProjectDetails = function ProjectDetails() {
     data: bugs,
   } = useSelector((state: AppState) => state.bugs);
   const projectData = projects?.find((project) => project.id === projectId);
+  const [sortBy, setSortBy] = useState<BugSortValues>('newest');
+  const [sortMembersBy, setSortMembersBy] = useState<ProjectMemberSortValues>('newest');
+  const [sortDir, setSortDir] = useState<SortDirection>('desc');
+  const [searchVal, setSearchVal] = useState<string>('');
+  const [searchMembersVal, setSearchMembersVal] = useState<string>('');
+  const [expanded, setExpanded] = useState<boolean>(false);
+  const [usersFiltExpanded, setUsersFiltExpanded] = useState<boolean>(false);
+  const sortedBugs = sortBugs(
+    bugs?.filter(
+      (b) => b.title.toLowerCase().includes(searchVal.toLowerCase()) && filterBugs('all', b)
+    ) || [],
+    sortBy
+  );
+  const sortedMembers = sortProjectMembers(
+    projectData?.members?.filter((u) =>
+      u.member.username.toLowerCase().includes(searchMembersVal.toLowerCase())
+    ) || [],
+    sortMembersBy
+  );
   const isAdmin = user.id === projectData?.createdBy.id;
 
   useEffect(() => {
@@ -95,7 +163,7 @@ const ProjectDetails = function ProjectDetails() {
 
   useEffect(() => {
     /* if user navigates direct to this page, ensure bug data laoded */
-    if (projectsLoaded && !bugsLoaded) {
+    if (projectsLoaded) {
       dispatch(bugActions.getBugs(projectId));
     }
   }, [projects]);
@@ -104,12 +172,45 @@ const ProjectDetails = function ProjectDetails() {
     setTab(newValue);
   };
 
+  const goToDashboard = () => {
+    router.push('/dashboard');
+  };
+
   const handleLeaveProject = (closeDialog: () => void) => {
-    dispatch(projectActions.leaveProject(projectId.toString(), closeDialog));
+    dispatch(projectActions.leaveProject(projectId.toString(), closeDialog, goToDashboard));
   };
 
   const handleDeleteProject = (closeDialog: () => void) => {
-    dispatch(projectActions.deleteProject(projectId.toString(), closeDialog));
+    dispatch(projectActions.deleteProject(projectId.toString(), closeDialog, goToDashboard));
+  };
+
+  const handleSortChange = (e: SelectChangeEvent) => {
+    setSortBy(e.target.value as BugSortValues);
+  };
+
+  const handleMembersSortChange = (e: SelectChangeEvent) => {
+    setSortMembersBy(e.target.value as ProjectMemberSortValues);
+  };
+
+  const handleTHeadSortChange = (value: string) => {
+    setSortBy(value as BugSortValues);
+    setSortDir(sortDir === 'asc' ? 'desc' : 'asc');
+  };
+
+  const handleSearchChange = (searchValue: string) => {
+    setSearchVal(searchValue);
+  };
+
+  const handleMembersSearchChange = (searchValue: string) => {
+    setSearchMembersVal(searchValue);
+  };
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
+
+  const handleUsersFiltExpandClick = () => {
+    setUsersFiltExpanded(!usersFiltExpanded);
   };
 
   const a11yProps = (index: string) => ({
@@ -243,7 +344,7 @@ const ProjectDetails = function ProjectDetails() {
             </Tabs>
           </Box>
           <ProjectTabPanel value={tab} index={0}>
-            <Box display="flex" sx={{ pt: 2, pb: 5 }}>
+            <Box display="flex" sx={{ pt: 2, pb: isMobile ? 2 : 5 }}>
               <BugReportIcon fontSize="large" style={{ marginRight: '0.2em' }} />
               <Typography variant="h4">Bug List</Typography>
               <MHidden width="smDown">
@@ -260,12 +361,115 @@ const ProjectDetails = function ProjectDetails() {
                   </FormDialog>
                 </Box>
               </MHidden>
+              <MHidden width="mdUp">
+                <ExpandMore
+                  expand={expanded}
+                  onClick={handleExpandClick}
+                  aria-expanded={expanded}
+                  aria-label="show filters"
+                >
+                  {expanded ? <FilterListOffIcon /> : <FilterListIcon />}
+                </ExpandMore>
+              </MHidden>
+              <MHidden width="mdDown">
+                <Box pl={2} display="flex" justifyContent="end" sx={{ flexGrow: isMobile ? 1 : 0 }}>
+                  <Box sx={{ minWidth: '190px' }}>
+                    <SearchBar
+                      searchValue={searchVal}
+                      setSearchValue={handleSearchChange}
+                      label="Bugs"
+                      size="small"
+                    />
+                  </Box>
+                </Box>
+                <Box pl={2} display="flex" justifyContent="end" sx={{ flexGrow: isMobile ? 1 : 0 }}>
+                  <Box sx={{ minWidth: '190px' }}>
+                    <SortBar
+                      sortBy={sortBy}
+                      handleSortChange={handleSortChange}
+                      menuItems={menuItems}
+                      label="Bugs"
+                      size="small"
+                    />
+                  </Box>
+                </Box>
+              </MHidden>
             </Box>
-            {!isMobile && <BugsTable bugs={bugs} projectId={projectId} />}
-            {isMobile && <BugsTableMobile bugs={bugs} projectId={projectId} />}
+            {!isMobile && (
+              <>
+                <MHidden width="mdUp">
+                  <Collapse in={expanded} unmountOnExit>
+                    <Box
+                      display="flex"
+                      justifyContent="center"
+                      flexDirection="column"
+                      sx={{ width: '100%' }}
+                      pb={4}
+                    >
+                      <Box pt={1} pb={2} sx={{ minWidth: '190px' }}>
+                        <SearchBar
+                          searchValue={searchVal}
+                          setSearchValue={handleSearchChange}
+                          label="Bugs"
+                          size="small"
+                        />
+                      </Box>
+                      <Box sx={{ minWidth: '190px' }}>
+                        <SortBar
+                          sortBy={sortBy}
+                          handleSortChange={handleSortChange}
+                          menuItems={menuItems}
+                          label="Bugs"
+                          size="small"
+                        />
+                      </Box>
+                    </Box>
+                  </Collapse>
+                </MHidden>
+                <BugsTable
+                  bugs={sortedBugs}
+                  projectId={projectId}
+                  sortBy={sortBy}
+                  sortDir={sortDir}
+                  sortChange={handleTHeadSortChange}
+                />
+              </>
+            )}
+            {isMobile && (
+              <>
+                <Collapse in={expanded} unmountOnExit>
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    flexDirection="column"
+                    sx={{ width: '100%' }}
+                    pb={4}
+                  >
+                    <Box pt={1} pb={2} sx={{ minWidth: '190px' }}>
+                      <SearchBar
+                        searchValue={searchVal}
+                        setSearchValue={handleSearchChange}
+                        label="Bugs"
+                        size="small"
+                      />
+                    </Box>
+                    <Box sx={{ minWidth: '190px' }}>
+                      <SortBar
+                        sortBy={sortBy}
+                        handleSortChange={handleSortChange}
+                        menuItems={menuItems}
+                        label="Bugs"
+                        size="small"
+                      />
+                    </Box>
+                  </Box>
+                </Collapse>
+                <BugsTableMobile bugs={sortedBugs} projectId={projectId} />
+              </>
+            )}
           </ProjectTabPanel>
           <ProjectTabPanel value={tab} index={1}>
-            <Box display="flex" sx={{ pt: 2, pb: 5 }}>
+            <Box display="flex" sx={{ pt: 2, pb: isMobile ? 2 : 5 }}>
               <GroupIcon fontSize="large" style={{ marginRight: '0.2em' }} />
               <Typography variant="h4">Users List</Typography>
               {isAdmin && (
@@ -289,20 +493,113 @@ const ProjectDetails = function ProjectDetails() {
                   </Box>
                 </MHidden>
               )}
+              <MHidden width="mdUp">
+                <ExpandMore
+                  expand={usersFiltExpanded}
+                  onClick={handleUsersFiltExpandClick}
+                  aria-expanded={usersFiltExpanded}
+                  aria-label="show user filters"
+                >
+                  {usersFiltExpanded ? <FilterListOffIcon /> : <FilterListIcon />}
+                </ExpandMore>
+              </MHidden>
+              <MHidden width="mdDown">
+                <Box pl={2} display="flex" justifyContent="end" sx={{ flexGrow: isMobile ? 1 : 0 }}>
+                  <Box sx={{ minWidth: '190px' }}>
+                    <SearchBar
+                      searchValue={searchMembersVal}
+                      setSearchValue={handleMembersSearchChange}
+                      label="Users"
+                      size="small"
+                    />
+                  </Box>
+                </Box>
+                <Box pl={2} display="flex" justifyContent="end" sx={{ flexGrow: isMobile ? 1 : 0 }}>
+                  <Box sx={{ minWidth: '190px' }}>
+                    <SortBar
+                      sortBy={sortMembersBy}
+                      handleSortChange={handleMembersSortChange}
+                      menuItems={userMenuItems}
+                      label="Users"
+                      size="small"
+                    />
+                  </Box>
+                </Box>
+              </MHidden>
             </Box>
             {!isMobile ? (
-              <MembersTable
-                members={projectData?.members}
-                projectId={projectData?.id}
-                adminId={projectData?.createdBy?.id}
-              />
+              <>
+                <MHidden width="mdUp">
+                  <Collapse in={usersFiltExpanded} unmountOnExit>
+                    <Box
+                      display="flex"
+                      justifyContent="center"
+                      flexDirection="column"
+                      sx={{ width: '100%' }}
+                      pb={4}
+                    >
+                      <Box pt={1} pb={2} sx={{ minWidth: '190px' }}>
+                        <SearchBar
+                          searchValue={searchMembersVal}
+                          setSearchValue={handleMembersSearchChange}
+                          label="Users"
+                          size="small"
+                        />
+                      </Box>
+                      <Box sx={{ minWidth: '190px' }}>
+                        <SortBar
+                          sortBy={sortMembersBy}
+                          handleSortChange={handleMembersSortChange}
+                          menuItems={userMenuItems}
+                          label="Users"
+                          size="small"
+                        />
+                      </Box>
+                    </Box>
+                  </Collapse>
+                </MHidden>
+                <MembersTable
+                  members={sortedMembers}
+                  projectId={projectData?.id}
+                  adminId={projectData?.createdBy?.id}
+                />
+              </>
             ) : (
-              <MembersTableMobile
-                members={projectData?.members}
-                projectId={projectData?.id}
-                projectName={projectData?.name}
-                adminId={projectData?.createdBy?.id}
-              />
+              <>
+                <Collapse in={usersFiltExpanded} unmountOnExit>
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    flexDirection="column"
+                    sx={{ width: '100%' }}
+                    pb={4}
+                  >
+                    <Box pt={1} pb={2} sx={{ minWidth: '190px' }}>
+                      <SearchBar
+                        searchValue={searchMembersVal}
+                        setSearchValue={handleMembersSearchChange}
+                        label="Users"
+                        size="small"
+                      />
+                    </Box>
+                    <Box sx={{ minWidth: '190px' }}>
+                      <SortBar
+                        sortBy={sortMembersBy}
+                        handleSortChange={handleMembersSortChange}
+                        menuItems={userMenuItems}
+                        label="Users"
+                        size="small"
+                      />
+                    </Box>
+                  </Box>
+                </Collapse>
+                <MembersTableMobile
+                  members={sortedMembers}
+                  projectId={projectData?.id}
+                  projectName={projectData?.name}
+                  adminId={projectData?.createdBy?.id}
+                />
+              </>
             )}
           </ProjectTabPanel>
         </Loader>

@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import cookie from 'cookie';
 import { loginUser } from '../../lib/api';
 
-export default async function login(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   /* get req params */
   const { method, body } = req;
   const { username, password } = body ?? {};
@@ -41,6 +41,7 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
           return res.status(200).json({
             id: data.id,
             username: data.username,
+            demo: false,
           });
         }
         return res.status(response.status).json({ message: data.message });

@@ -6,7 +6,7 @@ import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
-// import { Link as MuiLink } from '@mui/material';
+import { Link as MuiLink } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -89,11 +89,11 @@ const LoginForm: FC = function LoginForm() {
               label="Remember me"
             />
           </Grid>
-          {/* <Grid item xs sx={{ textAlign: 'right', padding: '10px 0' }}>
+          <Grid item xs sx={{ textAlign: 'right', padding: '10px 0' }}>
             <MuiLink component={Link} href="/forgot-password" variant="body2">
               Forgot password?
             </MuiLink>
-          </Grid> */}
+          </Grid>
         </Grid>
         <Button
           type="submit"

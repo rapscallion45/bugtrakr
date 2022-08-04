@@ -26,7 +26,7 @@ const serverMockHandlers = [
     return res(ctx.status(200), ctx.json({ message: 'login ok' }));
   }),
   /* Test/mock forgot password route */
-  rest.post('/api/forgot-password', async (req, res, ctx) => {
+  rest.post('/api/change-password', async (req, res, ctx) => {
     const { email } = req.body;
     if (!email || email !== acountMock.email)
       return res(ctx.status(404), ctx.json({ meesage: 'Incorrect email' }));

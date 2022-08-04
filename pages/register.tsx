@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import router from 'next/router';
 import { styled } from '@mui/material/styles';
-import { Card, Link as MuiLink, Container, Typography } from '@mui/material';
+import { Card, Link as MuiLink, Container, Typography, Box } from '@mui/material';
 import Link from '../components/Link/Link';
 import AuthLayout from '../layouts/AuthLayout/AuthLayout';
 import MHidden from '../components/@MUI-Extended/MHidden';
@@ -50,22 +50,37 @@ const Register = function Register() {
             Sign up to gain access to FREE bug tracking tools!
           </Typography>
         </SectionStyle>
+
+        <Container maxWidth="md">
+          <ContentStyle>
+            <ScrollBar
+              sx={{
+                height: '100%',
+                overflowY: 'auto',
+                '& .simplebar-content': {
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  paddingTop: '20px !important',
+                },
+              }}
+            >
+              <RegisterForm />
+
+              <Typography variant="body2" align="center" sx={{ mt: 3 }}>
+                Already have an account?&nbsp;
+                <MuiLink variant="subtitle2" component={Link} href="/login">
+                  Login
+                </MuiLink>
+              </Typography>
+            </ScrollBar>
+          </ContentStyle>
+        </Container>
       </MHidden>
 
-      <Container maxWidth="md">
-        <ContentStyle>
-          <ScrollBar
-            sx={{
-              height: '100%',
-              overflowY: 'auto',
-              '& .simplebar-content': {
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                paddingTop: '20px !important',
-              },
-            }}
-          >
+      <MHidden width="mdUp">
+        <Container maxWidth="md">
+          <Box sx={{ py: 5 }}>
             <RegisterForm />
 
             <Typography variant="body2" align="center" sx={{ mt: 3 }}>
@@ -74,9 +89,9 @@ const Register = function Register() {
                 Login
               </MuiLink>
             </Typography>
-          </ScrollBar>
-        </ContentStyle>
-      </Container>
+          </Box>
+        </Container>
+      </MHidden>
     </>
   );
 };

@@ -81,7 +81,7 @@ const UserMemerbershipForm: FC = function UserMemerbershipForm() {
                         </ListItemIcon>
                         <ListItemText
                           primary={
-                            <Typography variant="body1" color="text.secondary" py={1}>
+                            <Typography variant="body1" color="text.secondary">
                               Team member bug assignment
                             </Typography>
                           }
@@ -95,7 +95,7 @@ const UserMemerbershipForm: FC = function UserMemerbershipForm() {
                         </ListItemIcon>
                         <ListItemText
                           primary={
-                            <Typography variant="body1" color="text.secondary" py={1}>
+                            <Typography variant="body1" color="text.secondary">
                               Bug/project push notifications
                             </Typography>
                           }
@@ -107,6 +107,89 @@ const UserMemerbershipForm: FC = function UserMemerbershipForm() {
               </Box>
               <Button type="submit" fullWidth variant="contained" color="primary" disabled>
                 Current Plan
+              </Button>
+            </Box>
+          </Card>
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <Card
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: '20px',
+            }}
+          >
+            <Box
+              sx={{
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: '30px',
+              }}
+            >
+              <Typography
+                variant="body2"
+                component="h4"
+                color="text.secondary"
+                sx={{ textAlign: 'center', textTransform: 'uppercase' }}
+                py={1}
+              >
+                Standard
+              </Typography>
+              <Typography variant="h1" component="h4" sx={{ textAlign: 'center' }} py={2}>
+                $4.99
+              </Typography>
+              <Typography
+                variant="body2"
+                component="h4"
+                color="primary"
+                sx={{ textAlign: 'center' }}
+                py={2}
+              >
+                Monthly
+              </Typography>
+              <Box pb={2} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+                <nav aria-label="main mailbox folders">
+                  <List>
+                    <ListItem disablePadding>
+                      <ListItemButton>
+                        <ListItemIcon>
+                          <CheckIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Unlimited personal projects" />
+                      </ListItemButton>
+                    </ListItem>
+                    <ListItem disablePadding>
+                      <ListItemButton>
+                        <ListItemIcon>
+                          <CheckIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Unlimited personal bugs" />
+                      </ListItemButton>
+                    </ListItem>
+                    <ListItem disablePadding>
+                      <ListItemButton>
+                        <ListItemIcon>
+                          <CheckIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Team member bug assignment" />
+                      </ListItemButton>
+                    </ListItem>
+                    <ListItem disablePadding>
+                      <ListItemButton>
+                        <ListItemIcon>
+                          <CheckIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Bug/project push notifications" />
+                      </ListItemButton>
+                    </ListItem>
+                  </List>
+                </nav>
+              </Box>
+              <Button type="submit" fullWidth variant="contained" color="primary" disabled>
+                Coming Soon!
               </Button>
             </Box>
           </Card>

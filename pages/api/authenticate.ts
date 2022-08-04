@@ -2,10 +2,11 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import cookie from 'cookie';
 import { authenticateUser } from '../../lib/api';
 
-export default async function authenticate(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { method } = req;
   const cookies = cookie.parse(req.headers.cookie);
   const authToken = cookies?.bugTrakrAuth || '';
+  const demoToken = cookies?.bugTrakrDemo || '';
 
   /* determine which request type this is */
   switch (method) {
@@ -31,7 +32,11 @@ export default async function authenticate(req: NextApiRequest, res: NextApiResp
             }),
           ]);
 
-          return res.status(200).json({ id: data?.id, username: data?.username });
+          return res.status(200).json({
+            id: data?.id,
+            username: data?.username,
+            demo: demoToken === 'demo',
+          });
         }
         return res.status(401).json({ message: 'Session expired, please login again' });
       } catch (error) {
