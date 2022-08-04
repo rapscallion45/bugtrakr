@@ -38,7 +38,7 @@ const LoginForm: FC = function LoginForm() {
         Enter your details below
       </Typography>
       <form onSubmit={formik.handleSubmit}>
-        <GoogleLoginButton text="Login with Google" disabled={loggingIn} />
+        <GoogleLoginButton variant="login" />
         <Divider sx={{ color: 'lightgray' }}>Or</Divider>
         <TextField
           fullWidth

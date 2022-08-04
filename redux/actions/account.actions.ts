@@ -120,13 +120,13 @@ function demoLogin(nextPage: () => void) {
 
 function loginWithGoogle(payload: IGoogleCredentialsPayload, nextPage: () => void) {
   function request() {
-    return { type: accountConstants.LOGIN_FACEBOOK_REQUEST };
+    return { type: accountConstants.LOGIN_GOOGLE_REQUEST };
   }
   function success(userData: IAccount) {
-    return { type: accountConstants.LOGIN_FACEBOOK_SUCCESS, userData };
+    return { type: accountConstants.LOGIN_GOOGLE_SUCCESS, userData };
   }
   function failure(error: string) {
-    return { type: accountConstants.LOGIN_FACEBOOK_FAILURE, error };
+    return { type: accountConstants.LOGIN_GOOGLE_FAILURE, error };
   }
 
   return (dispatch) => {
