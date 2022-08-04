@@ -19,6 +19,8 @@ import Breadcrumbs from '@mui/material/Breadcrumbs';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AppsIcon from '@mui/icons-material/Apps';
+import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
+import ReplayIcon from '@mui/icons-material/Replay';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -76,6 +78,8 @@ const BugDetails = function BugDetails() {
   } = useSelector((state: AppState) => state.projects);
   const {
     deleting,
+    closing,
+    reopening,
     loading: bugsLoading,
     loaded: bugsLoaded,
     error: bugsError,
@@ -105,6 +109,14 @@ const BugDetails = function BugDetails() {
 
   const handleDeleteBug = (closeDialog: () => void) => {
     dispatch(bugActions.deleteBug(bugData.projectId, id.toString(), closeDialog));
+  };
+
+  const handleCloseBug = (closeDialog: () => void) => {
+    dispatch(bugActions.closeBug(projectId, id, closeDialog));
+  };
+
+  const handleReopenBug = (closeDialog: () => void) => {
+    dispatch(bugActions.reopenBug(projectId, id, closeDialog));
   };
 
   const handleExpandClick = () => {
@@ -148,6 +160,37 @@ const BugDetails = function BugDetails() {
               <Box display="flex" justifyContent="center" alignItems="center">
                 {bugsLoaded ? (
                   <>
+                    <Box pr={isMobile ? 1 : 2}>
+                      {!bugData.isResolved ? (
+                        <ConfirmDialog
+                          title="Confirm Close Bug"
+                          contentText={`Are you sure you want to close "${bugData?.title}"?`}
+                          actionBtnText="Close"
+                          triggerBtn={{
+                            type: isMobile ? 'icon' : 'normal',
+                            icon: DoneOutlineIcon,
+                            color: 'primary',
+                            text: 'Close Bug',
+                          }}
+                          processing={closing}
+                          actionFunc={(closeDialog) => handleCloseBug(closeDialog)}
+                        />
+                      ) : (
+                        <ConfirmDialog
+                          title="Confirm Reopen Bug"
+                          contentText={`Are you sure you want to reopen "${bugData?.title}"?`}
+                          actionBtnText="Reopen"
+                          triggerBtn={{
+                            type: isMobile ? 'icon' : 'normal',
+                            icon: ReplayIcon,
+                            color: 'primary',
+                            text: 'Reopen Bug',
+                          }}
+                          processing={reopening}
+                          actionFunc={(closeDialog) => handleReopenBug(closeDialog)}
+                        />
+                      )}
+                    </Box>
                     <ConfirmDialog
                       title="Confirm Delete Bug"
                       contentText={`Are you sure you want to permanently delete bug "${bugData?.title}"?`}
