@@ -7,7 +7,7 @@ import Layout from '../layouts/Layout/Layout';
 import ThemeConfig from '../theme/ThemeConfig';
 import Meta from '../components/Meta/Meta';
 import FeatureBar from '../components/FeatureBar/FeatureBar';
-import useAcceptCookies from '../hooks/useAcceptCookies';
+import { useAcceptCookies } from '../hooks';
 import { createEmotionCache, useStore } from '../utils';
 import 'simplebar/dist/simplebar.min.css';
 

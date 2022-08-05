@@ -1,4 +1,6 @@
 import {
+  ICredentialsPayload,
+  IGoogleLoginPayload,
   IVerifyEmailPayload,
   IChangePasswordPayload,
   IResetPasswordPayload,
@@ -16,21 +18,31 @@ export async function authenticateUser(token: string) {
   return fetch(`${API_REST_URL}/authenticate`, requestOptions);
 }
 
-export async function loginUser({ username, password }) {
+export async function loginUser(payload: ICredentialsPayload) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password }),
+    body: JSON.stringify(payload),
   };
 
   return fetch(`${API_REST_URL}/login`, requestOptions);
 }
 
-export async function registerUser(body: any) {
+export async function loginWithGoogle(payload: IGoogleLoginPayload) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
+    body: JSON.stringify(payload),
+  };
+
+  return fetch(`${API_REST_URL}/login-google`, requestOptions);
+}
+
+export async function registerUser(payload: any) {
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
   };
 
   return fetch(`${API_REST_URL}/signup`, requestOptions);

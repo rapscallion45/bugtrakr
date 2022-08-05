@@ -1,6 +1,7 @@
 export {
   authenticateUser,
   loginUser,
+  loginWithGoogle,
   registerUser,
   verifyEmail,
   changePassword,

@@ -37,7 +37,7 @@ const RegisterForm: FC = function RegisterForm() {
         Sign up to our free plan. No credit card needed.
       </Typography>
       <form onSubmit={formik.handleSubmit}>
-        <GoogleLoginButton text="Continue with Google" disabled={registering} />
+        <GoogleLoginButton variant="register" />
         <Divider sx={{ color: 'lightgray' }}>Or</Divider>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
