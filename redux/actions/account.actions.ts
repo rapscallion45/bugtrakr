@@ -9,8 +9,8 @@ import {
   IValidateResetTokenPayload,
   IResetPasswordPayload,
   IChangePasswordPayload,
-  IGoogleCredentialsPayload,
-  IFacebookCredentialsPayload,
+  IGoogleLoginPayload,
+  IFacebookLoginPayload,
   IVerifyEmailPayload,
 } from '../types/types';
 
@@ -118,7 +118,7 @@ function demoLogin(nextPage: () => void) {
   };
 }
 
-function loginWithGoogle(payload: IGoogleCredentialsPayload, nextPage: () => void) {
+function loginWithGoogle(payload: IGoogleLoginPayload, nextPage: () => void) {
   function request() {
     return { type: accountConstants.LOGIN_GOOGLE_REQUEST };
   }
@@ -153,7 +153,7 @@ function loginWithGoogle(payload: IGoogleCredentialsPayload, nextPage: () => voi
   };
 }
 
-function loginWithFacebook(payload: IFacebookCredentialsPayload, nextPage: () => void) {
+function loginWithFacebook(payload: IFacebookLoginPayload, nextPage: () => void) {
   function request() {
     return { type: accountConstants.LOGIN_FACEBOOK_REQUEST };
   }

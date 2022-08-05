@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
-import jwt_deocde from 'jwt-decode';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { alertActions, accountActions } from '../../redux/actions';
 import { useScript } from '../../hooks';
@@ -19,10 +18,7 @@ const useGoogleLoginButtonController = (variant) => {
   };
 
   const onGoogleSignIn = (googleUser: any) => {
-    const userCred = googleUser.credential;
-    const payload = jwt_deocde(userCred);
-    console.log(payload);
-    setToken(userCred);
+    setToken(googleUser.credential);
   };
 
   useScript(

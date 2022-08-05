@@ -2,8 +2,8 @@ import { handleResponse } from '../../utils';
 import {
   IAccount,
   ICredentialsPayload,
-  IGoogleCredentialsPayload,
-  IFacebookCredentialsPayload,
+  IGoogleLoginPayload,
+  IFacebookLoginPayload,
   IChangePasswordPayload,
   IValidateResetTokenPayload,
   IResetPasswordPayload,
@@ -38,7 +38,7 @@ function demoLogin() {
   return fetch(`/api/demo-login`, requestOptions).then(handleResponse);
 }
 
-function loginWithGoogle(payload: IGoogleCredentialsPayload) {
+function loginWithGoogle(payload: IGoogleLoginPayload) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -48,7 +48,7 @@ function loginWithGoogle(payload: IGoogleCredentialsPayload) {
   return fetch(`/api/login-google`, requestOptions).then(handleResponse);
 }
 
-function loginWithFacebook(payload: IFacebookCredentialsPayload) {
+function loginWithFacebook(payload: IFacebookLoginPayload) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
