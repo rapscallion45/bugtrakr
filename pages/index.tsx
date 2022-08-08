@@ -1,12 +1,29 @@
+import { useDispatch, useSelector } from 'react-redux';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import CircularProgress from '@mui/material/CircularProgress';
+import { useRouter } from 'next/router';
 import Link from '../components/Link/Link';
+import { accountActions } from '../redux/actions';
+import { AppState } from '../redux/reducers';
 
 const Index = function Index() {
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const { loggingIn } = useSelector((state: AppState) => state.authentication);
+
+  const goToDashboard = () => {
+    router.push('/dashboard');
+  };
+
+  const handleDemoClick = () => {
+    dispatch(accountActions.demoLogin(goToDashboard));
+  };
+
   return (
     <main>
       <Container>
@@ -25,8 +42,18 @@ const Index = function Index() {
                 developers!
               </Typography>
               <Stack sx={{ pt: 4 }} direction="row" spacing={2} justifyContent="center">
-                <Button variant="contained" component={Link} href="/register">
+                <Button disabled={loggingIn} variant="contained" component={Link} href="/register">
                   Get Started
+                </Button>
+                <Button
+                  color="primary"
+                  variant="outlined"
+                  onClick={handleDemoClick}
+                  disabled={loggingIn}
+                  sx={{ minWidth: '120px' }}
+                >
+                  {!loggingIn && 'Access Demo'}
+                  {loggingIn && <CircularProgress size={25} color="inherit" />}
                 </Button>
               </Stack>
             </Box>
