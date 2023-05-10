@@ -14,10 +14,15 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import Link from '../Link/Link';
 import ValidatedCheckbox from '../ValidatedCheckbox/ValidatedCheckbox';
-import GoogleLoginButton from '../GoogleLoginButton/GoogleLoginButton';
+import NextAuthBtns from '../NextAuthBtns/NextAuthBtns';
 import useLoginFormController from './LoginFormController';
 
-const LoginForm: FC = function LoginForm() {
+interface LoginFormProps {
+  providers: any;
+}
+
+const LoginForm: FC<LoginFormProps> = function LoginForm(props) {
+  const { providers } = props;
   const [showPassword, setShowPassword] = useState(false);
   const { loggingIn, demo, formik, handleDemoLogin } = useLoginFormController();
 
@@ -38,7 +43,7 @@ const LoginForm: FC = function LoginForm() {
         Enter your details below
       </Typography>
       <form onSubmit={formik.handleSubmit}>
-        <GoogleLoginButton variant="login" />
+        <NextAuthBtns providers={providers} />
         <Divider sx={{ color: 'lightgray' }}>Or</Divider>
         <TextField
           fullWidth

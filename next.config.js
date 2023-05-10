@@ -1,6 +1,13 @@
 module.exports = {
   images: {
-    domains: ['localhost', 'fplfrog.co.uk', 'cms.fplfrog.brightseed.io', 'secure.gravatar.com'],
+    domains: [
+      'localhost',
+      'bugtrakr.vercel.app',
+      'bugtrakr-server.up.railway.app',
+      'bugtrakr-server-staging.up.railway.app',
+      'secure.gravatar.com',
+      'authjs.dev',
+    ],
     formats: ['image/avif', 'image/webp'],
   },
   env: {

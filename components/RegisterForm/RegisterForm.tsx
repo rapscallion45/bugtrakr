@@ -13,10 +13,15 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import Link from '../Link/Link';
 import ValidatedCheckbox from '../ValidatedCheckbox/ValidatedCheckbox';
-import GoogleLoginButton from '../GoogleLoginButton/GoogleLoginButton';
+import NextAuthBtns from '../NextAuthBtns/NextAuthBtns';
 import useRegisterFormController from './RegisterFormController';
 
-const RegisterForm: FC = function RegisterForm() {
+interface RegisterFormProps {
+  providers: any;
+}
+
+const RegisterForm: FC<RegisterFormProps> = function RegisterForm(props) {
+  const { providers } = props;
   const [showPassword, setShowPassword] = useState(false);
   const { registering, formik } = useRegisterFormController();
 
@@ -37,7 +42,7 @@ const RegisterForm: FC = function RegisterForm() {
         Sign up to our free plan. No credit card needed.
       </Typography>
       <form onSubmit={formik.handleSubmit}>
-        <GoogleLoginButton variant="register" />
+        <NextAuthBtns providers={providers} />
         <Divider sx={{ color: 'lightgray' }}>Or</Divider>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>

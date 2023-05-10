@@ -1,5 +1,8 @@
 import { useEffect } from 'react';
+import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useDispatch } from 'react-redux';
+import { getProviders } from 'next-auth/react';
+import { getServerSession } from 'next-auth/next';
 import { styled } from '@mui/material/styles';
 import { Card, Link as MuiLink, Container, Typography, Box } from '@mui/material';
 import Link from '../components/Link/Link';
@@ -7,6 +10,7 @@ import AuthLayout from '../layouts/AuthLayout/AuthLayout';
 import MHidden from '../components/@MUI-Extended/MHidden';
 import LoginForm from '../components/LoginForm/LoginForm';
 import { accountActions } from '../redux/actions';
+import { authOptions } from './api/auth/[...nextauth]';
 
 const SectionStyle = styled(Card)(({ theme }) => ({
   width: '100%',
@@ -27,7 +31,7 @@ const ContentStyle = styled('div')(({ theme }) => ({
   padding: theme.spacing(12, 0),
 }));
 
-function Login() {
+function Login({ providers }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const dispatch = useDispatch();
 
   /* reset login status and clear squad data if we get routed here */
@@ -46,7 +50,7 @@ function Login() {
 
         <Container maxWidth="sm">
           <ContentStyle>
-            <LoginForm />
+            <LoginForm providers={providers} />
 
             <Typography variant="body2" align="center" sx={{ mt: 3 }}>
               Don’t have an account?&nbsp;
@@ -61,7 +65,7 @@ function Login() {
       <MHidden width="mdUp">
         <Container maxWidth="md">
           <Box sx={{ pt: 10, pb: 5 }}>
-            <LoginForm />
+            <LoginForm providers={providers} />
 
             <Typography variant="body2" align="center" sx={{ mt: 3 }}>
               Don’t have an account?&nbsp;
@@ -79,3 +83,22 @@ function Login() {
 Login.Layout = AuthLayout;
 
 export default Login;
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+
+  /**
+   * If the user is already logged in, redirect.
+   * Note: Make sure not to redirect to the same page
+   * To avoid an infinite loop!
+   */
+  if (session) {
+    return { redirect: { destination: '/dashboard' } };
+  }
+
+  const providers = await getProviders();
+
+  return {
+    props: { providers: providers ?? [] },
+  };
+}

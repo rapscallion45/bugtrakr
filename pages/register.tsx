@@ -1,5 +1,8 @@
 import React, { useEffect } from 'react';
+import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useSelector } from 'react-redux';
+import { getProviders } from 'next-auth/react';
+import { getServerSession } from 'next-auth/next';
 import router from 'next/router';
 import { styled } from '@mui/material/styles';
 import { Card, Link as MuiLink, Container, Typography, Box } from '@mui/material';
@@ -9,6 +12,7 @@ import MHidden from '../components/@MUI-Extended/MHidden';
 import RegisterForm from '../components/RegisterForm/RegisterForm';
 import ScrollBar from '../components/ScrollBar/ScrollBar';
 import { AppState } from '../redux/reducers';
+import { authOptions } from './api/auth/[...nextauth]';
 
 const SectionStyle = styled(Card)(({ theme }) => ({
   width: '100%',
@@ -34,7 +38,9 @@ const ContentStyle = styled('div')(({ theme }) => ({
   },
 }));
 
-const Register = function Register() {
+const Register = function Register({
+  providers,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const loggedIn = useSelector((state: AppState) => state.authentication.loggedIn);
 
   /* If we're logged in, ignore the request and re-route to dashboard */
@@ -65,7 +71,7 @@ const Register = function Register() {
                 },
               }}
             >
-              <RegisterForm />
+              <RegisterForm providers={providers} />
 
               <Typography variant="body2" align="center" sx={{ mt: 3 }}>
                 Already have an account?&nbsp;
@@ -81,7 +87,7 @@ const Register = function Register() {
       <MHidden width="mdUp">
         <Container maxWidth="md">
           <Box sx={{ py: 5 }}>
-            <RegisterForm />
+            <RegisterForm providers={providers} />
 
             <Typography variant="body2" align="center" sx={{ mt: 3 }}>
               Already have an account?&nbsp;
@@ -99,3 +105,22 @@ const Register = function Register() {
 Register.Layout = AuthLayout;
 
 export default Register;
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+
+  /**
+   * If the user is already logged in, redirect.
+   * Note: Make sure not to redirect to the same page
+   * To avoid an infinite loop!
+   */
+  if (session) {
+    return { redirect: { destination: '/dashboard' } };
+  }
+
+  const providers = await getProviders();
+
+  return {
+    props: { providers: providers ?? [] },
+  };
+}
