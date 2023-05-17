@@ -1,5 +1,6 @@
 import { FC, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { getServerSession } from 'next-auth/next';
 import { styled } from '@mui/material/styles';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -18,6 +19,7 @@ import UserBillingForm from '../../components/UserBillingForm/UserBillingForm';
 import ChangePasswordRequestForm from '../../components/ChangePasswordRequestForm/ChangePasswordRequestForm';
 import Loader from '../../components/Loader/Loader';
 import { AppState } from '../../redux/reducers';
+import { authOptions } from '../api/auth/[...nextauth]';
 
 const TabStyle = styled(Tab)({
   display: 'flex',
@@ -137,3 +139,22 @@ const MyAccount = function MyAccount() {
 MyAccount.Layout = DashboardLayout;
 
 export default MyAccount;
+
+export async function getServerSideProps(context) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+
+  /**
+   * If the user is not logged in, redirect.
+   * Note: Make sure not to redirect to the same page
+   * to avoid an infinite loop!
+   */
+  if (!session) {
+    return { redirect: { destination: '/login' } };
+  }
+
+  return {
+    props: {
+      session,
+    },
+  };
+}

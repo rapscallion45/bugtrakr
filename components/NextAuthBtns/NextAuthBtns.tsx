@@ -31,19 +31,21 @@ interface NextAuthBtnsProps {
 const NextAuthBtns: FC<NextAuthBtnsProps> = function NextAuthBtns({ providers }) {
   return (
     <>
-      {Object.values(providers).map((provider: any) => (
-        <NextAuthBtnStyle key={provider.name} onClick={() => signIn(provider.id)}>
-          <Image
-            loading="lazy"
-            height="24"
-            width="24"
-            id={`provider-logo-${provider.name}`}
-            src={`https://authjs.dev/img/providers/${provider.name?.toLowerCase()}.svg`}
-            alt={`${provider.name} logo`}
-          />
-          <span style={{ marginLeft: 20 }}>Sign in with {provider.name}</span>
-        </NextAuthBtnStyle>
-      ))}
+      {Object.values(providers).map((provider: any) =>
+        provider.name !== 'Credentials' ? (
+          <NextAuthBtnStyle key={provider.name} onClick={() => signIn(provider.id)}>
+            <Image
+              loading="lazy"
+              height="24"
+              width="24"
+              id={`provider-logo-${provider.name}`}
+              src={`https://authjs.dev/img/providers/${provider.name?.toLowerCase()}.svg`}
+              alt={`${provider.name} logo`}
+            />
+            <span style={{ marginLeft: 20 }}>Sign in with {provider.name}</span>
+          </NextAuthBtnStyle>
+        ) : null
+      )}
     </>
   );
 };

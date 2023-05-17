@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
+import { getServerSession } from 'next-auth/next';
 import {
   Chip,
   Divider,
@@ -41,6 +42,7 @@ import { projectActions, bugActions } from '../../../../../redux/actions';
 import { AppState } from '../../../../../redux/reducers';
 import { formatDateTime, getBugPriorityColor, sortNotes } from '../../../../../utils';
 import { NoteSortValues } from '../../../../../utils/sortNotes';
+import { authOptions } from '../../../../api/auth/[...nextauth]';
 
 const menuItems = [
   { value: 'newest', label: 'Newest' },
@@ -410,3 +412,22 @@ const BugDetails = function BugDetails() {
 BugDetails.Layout = DashboardLayout;
 
 export default BugDetails;
+
+export async function getServerSideProps(context) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+
+  /**
+   * If the user is not logged in, redirect.
+   * Note: Make sure not to redirect to the same page
+   * to avoid an infinite loop!
+   */
+  if (!session) {
+    return { redirect: { destination: '/login' } };
+  }
+
+  return {
+    props: {
+      session,
+    },
+  };
+}

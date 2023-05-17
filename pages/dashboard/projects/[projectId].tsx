@@ -1,6 +1,7 @@
 import { FC, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
+import { getServerSession } from 'next-auth/next';
 import {
   Divider,
   Collapse,
@@ -47,6 +48,7 @@ import { bugActions, projectActions } from '../../../redux/actions';
 import { AppState } from '../../../redux/reducers';
 import { formatDateTime, sortBugs, filterBugs, sortProjectMembers } from '../../../utils';
 import { BugSortValues, ProjectMemberSortValues } from '../../../redux/types/types';
+import { authOptions } from '../../api/auth/[...nextauth]';
 
 const TabStyle = styled(Tab)({
   display: 'flex',
@@ -611,3 +613,22 @@ const ProjectDetails = function ProjectDetails() {
 ProjectDetails.Layout = DashboardLayout;
 
 export default ProjectDetails;
+
+export async function getServerSideProps(context) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+
+  /**
+   * If the user is not logged in, redirect.
+   * Note: Make sure not to redirect to the same page
+   * to avoid an infinite loop!
+   */
+  if (!session) {
+    return { redirect: { destination: '/login' } };
+  }
+
+  return {
+    props: {
+      session,
+    },
+  };
+}

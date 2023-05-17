@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { getServerSession } from 'next-auth/next';
 import { useMediaQuery, SelectChangeEvent, SortDirection, Collapse } from '@mui/material';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import { useTheme, styled } from '@mui/material/styles';
@@ -23,6 +24,7 @@ import { sortProjects } from '../../utils';
 import { projectActions } from '../../redux/actions';
 import { ProjectSortValues } from '../../redux/types/types';
 import { AppState } from '../../redux/reducers';
+import { authOptions } from '../api/auth/[...nextauth]';
 
 const menuItems = [
   { value: 'newest', label: 'Newest' },
@@ -233,3 +235,22 @@ const Dashboard = function Dashboard() {
 Dashboard.Layout = DashboardLayout;
 
 export default Dashboard;
+
+export async function getServerSideProps(context) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+
+  /**
+   * If the user is not logged in, redirect.
+   * Note: Make sure not to redirect to the same page
+   * to avoid an infinite loop!
+   */
+  if (!session) {
+    return { redirect: { destination: '/login' } };
+  }
+
+  return {
+    props: {
+      session,
+    },
+  };
+}

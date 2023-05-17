@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
+import { signIn } from 'next-auth/react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { accountActions } from '../../redux/actions';
@@ -27,7 +28,13 @@ const useLoginFormController = () => {
     },
     validationSchema,
     onSubmit: ({ username, password }) => {
-      dispatch(accountActions.login({ username, password }, goToDashboard));
+      // dispatch(accountActions.login({ username, password }, goToDashboard));
+      signIn('credentials', {
+        redirect: true,
+        username,
+        password,
+        callbackUrl: '/dashboard',
+      });
     },
   });
 
