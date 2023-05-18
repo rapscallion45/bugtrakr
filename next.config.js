@@ -17,5 +17,7 @@ module.exports = {
     TWITTER_HANDLE: 'bugtrakr',
     GOOGLE_ADSENSE_PUBLISHER_ID: 'ca-pub-3649196559623661',
     GOOGLE_ADSENSE_TEST: 'on',
+    DEMO_LOGIN_USERNAME: 'demo',
+    DEMO_LOGIN_PASSWORD: 'password',
   },
 };

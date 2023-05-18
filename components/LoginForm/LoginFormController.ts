@@ -53,8 +53,8 @@ const useLoginFormController = () => {
     setDemoLoggingIn(true);
     signIn('credentials', {
       redirect: false,
-      username: process.env.DEMO_USERNAME,
-      password: process.env.DEMO_PASSWORD,
+      username: process.env.DEMO_LOGIN_USERNAME,
+      password: process.env.DEMO_LOGIN_PASSWORD,
     }).then(({ ok, error }) => {
       if (ok) {
         router.push('/dashboard');
