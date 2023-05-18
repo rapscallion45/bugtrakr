@@ -131,15 +131,6 @@ export interface ICredentialsPayload {
   password: string;
 }
 
-export interface IGoogleLoginPayload {
-  tokenId: string;
-}
-
-export interface IFacebookLoginPayload {
-  facebookId: string;
-  authToken: string;
-}
-
 export interface IProjectPayload {
   name: string;
   members: string[];

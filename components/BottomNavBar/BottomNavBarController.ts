@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import routes from './routes';
-import { AppState } from '../../redux/reducers';
 
 const useBottomNavBarController = () => {
+  const { data: session } = useSession();
   const isDesktop = useMediaQuery('(min-width:992px)');
   const router = useRouter();
   const [value, setValue] = useState(router.pathname);
-  const loggedIn = useSelector((state: AppState) => state.authentication.loggedIn);
 
   useEffect(() => {
     setValue(router.pathname);
@@ -19,7 +18,7 @@ const useBottomNavBarController = () => {
     setValue(newValue);
   };
 
-  const showBottomBar = !isDesktop && loggedIn;
+  const showBottomBar = !isDesktop && session;
   const hideBottomBarTrigger = useMediaQuery('(min-height:500px)');
 
   return {

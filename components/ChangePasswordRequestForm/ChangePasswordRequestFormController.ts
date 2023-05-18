@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
+import { useSession } from 'next-auth/react';
 import { accountActions } from '../../redux/actions';
 import { AppState } from '../../redux/reducers';
 
@@ -7,9 +8,10 @@ const useChangePasswordRequestFormController = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { requestingPassword } = useSelector((state: AppState) => state.changePassword);
-  const { demo } = useSelector((state: AppState) => state.authentication);
-  const { user } = useSelector((state: AppState) => state.account);
-  const { email } = user;
+  const { data: session } = useSession();
+  const { user } = session;
+  const { user: account } = useSelector((state: AppState) => state.account);
+  const { email } = account;
 
   const gotToResetPasswordPage = () => {
     router.push('/reset-password');
@@ -21,7 +23,7 @@ const useChangePasswordRequestFormController = () => {
 
   return {
     requestingPassword,
-    demo,
+    demo: user.demo,
     changePasswordRequest,
   };
 };

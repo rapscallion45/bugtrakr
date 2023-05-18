@@ -1,9 +1,6 @@
-import React, { useEffect } from 'react';
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
-import { useSelector } from 'react-redux';
 import { getProviders } from 'next-auth/react';
 import { getServerSession } from 'next-auth/next';
-import router from 'next/router';
 import { styled } from '@mui/material/styles';
 import { Card, Link as MuiLink, Container, Typography, Box } from '@mui/material';
 import Link from '../components/Link/Link';
@@ -11,7 +8,6 @@ import AuthLayout from '../layouts/AuthLayout/AuthLayout';
 import MHidden from '../components/@MUI-Extended/MHidden';
 import RegisterForm from '../components/RegisterForm/RegisterForm';
 import ScrollBar from '../components/ScrollBar/ScrollBar';
-import { AppState } from '../redux/reducers';
 import { authOptions } from './api/auth/[...nextauth]';
 
 const SectionStyle = styled(Card)(({ theme }) => ({
@@ -41,13 +37,6 @@ const ContentStyle = styled('div')(({ theme }) => ({
 const Register = function Register({
   providers,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const loggedIn = useSelector((state: AppState) => state.authentication.loggedIn);
-
-  /* If we're logged in, ignore the request and re-route to dashboard */
-  useEffect(() => {
-    if (loggedIn) router.replace('/dashboard');
-  }, [loggedIn]);
-
   return (
     <>
       <MHidden width="mdDown">

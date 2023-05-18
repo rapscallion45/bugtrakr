@@ -1,6 +1,7 @@
 import { FC, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 import { styled } from '@mui/material/styles';
 import { Box, Link as MuiLink, Button, Drawer, Typography, Avatar, Stack } from '@mui/material';
 import Link from '../Link/Link';
@@ -37,9 +38,9 @@ const DashboardSideBar: FC<DashboardSideBarProps> = function DashboardSideBar({
   onCloseSidebar,
 }) {
   const { pathname } = useRouter();
-  const loggedIn = useSelector((state: AppState) => state.authentication?.loggedIn);
-  const isDemo = useSelector((state: AppState) => state.authentication?.demo);
-  const user = useSelector((state: AppState) => state.account?.user);
+  const { data: session } = useSession();
+  const { user } = session;
+  const { user: account } = useSelector((state: AppState) => state.account);
 
   useEffect(() => {
     if (isOpenSidebar) {
@@ -66,15 +67,15 @@ const DashboardSideBar: FC<DashboardSideBarProps> = function DashboardSideBar({
       </Box>
       <Box sx={{ mb: 2, mx: 2.5 }}>
         <AccountStyle>
-          {loggedIn && !isDemo && (
+          {session && !user?.demo && (
             <MuiLink underline="none" component={Link} href="/dashboard/my-account">
-              <Avatar src={user?.avatar?.url} alt={user?.firstName} />
+              <Avatar src={account?.avatar?.url} alt={account?.firstName} />
             </MuiLink>
           )}
           <Box sx={{ ml: 2 }}>
             <Typography variant="h4" sx={{ color: 'text.primary' }}>
-              {loggedIn && !isDemo
-                ? `Hi, ${user?.firstName}! 👋 Welcome back!`
+              {session && !user.demo
+                ? `Hi, ${account?.firstName}! 👋 Welcome back!`
                 : `Hi! Welcome to ${process.env.APP_NAME}! 👋`}
             </Typography>
           </Box>
@@ -100,7 +101,7 @@ const DashboardSideBar: FC<DashboardSideBarProps> = function DashboardSideBar({
             sx={{ width: 100, position: 'absolute', top: -50 }}
           />
 
-          {loggedIn && !isDemo && (
+          {session && !user?.demo && (
             <Box sx={{ textAlign: 'center' }}>
               <Typography gutterBottom variant="h6">
                 Want more?
@@ -110,7 +111,7 @@ const DashboardSideBar: FC<DashboardSideBarProps> = function DashboardSideBar({
               </Typography>
             </Box>
           )}
-          {(!loggedIn || isDemo) && (
+          {(!session || user.demo) && (
             <Box sx={{ textAlign: 'center' }}>
               <Typography gutterBottom variant="h6">
                 Sign Up
@@ -121,12 +122,12 @@ const DashboardSideBar: FC<DashboardSideBarProps> = function DashboardSideBar({
             </Box>
           )}
 
-          {loggedIn && !isDemo && (
+          {session && !user.demo && (
             <Button fullWidth component={Link} href="/dashboard/my-account" variant="contained">
               Upgrade Plan
             </Button>
           )}
-          {(!loggedIn || isDemo) && (
+          {(!session || user.demo) && (
             <Button fullWidth component={Link} href="/login" variant="contained">
               Create Account
             </Button>

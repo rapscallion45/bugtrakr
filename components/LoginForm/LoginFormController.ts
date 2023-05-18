@@ -1,19 +1,11 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
-import { signIn } from 'next-auth/react';
+import { useState } from 'react';
+import { signIn, useSession } from 'next-auth/react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { accountActions } from '../../redux/actions';
-import { AppState } from '../../redux/reducers';
 
 const useLoginFormController = () => {
-  const router = useRouter();
-  const dispatch = useDispatch();
-  const { loggingIn, demo } = useSelector((state: AppState) => state.authentication);
-
-  const goToDashboard = () => {
-    router.push('/dashboard');
-  };
+  const [loggingIn, setLoggingIn] = useState(false);
+  const { data: session } = useSession();
 
   const validationSchema = Yup.object().shape({
     username: Yup.string().required('Username or email is required'),
@@ -28,7 +20,7 @@ const useLoginFormController = () => {
     },
     validationSchema,
     onSubmit: ({ username, password }) => {
-      // dispatch(accountActions.login({ username, password }, goToDashboard));
+      setLoggingIn(true);
       signIn('credentials', {
         redirect: true,
         username,
@@ -39,9 +31,15 @@ const useLoginFormController = () => {
   });
 
   const handleDemoLogin = () => {
-    dispatch(accountActions.demoLogin(goToDashboard));
+    setLoggingIn(true);
+    signIn('credentials', {
+      redirect: true,
+      username: process.env.DEMO_USERNAME,
+      password: process.env.DEMO_PASSWORD,
+      callbackUrl: '/dashboard',
+    });
   };
 
-  return { loggingIn, demo, formik, handleDemoLogin };
+  return { loggingIn, demo: session?.user.demo, formik, handleDemoLogin };
 };
 export default useLoginFormController;

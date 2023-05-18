@@ -1,12 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import cookie from 'cookie';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '../../../../auth/[...nextauth]';
 import { reopenBug } from '../../../../../../lib/api';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   /* get req params */
   const { method, query } = req;
-  const cookies = cookie.parse(req.headers.cookie);
-  const authToken = cookies?.bugTrakrAuth || '';
+  const session = await getServerSession(req, res, authOptions);
 
   /* check if we have a project Id and bug Id, if not return error */
   if (!query.projectId || !query.id) {
@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     case 'POST':
       /* call api */
       try {
-        const response = await reopenBug(authToken, query.projectId, query.id);
+        const response = await reopenBug(session.user.accessToken, query.projectId, query.id);
         const data = await response.json();
 
         /* send back server response */

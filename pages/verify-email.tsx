@@ -1,13 +1,13 @@
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import router from 'next/router';
+import type { GetServerSidePropsContext } from 'next';
+import { getProviders } from 'next-auth/react';
+import { getServerSession } from 'next-auth/next';
 import { styled } from '@mui/material/styles';
 import { Card, Link as MuiLink, Container, Typography } from '@mui/material';
 import Link from '../components/Link/Link';
 import AuthLayout from '../layouts/AuthLayout/AuthLayout';
 import MHidden from '../components/@MUI-Extended/MHidden';
 import VerifyEmailForm from '../components/VerifyEmailForm/VerifyEmailForm';
-import { AppState } from '../redux/reducers';
+import { authOptions } from './api/auth/[...nextauth]';
 
 const SectionStyle = styled(Card)(({ theme }) => ({
   width: '100%',
@@ -29,13 +29,6 @@ const ContentStyle = styled('div')(({ theme }) => ({
 }));
 
 const VerifyEmail = function VerifyEmail() {
-  const loggedIn = useSelector((state: AppState) => state.authentication?.loggedIn);
-
-  /* If we're logged in, ignore the request and re-route to dashboard */
-  useEffect(() => {
-    if (loggedIn) router.replace('/dashboard');
-  }, [loggedIn]);
-
   return (
     <>
       <MHidden width="mdDown">
@@ -65,3 +58,22 @@ const VerifyEmail = function VerifyEmail() {
 VerifyEmail.Layout = AuthLayout;
 
 export default VerifyEmail;
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+
+  /**
+   * If the user is already logged in, redirect.
+   * Note: Make sure not to redirect to the same page
+   * To avoid an infinite loop!
+   */
+  if (session) {
+    return { redirect: { destination: '/dashboard' } };
+  }
+
+  const providers = await getProviders();
+
+  return {
+    props: { providers: providers ?? [] },
+  };
+}

@@ -1,13 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import cookie from 'cookie';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from './auth/[...nextauth]';
 import { getUserById, updateUserById } from '../../lib/api';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   /* get req params */
   const { body, method } = req;
-  const cookies = cookie.parse(req.headers.cookie);
-  const authToken = cookies?.bugTrakrAuth || '';
-  const demoToken = cookies?.bugTrakrDemo || '';
+  const session = await getServerSession(req, res, authOptions);
   const { id, user } = body;
 
   if (!id) {
@@ -22,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     case 'POST':
       /* call api */
       try {
-        const response = await getUserById(authToken, id);
+        const response = await getUserById(session.user.accessToken, id);
         const data = await response.json();
 
         /* send back server response */
@@ -40,11 +39,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       /* call api */
       try {
         /* check if we're in demo mode, if so deny access */
-        if (demoToken === 'demo') {
+        if (session.user.demo) {
           return res.status(401).json({ message: 'Operation not authorized in demo mode.' });
         }
 
-        const response = await updateUserById(authToken, id, user);
+        const response = await updateUserById(session.user.accessToken, id, user);
         const data = await response.json();
 
         /* send back server response */

@@ -1,19 +1,19 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import cookie from 'cookie';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from './auth/[...nextauth]';
 import { getProjects, deleteProject, updateProject, createProject } from '../../lib/api';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   /* get req params */
   const { body, method } = req;
-  const cookies = cookie.parse(req.headers.cookie);
-  const authToken = cookies?.bugTrakrAuth || '';
+  const session = await getServerSession(req, res, authOptions);
 
   /* determine which request type this is */
   switch (method) {
     case 'GET':
       /* call api */
       try {
-        const response = await getProjects(authToken);
+        const response = await getProjects(session.user.accessToken);
         const data = await response.json();
 
         /* send back server response */
@@ -37,7 +37,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             .json({ message: 'Unproccesable request, no project ID provided.' });
         }
 
-        const response = await deleteProject(authToken, body.id);
+        const response = await deleteProject(session.user.accessToken, body.id);
 
         /* send back server response */
         if (response.status === 204) {
@@ -60,7 +60,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             .json({ message: 'Unproccesable request, project must have a name.' });
         }
 
-        const response = await createProject(authToken, body);
+        const response = await createProject(session.user.accessToken, body);
         const data = await response.json();
 
         /* send back server response */
@@ -84,7 +84,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             .json({ message: 'Unproccesable request, project name and ID not provided.' });
         }
 
-        const response = await updateProject(authToken, body);
+        const response = await updateProject(session.user.accessToken, body);
         const data = await response.json();
 
         /* send back server response */

@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useSession } from 'next-auth/react';
 import { Box, Divider, Typography } from '@mui/material';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import BlockIcon from '@mui/icons-material/Block';
@@ -27,9 +28,10 @@ const MembersTableMobile: FC<MembersTableMobileProps> = function MembersTableMob
   projectName,
 }) {
   const dispatch = useDispatch();
-  const { user } = useSelector((state: AppState) => state.authentication);
   const { removing } = useSelector((state: AppState) => state.projects);
-  const isAdmin = adminId === user?.id;
+  const { data: session } = useSession();
+  const { user } = session;
+  const isAdmin = adminId === user?.uid;
 
   const handleRemoveUser = (memberId: string, closeDialog: () => void) => {
     dispatch(projectActions.removeProjectMember(projectId, memberId, closeDialog));
@@ -45,12 +47,12 @@ const MembersTableMobile: FC<MembersTableMobileProps> = function MembersTableMob
               <Box display="flex" alignItems="center">
                 <Box sx={{ flexGrow: 1, textDecoration: 'none' }}>
                   <Typography variant="h4" color="text.primary">
-                    {m.member.username} {m.member.id === user?.id && '(You)'}
+                    {m.member.username} {m.member.id === user?.uid && '(You)'}
                   </Typography>
                 </Box>
                 {isAdmin && (
                   <Box>
-                    {m.member.id === user?.id ? (
+                    {m.member.id === user?.uid ? (
                       <BlockIcon color="secondary" fontSize="large" />
                     ) : (
                       <ConfirmDialog

@@ -1,5 +1,6 @@
-import { FC, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { FC, useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useSession } from 'next-auth/react';
 import { getServerSession } from 'next-auth/next';
 import { styled } from '@mui/material/styles';
 import Tabs from '@mui/material/Tabs';
@@ -20,6 +21,7 @@ import ChangePasswordRequestForm from '../../components/ChangePasswordRequestFor
 import Loader from '../../components/Loader/Loader';
 import { AppState } from '../../redux/reducers';
 import { authOptions } from '../api/auth/[...nextauth]';
+import { accountActions } from '../../redux/actions';
 
 const TabStyle = styled(Tab)({
   display: 'flex',
@@ -51,11 +53,18 @@ const MyAccountTabPanel: FC<MyAccountTabPanelProps> = function MyAccountTabPanel
 };
 
 const MyAccount = function MyAccount() {
+  const dispatch = useDispatch();
+  const { data: session } = useSession();
+  const { user } = session;
   const account = useSelector((state: AppState) => state.account);
   const [tabValue, setTabValue] = useState(0);
   const dataLoading = account.loading;
   const dataLoaded = account.loaded;
   const dataError = !account.user && !account.loading;
+
+  useEffect(() => {
+    dispatch(accountActions.get(user?.uid));
+  }, []);
 
   const handleChange = (event, newValue) => {
     setTabValue(newValue);

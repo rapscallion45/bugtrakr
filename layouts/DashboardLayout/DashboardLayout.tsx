@@ -1,12 +1,8 @@
-import { FC, useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import router from 'next/router';
+import { FC, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import NavBar from '../../components/NavBar/NavBar';
 import NavSideBar from '../../components/NavSideBar/NavSideBar';
-import Preloader from '../../components/Preloader/Preloader';
 import useNotifier from '../../hooks/useNotifier';
-import { AppState } from '../../redux/reducers';
 
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 92;
@@ -35,24 +31,16 @@ interface DashboardLayoutProps {
 }
 
 const DashboardLayout: FC<DashboardLayoutProps> = function DashboardLayout({ children }) {
-  const loggedIn = useSelector((state: AppState) => state.authentication.loggedIn);
-  const authenticating = useSelector((state: AppState) => state.authentication.authenticating);
   const [open, setOpen] = useState(false);
   useNotifier();
 
-  useEffect(() => {
-    if (!loggedIn && !authenticating) router.replace('/login');
-  }, [loggedIn, authenticating]);
-
-  const getLayout = () => (
+  return (
     <RootStyle>
       <NavBar onOpenSidebar={() => setOpen(true)} />
       <NavSideBar isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
       <MainStyle>{children}</MainStyle>
     </RootStyle>
   );
-
-  return !loggedIn && !authenticating ? <Preloader /> : getLayout();
 };
 
 export default DashboardLayout;

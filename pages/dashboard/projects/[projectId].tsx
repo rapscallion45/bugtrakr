@@ -1,6 +1,7 @@
 import { FC, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 import { getServerSession } from 'next-auth/next';
 import {
   Divider,
@@ -116,13 +117,14 @@ const ProjectTabPanel: FC<ProjectTabPanelProps> = function AssetStatisticsTabPan
 };
 
 const ProjectDetails = function ProjectDetails() {
+  const { data: session } = useSession();
+  const { user } = session;
   const dispatch = useDispatch();
   const router = useRouter();
   const { projectId } = router.query;
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [tab, setTab] = useState<number>(0);
-  const { user } = useSelector((state: AppState) => state.authentication);
   const {
     leaving,
     deleting,
@@ -157,7 +159,7 @@ const ProjectDetails = function ProjectDetails() {
     ) || [],
     sortMembersBy
   );
-  const isAdmin = user.id === projectData?.createdBy.id;
+  const isAdmin = user.uid === projectData?.createdBy.id;
 
   useEffect(() => {
     if (!projectsLoaded) dispatch(projectActions.getProjects());

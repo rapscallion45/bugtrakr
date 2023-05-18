@@ -1,71 +1,11 @@
 import { handleResponse } from '../../utils';
 import {
   IAccount,
-  ICredentialsPayload,
-  IGoogleLoginPayload,
-  IFacebookLoginPayload,
   IChangePasswordPayload,
   IValidateResetTokenPayload,
   IResetPasswordPayload,
   IVerifyEmailPayload,
 } from '../types/types';
-
-function authenticate() {
-  const requestOptions = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-  };
-
-  return fetch(`/api/authenticate`, requestOptions).then(handleResponse);
-}
-
-function login(payload: ICredentialsPayload) {
-  const requestOptions = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  };
-
-  return fetch(`/api/login`, requestOptions).then(handleResponse);
-}
-
-function demoLogin() {
-  const requestOptions = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-  };
-
-  return fetch(`/api/demo-login`, requestOptions).then(handleResponse);
-}
-
-function loginWithGoogle(payload: IGoogleLoginPayload) {
-  const requestOptions = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  };
-
-  return fetch(`/api/login-google`, requestOptions).then(handleResponse);
-}
-
-function loginWithFacebook(payload: IFacebookLoginPayload) {
-  const requestOptions = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  };
-
-  return fetch(`/api/login-facebook`, requestOptions).then(handleResponse);
-}
-
-function logout() {
-  const requestOptions = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-  };
-
-  return fetch(`/api/logout`, requestOptions).then(handleResponse);
-}
 
 function register(payload: IAccount) {
   const requestOptions = {
@@ -148,12 +88,6 @@ function deleteAccount(id: string) {
 }
 
 const accountService = {
-  authenticate,
-  login,
-  demoLogin,
-  loginWithGoogle,
-  loginWithFacebook,
-  logout,
   register,
   verifyEmail,
   changePassword,

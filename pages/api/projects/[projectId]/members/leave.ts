@@ -1,19 +1,19 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import cookie from 'cookie';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '../../../auth/[...nextauth]';
 import { leaveProject } from '../../../../../lib/api';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   /* get req params */
   const { method, body } = req;
-  const cookies = cookie.parse(req.headers.cookie);
-  const authToken = cookies?.bugTrakrAuth || '';
+  const session = await getServerSession(req, res, authOptions);
 
   /* determine which request type this is */
   switch (method) {
     case 'POST':
       /* call api */
       try {
-        const response = await leaveProject(authToken, body.id);
+        const response = await leaveProject(session.user.accessToken, body.id);
 
         /* send back server response */
         if (response.status === 204) {

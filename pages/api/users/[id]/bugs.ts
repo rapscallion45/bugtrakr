@@ -1,12 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import cookie from 'cookie';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '../../auth/[...nextauth]';
 import { getBugsByUser } from '../../../../lib/api';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   /* get req params */
   const { method, query } = req;
-  const cookies = cookie.parse(req.headers.cookie);
-  const authToken = cookies?.bugTrakrAuth || '';
+  const session = await getServerSession(req, res, authOptions);
 
   /* check if we have a user Id, if not return error */
   if (!query.id) {
@@ -18,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     case 'GET':
       /* call api */
       try {
-        const response = await getBugsByUser(authToken, query.id);
+        const response = await getBugsByUser(session.user.accessToken, query.id);
         const data = await response.json();
 
         /* send back server response */

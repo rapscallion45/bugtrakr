@@ -1,12 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import cookie from 'cookie';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '../../auth/[...nextauth]';
 import { updateProjectMembers, removeProjectMember } from '../../../../lib/api';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   /* get req params */
   const { body, method } = req;
-  const cookies = cookie.parse(req.headers.cookie);
-  const authToken = cookies?.bugTrakrAuth || '';
+  const session = await getServerSession(req, res, authOptions);
 
   /* determine which request type this is */
   switch (method) {
@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             .json({ message: 'Unproccesable request, project must have a name.' });
         }
 
-        const response = await updateProjectMembers(authToken, body);
+        const response = await updateProjectMembers(session.user.accessToken, body);
         const data = await response.json();
 
         /* send back server response */
@@ -44,7 +44,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             .json({ message: 'Unproccesable request, no project or user ID provided.' });
         }
 
-        const response = await removeProjectMember(authToken, body);
+        const response = await removeProjectMember(session.user.accessToken, body);
 
         /* send back server response */
         if (response.status === 204) {

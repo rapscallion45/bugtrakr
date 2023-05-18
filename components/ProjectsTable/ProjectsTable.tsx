@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { useSelector } from 'react-redux';
+import { useSession } from 'next-auth/react';
 import router from 'next/router';
 import { styled } from '@mui/material/styles';
 import {
@@ -20,7 +20,6 @@ import ActionsPopover from './ActionsPopover/ActionsPopover';
 import FormDialog from '../FormDialog/FormDialog';
 import ProjectForm from '../ProjectForm/ProjectForm';
 import { formatDateTime, truncateString } from '../../utils';
-import { AppState } from '../../redux/reducers';
 import { IProjectState } from '../../redux/types/types';
 
 interface ITableHeader {
@@ -71,7 +70,8 @@ const ProjectsTable: FC<ProjectsTableProps> = function ProjectsTable({
   sortDir,
   sortChange,
 }) {
-  const { user } = useSelector((state: AppState) => state.authentication);
+  const { data: session } = useSession();
+  const { user } = session;
 
   const handleTHeadClick = (value: string) => {
     const type = tableHeaders.find((header) => header.value === value);
@@ -144,7 +144,7 @@ const ProjectsTable: FC<ProjectsTableProps> = function ProjectsTable({
                     projectId={p.id}
                     currentName={p.name}
                     currentMembers={p.members.map((m) => m.member.id)}
-                    isAdmin={p.createdBy.id === user?.id}
+                    isAdmin={p.createdBy.id === user?.uid}
                     isMobile={false}
                   />
                 </TableCell>

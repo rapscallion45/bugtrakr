@@ -1,4 +1,7 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useState } from 'react';
+import type { GetServerSidePropsContext } from 'next';
+import { signIn, getProviders } from 'next-auth/react';
+import { getServerSession } from 'next-auth/next';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
@@ -6,22 +9,20 @@ import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
-import { useRouter } from 'next/router';
 import Link from '../components/Link/Link';
-import { accountActions } from '../redux/actions';
-import { AppState } from '../redux/reducers';
+import { authOptions } from './api/auth/[...nextauth]';
 
 const Index = function Index() {
-  const router = useRouter();
-  const dispatch = useDispatch();
-  const { loggingIn } = useSelector((state: AppState) => state.authentication);
+  const [loggingIn, setLoggingIn] = useState(false);
 
-  const goToDashboard = () => {
-    router.push('/dashboard');
-  };
-
-  const handleDemoClick = () => {
-    dispatch(accountActions.demoLogin(goToDashboard));
+  const handleDemoLogin = () => {
+    setLoggingIn(true);
+    signIn('credentials', {
+      redirect: true,
+      username: process.env.DEMO_USERNAME,
+      password: process.env.DEMO_PASSWORD,
+      callbackUrl: '/dashboard',
+    });
   };
 
   return (
@@ -48,7 +49,7 @@ const Index = function Index() {
                 <Button
                   color="primary"
                   variant="outlined"
-                  onClick={handleDemoClick}
+                  onClick={handleDemoLogin}
                   disabled={loggingIn}
                   sx={{ minWidth: '120px' }}
                 >
@@ -65,3 +66,22 @@ const Index = function Index() {
 };
 
 export default Index;
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+
+  /**
+   * If the user is already logged in, redirect.
+   * Note: Make sure not to redirect to the same page
+   * To avoid an infinite loop!
+   */
+  if (session) {
+    return { redirect: { destination: '/dashboard' } };
+  }
+
+  const providers = await getProviders();
+
+  return {
+    props: { providers: providers ?? [] },
+  };
+}

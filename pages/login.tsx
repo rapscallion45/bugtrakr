@@ -1,6 +1,4 @@
-import { useEffect } from 'react';
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
-import { useDispatch } from 'react-redux';
 import { getProviders } from 'next-auth/react';
 import { getServerSession } from 'next-auth/next';
 import { styled } from '@mui/material/styles';
@@ -9,7 +7,6 @@ import Link from '../components/Link/Link';
 import AuthLayout from '../layouts/AuthLayout/AuthLayout';
 import MHidden from '../components/@MUI-Extended/MHidden';
 import LoginForm from '../components/LoginForm/LoginForm';
-import { accountActions } from '../redux/actions';
 import { authOptions } from './api/auth/[...nextauth]';
 
 const SectionStyle = styled(Card)(({ theme }) => ({
@@ -32,13 +29,6 @@ const ContentStyle = styled('div')(({ theme }) => ({
 }));
 
 function Login({ providers }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const dispatch = useDispatch();
-
-  /* reset login status and clear squad data if we get routed here */
-  useEffect(() => {
-    dispatch(accountActions.logout());
-  }, []);
-
   return (
     <>
       <MHidden width="mdDown">

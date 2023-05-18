@@ -1,12 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import cookie from 'cookie';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '../../../../../auth/[...nextauth]';
 import { deleteNote, updateNote } from '../../../../../../../lib/api';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   /* get req params */
   const { method, query, body } = req;
-  const cookies = cookie.parse(req.headers.cookie);
-  const authToken = cookies?.bugTrakrAuth || '';
+  const session = await getServerSession(req, res, authOptions);
 
   /* determine which request type this is */
   switch (method) {
@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       /* call api */
       try {
-        const response = await deleteNote(authToken, query.projectId, query.noteId);
+        const response = await deleteNote(session.user.accessToken, query.projectId, query.noteId);
 
         /* send back server response */
         if (response.status === 204) {
@@ -43,7 +43,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       /* call api */
       try {
-        const response = await updateNote(authToken, query.projectId, query.noteId, body);
+        const response = await updateNote(session.user.accessToken, query.projectId, query.noteId, body);
         const data = await response.json();
 
         /* send back server response */

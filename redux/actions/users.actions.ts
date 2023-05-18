@@ -17,7 +17,7 @@ function getUsers() {
     dispatch(request());
 
     usersService.getUsers().then(
-      (projects) => dispatch(success(projects)),
+      (users) => dispatch(success(users)),
       (error) => {
         dispatch(failure(error.toString()));
         dispatch(

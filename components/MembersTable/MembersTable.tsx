@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useSession } from 'next-auth/react';
 import { styled } from '@mui/material/styles';
 import { Table, TableHead, TableBody, TableRow, TableCell, Paper } from '@mui/material';
 import BlockIcon from '@mui/icons-material/Block';
@@ -35,8 +36,9 @@ interface MembersTableProps {
 const MembersTable: FC<MembersTableProps> = function MembersTable({ members, adminId, projectId }) {
   const dispatch = useDispatch();
   const { removing } = useSelector((state: AppState) => state.projects);
-  const { user } = useSelector((state: AppState) => state.authentication);
-  const isAdmin = adminId === user?.id;
+  const { data: session } = useSession();
+  const { user } = session;
+  const isAdmin = adminId === user?.uid;
 
   const handleRemoveUser = (memberId: string, closeDialog: () => void) => {
     dispatch(projectActions.removeProjectMember(projectId, memberId, closeDialog));
@@ -61,13 +63,13 @@ const MembersTable: FC<MembersTableProps> = function MembersTable({ members, adm
               <TableRowStyle key={m.id}>
                 <TableCell align="center">{m.id}</TableCell>
                 <TableCell align="center">
-                  {m.member.username} {m.member.id === user?.id && '(You)'}
+                  {m.member.username} {m.member.id === user?.uid && '(You)'}
                 </TableCell>
                 <TableCell align="center">{m.member.id === adminId ? 'Admin' : 'Member'}</TableCell>
                 <TableCell align="center">{formatDateInWords(m.joinedAt)}</TableCell>
                 {isAdmin && (
                   <TableCell align="center">
-                    {m.member.id === user?.id ? (
+                    {m.member.id === user?.uid ? (
                       <BlockIcon color="secondary" fontSize="large" />
                     ) : (
                       <ConfirmDialog

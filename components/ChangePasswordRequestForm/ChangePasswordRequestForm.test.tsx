@@ -2,6 +2,8 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
+import { Session } from 'next-auth';
+import { SessionProvider } from 'next-auth/react';
 import { mount, render } from 'enzyme';
 import toJson from 'enzyme-to-json';
 import { waitFor } from '@testing-library/react';
@@ -40,10 +42,6 @@ describe('Change Password Request Form', () => {
     const testStore = createStore(
       rootReducer,
       {
-        authentication: {
-          authenticating: false,
-          loggedIn: true,
-        },
         account: {
           user: {
             email: accountMock.email,
@@ -52,11 +50,24 @@ describe('Change Password Request Form', () => {
       },
       applyMiddleware(...middleware)
     );
+    const mockSession: Session = {
+      expires: '1',
+      user: {
+        email: accountMock.email,
+        name: 'Delta',
+        image: 'c',
+        uid: '324efgvb',
+        id: '324efgvb',
+        demo: false,
+      },
+    };
 
     /* Act */
     const view = render(
       <Provider store={testStore}>
-        <ChangePasswordRequestForm />
+        <SessionProvider session={mockSession}>
+          <ChangePasswordRequestForm />
+        </SessionProvider>
       </Provider>
     );
 
@@ -70,11 +81,6 @@ describe('Change Password Request Form', () => {
       const testStore = createStore(
         rootReducer,
         {
-          authentication: {
-            authenticating: false,
-            loggedIn: true,
-            demo: false,
-          },
           account: {
             user: {
               email: accountMock.email,
@@ -86,11 +92,24 @@ describe('Change Password Request Form', () => {
         },
         applyMiddleware(...middleware)
       );
+      const mockSession: Session = {
+        expires: '1',
+        user: {
+          email: accountMock.email,
+          name: 'Delta',
+          image: 'c',
+          uid: '324efgvb',
+          id: '324efgvb',
+          demo: false,
+        },
+      };
 
       /* Act */
       const view = render(
         <Provider store={testStore}>
-          <ChangePasswordRequestForm />
+          <SessionProvider session={mockSession}>
+            <ChangePasswordRequestForm />
+          </SessionProvider>
         </Provider>
       );
 
@@ -104,11 +123,6 @@ describe('Change Password Request Form', () => {
       const testStore = createStore(
         rootReducer,
         {
-          authentication: {
-            authenticating: false,
-            loggedIn: true,
-            demo: false,
-          },
           account: {
             user: {
               email: accountMock.email,
@@ -117,11 +131,24 @@ describe('Change Password Request Form', () => {
         },
         applyMiddleware(...middleware)
       );
+      const mockSession: Session = {
+        expires: '1',
+        user: {
+          email: accountMock.email,
+          name: 'Delta',
+          image: 'c',
+          uid: '324efgvb',
+          id: '324efgvb',
+          demo: false,
+        },
+      };
 
       /* Act */
       const view = mount(
         <Provider store={testStore}>
-          <ChangePasswordRequestForm />
+          <SessionProvider session={mockSession}>
+            <ChangePasswordRequestForm />
+          </SessionProvider>
         </Provider>
       );
       view.find('button').simulate('click');
@@ -142,11 +169,6 @@ describe('Change Password Request Form', () => {
       const testStore = createStore(
         rootReducer,
         {
-          authentication: {
-            authenticating: false,
-            loggedIn: true,
-            demo: true,
-          },
           account: {
             user: {
               email: accountMock.email,
@@ -158,11 +180,24 @@ describe('Change Password Request Form', () => {
         },
         applyMiddleware(...middleware)
       );
+      const mockSession: Session = {
+        expires: '1',
+        user: {
+          email: accountMock.email,
+          name: 'Delta',
+          image: 'c',
+          uid: '324efgvb',
+          id: '324efgvb',
+          demo: true,
+        },
+      };
 
       /* Act */
       const view = render(
         <Provider store={testStore}>
-          <ChangePasswordRequestForm />
+          <SessionProvider session={mockSession}>
+            <ChangePasswordRequestForm />
+          </SessionProvider>
         </Provider>
       );
 
@@ -180,10 +215,6 @@ describe('Change Password Request Form', () => {
       const testStore = createStore(
         rootReducer,
         {
-          authentication: {
-            authenticating: false,
-            loggedIn: true,
-          },
           account: {
             user: {
               email: accountMock.email,
@@ -192,12 +223,25 @@ describe('Change Password Request Form', () => {
         },
         applyMiddleware(...middleware)
       );
+      const mockSession: Session = {
+        expires: '1',
+        user: {
+          email: accountMock.email,
+          name: 'Delta',
+          image: 'c',
+          uid: '324efgvb',
+          id: '324efgvb',
+          demo: false,
+        },
+      };
       const { email } = accountMock;
 
       /* Act */
       const view = mount(
         <Provider store={testStore}>
-          <ChangePasswordRequestForm />
+          <SessionProvider session={mockSession}>
+            <ChangePasswordRequestForm />
+          </SessionProvider>
         </Provider>
       );
       view.find('button').simulate('click');

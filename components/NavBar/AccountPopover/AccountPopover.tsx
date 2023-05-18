@@ -1,5 +1,7 @@
 import { FC, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { signOut, useSession } from 'next-auth/react';
+import CircularProgress from '@mui/material/CircularProgress';
 import AppsIcon from '@mui/icons-material/Apps';
 import BugReportIcon from '@mui/icons-material/BugReport';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -45,16 +47,21 @@ const MENU_OPTIONS_LOGGED_OUT = [
 const AccountPopover: FC = function AccountPopover() {
   const anchorRef = useRef(null);
   const [open, setOpen] = useState<boolean>(false);
-  const userAuth = useSelector((state: AppState) => state.authentication?.user);
-  const loggedIn = useSelector((state: AppState) => state.authentication?.loggedIn);
-  const demo = useSelector((state: AppState) => state.authentication?.demo);
-  const user = useSelector((state: AppState) => state.account?.user);
+  const [loggingOut, setLoggingOut] = useState<boolean>(false);
+  const { data: session } = useSession();
+  const { user } = session;
+  const { user: account } = useSelector((state: AppState) => state.account);
 
   const handleOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleLogout = () => {
+    setLoggingOut(true);
+    signOut();
   };
 
   return (
@@ -79,7 +86,7 @@ const AccountPopover: FC = function AccountPopover() {
           }),
         }}
       >
-        <Avatar src={user?.avatar?.url} alt={userAuth?.firstName} />
+        <Avatar src={account?.avatar?.url} alt={account?.firstName} />
       </IconButton>
       <MenuPopover
         open={open}
@@ -88,19 +95,19 @@ const AccountPopover: FC = function AccountPopover() {
         sx={{ width: 220 }}
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
-          {!demo && (
+          {!user?.demo && (
             <Typography variant="subtitle1" noWrap>
-              {loggedIn ? `${userAuth?.username}` : 'Sign In'}
+              {session ? `${account?.username}` : 'Sign In'}
             </Typography>
           )}
-          {demo && (
+          {user?.demo && (
             <Typography variant="subtitle1" noWrap>
               Demo Mode
             </Typography>
           )}
         </Box>
         <Divider sx={{ my: 1 }} />
-        {loggedIn &&
+        {session &&
           MENU_OPTIONS_LOGGED_IN.map((option) => (
             <MenuItem
               key={option.label}
@@ -113,7 +120,7 @@ const AccountPopover: FC = function AccountPopover() {
               {option.label}
             </MenuItem>
           ))}
-        {!loggedIn &&
+        {!session &&
           MENU_OPTIONS_LOGGED_OUT.map((option) => (
             <MenuItem
               key={option.label}
@@ -126,14 +133,21 @@ const AccountPopover: FC = function AccountPopover() {
               {option.label}
             </MenuItem>
           ))}
-        {loggedIn && (
+        {session && (
           <Box sx={{ p: 2, pt: 1.5 }}>
-            <Button fullWidth color="inherit" variant="outlined" component={Link} href="/login">
-              Logout
+            <Button
+              fullWidth
+              color="inherit"
+              variant="outlined"
+              onClick={handleLogout}
+              disabled={loggingOut}
+            >
+              {!loggingOut && 'Logout'}
+              {loggingOut && <CircularProgress size={25} color="inherit" />}
             </Button>
           </Box>
         )}
-        {!loggedIn && (
+        {!session && (
           <Box sx={{ p: 2, pt: 1.5 }}>
             <Button fullWidth color="inherit" variant="outlined" onClick={handleClose}>
               Close

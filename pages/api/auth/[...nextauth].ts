@@ -34,9 +34,13 @@ export const authOptions = {
         if (!res.ok) {
           throw new Error(user.message);
         }
+
         /* if no error and we have user data, return it */
         if (res.ok && user) {
-          return user;
+          return {
+            ...user,
+            demo: user.username === 'demo',
+          };
         }
 
         /* return null if user data could not be retrieved */
@@ -45,12 +49,14 @@ export const authOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user, account }) {
-      if (account && user) {
+    async jwt({ token, user }) {
+      if (user) {
         return {
           ...token,
           accessToken: user.token,
           refreshToken: user.refreshToken,
+          uid: user.id,
+          username: user.username,
         };
       }
 
@@ -59,16 +65,19 @@ export const authOptions = {
 
     /* eslint-disable no-param-reassign */
     async session({ session, token }) {
-      session.user.accessToken = token.accessToken;
-      // session.user.refreshToken = token.refreshToken;
-      // session.user.accessTokenExpires = token.accessTokenExpires;
+      if (session) {
+        session.user.accessToken = token.accessToken;
+        session.user.refreshToken = token.refreshToken || null;
+        session.user.accessTokenExpires = token.accessTokenExpires || null;
+        session.user.username = token.username;
+        session.user.uid = token.uid;
+        session.user.demo = token.username === 'demo';
 
-      /* return placeholders for now */
-      session.user.refreshToken = '';
-      session.user.accessTokenExpires = '';
-      session.user.name = '';
-      session.user.email = '';
-      session.user.image = '';
+        /* return placeholders for now */
+        session.user.name = token.name || null;
+        session.user.email = token.email || null;
+        session.user.image = token.image || null;
+      }
 
       return session;
     },

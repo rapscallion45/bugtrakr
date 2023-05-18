@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { useSelector } from 'react-redux';
+import { useSession } from 'next-auth/react';
 import { Box, Divider, Typography } from '@mui/material';
 import BugReportIcon from '@mui/icons-material/BugReport';
 import GroupIcon from '@mui/icons-material/Group';
@@ -10,7 +10,6 @@ import HideOnScroll from '../HideOnScroll/HideOnScroll';
 import FormDialog from '../FormDialog/FormDialog';
 import Link from '../Link/Link';
 import ProjectForm from '../ProjectForm/ProjectForm';
-import { AppState } from '../../redux/reducers';
 
 interface ProjectsTableMobileProps {
   projects: any[];
@@ -19,7 +18,8 @@ interface ProjectsTableMobileProps {
 const ProjectsTableMobile: FC<ProjectsTableMobileProps> = function ProjectsTableMobile({
   projects,
 }) {
-  const { user } = useSelector((state: AppState) => state.authentication);
+  const { data: session } = useSession();
+  const { user } = session;
 
   return (
     <Box pb={14}>
@@ -42,7 +42,7 @@ const ProjectsTableMobile: FC<ProjectsTableMobileProps> = function ProjectsTable
                   projectId={p.id}
                   currentName={p.name}
                   currentMembers={p.members.map((m) => m.member.id)}
-                  isAdmin={p.createdBy.id === user?.id}
+                  isAdmin={p.createdBy.id === user?.uid}
                   isMobile
                   iconSize="inherit"
                 />

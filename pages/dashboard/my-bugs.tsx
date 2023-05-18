@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useSession } from 'next-auth/react';
 import { getServerSession } from 'next-auth/next';
 import { useMediaQuery, SelectChangeEvent, SortDirection, Collapse } from '@mui/material';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
@@ -53,10 +54,11 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 }));
 
 const MyBugs = function MyBugs() {
+  const { data: session } = useSession();
+  const { user } = session;
   const dispatch = useDispatch();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const { user } = useSelector((state: AppState) => state.authentication);
   const {
     loading: bugsLoading,
     loaded: bugsLoaded,
@@ -75,7 +77,7 @@ const MyBugs = function MyBugs() {
   );
 
   useEffect(() => {
-    dispatch(bugActions.getBugsByUser(user?.id));
+    dispatch(bugActions.getBugsByUser(user?.uid));
   }, []);
 
   const handleSortChange = (e: SelectChangeEvent) => {

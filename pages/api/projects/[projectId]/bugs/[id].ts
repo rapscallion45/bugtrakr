@@ -1,12 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import cookie from 'cookie';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '../../../auth/[...nextauth]';
 import { deleteBug, updateBug } from '../../../../../lib/api';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   /* get req params */
   const { method, query, body } = req;
-  const cookies = cookie.parse(req.headers.cookie);
-  const authToken = cookies?.bugTrakrAuth || '';
+  const session = await getServerSession(req, res, authOptions);
 
   /* check if we have a project Id, if not return error */
   if (!query.projectId || !query.id) {
@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     case 'DELETE':
       /* call api */
       try {
-        const response = await deleteBug(authToken, query.projectId, query.id);
+        const response = await deleteBug(session.user.accessToken, query.projectId, query.id);
 
         /* send back server response */
         if (response.status === 204) {
@@ -36,7 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     case 'PUT':
       /* call api */
       try {
-        const response = await updateBug(authToken, query.projectId, query.id, body);
+        const response = await updateBug(session.user.accessToken, query.projectId, query.id, body);
         const data = await response.json();
 
         /* send back server response */

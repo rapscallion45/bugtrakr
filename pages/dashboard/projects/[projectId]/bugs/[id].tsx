@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 import { getServerSession } from 'next-auth/next';
 import {
   Chip,
@@ -71,7 +72,8 @@ const BugDetails = function BugDetails() {
   const { projectId, id } = router.query;
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const { user } = useSelector((state: AppState) => state.authentication);
+  const { data: session } = useSession();
+  const { user } = session;
   const {
     loading: projectsLoading,
     loaded: projectsLoaded,
@@ -400,7 +402,7 @@ const BugDetails = function BugDetails() {
             notes={sortedNotes}
             bugId={bugData?.id}
             projectId={projectData?.id}
-            isAdmin={user?.id === projectData?.createdBy?.id}
+            isAdmin={user?.uid === projectData?.createdBy?.id}
             isMobile={isMobile}
           />
         </Loader>

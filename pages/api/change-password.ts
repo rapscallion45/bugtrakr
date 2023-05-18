@@ -1,14 +1,22 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from './auth/[...nextauth]';
 import { changePassword } from '../../lib/api';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { method, body } = req;
+  const session = await getServerSession(req, res, authOptions);
 
   if (!body.email) {
     /* no account email provided, return error */
     return res
       .status(422)
       .json({ message: 'Unproccesable request, please provide the required fields.' });
+  }
+
+  if (session.user.demo) {
+    /* do not allow password resets on demo account */
+    return res.status(401).json({ message: 'Operation not authorized in demo mode.' });
   }
 
   /* determine which request type this is */

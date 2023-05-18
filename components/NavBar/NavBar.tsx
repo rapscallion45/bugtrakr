@@ -1,14 +1,13 @@
 import { FC } from 'react';
+import { useSession } from 'next-auth/react';
 import MenuIcon from '@mui/icons-material/Menu';
 import { alpha, styled } from '@mui/material/styles';
 import { Box, Stack, AppBar, Toolbar, Button, IconButton } from '@mui/material';
-import { useSelector } from 'react-redux';
 import MHidden from '../@MUI-Extended/MHidden';
 import AccountPopover from './AccountPopover/AccountPopover';
 import NotificationsPopover from './NotificationsPopover/NotificationsPopover';
 import Logo from '../Logo/Logo';
 import Link from '../Link/Link';
-import { AppState } from '../../redux/reducers';
 
 const DRAWER_WIDTH = 280;
 const APPBAR_MOBILE = 64;
@@ -25,7 +24,7 @@ const NavBar: FC<NavBarProps> = function NavBar({
   showLogo = false,
   fullWidth = true,
 }) {
-  const loggedIn = useSelector((state: AppState) => state.authentication?.loggedIn);
+  const { data: session } = useSession();
 
   const RootStyle = styled(AppBar)(({ theme }) => ({
     boxShadow: 'none',
@@ -68,10 +67,10 @@ const NavBar: FC<NavBarProps> = function NavBar({
 
         <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
           <MHidden width="xsDown">
-            <Box>{loggedIn && <NotificationsPopover />}</Box>
+            <Box>{session && <NotificationsPopover />}</Box>
           </MHidden>
-          {loggedIn && <AccountPopover />}
-          {!loggedIn && (
+          {session && <AccountPopover />}
+          {!session && (
             <Button variant="contained" component={Link} href="/login">
               Login
             </Button>
