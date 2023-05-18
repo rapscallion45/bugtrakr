@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux';
 import { signIn, useSession } from 'next-auth/react';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
@@ -8,18 +10,35 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import Link from '../components/Link/Link';
+import { alertActions } from '../redux/actions';
 
 const Index = function Index() {
+  const dispatch = useDispatch();
+  const router = useRouter();
   const [loggingIn, setLoggingIn] = useState(false);
   const { data: session } = useSession();
 
   const handleDemoLogin = () => {
     setLoggingIn(true);
     signIn('credentials', {
-      redirect: true,
-      username: process.env.DEMO_USERNAME,
-      password: process.env.DEMO_PASSWORD,
-      callbackUrl: '/dashboard',
+      redirect: false,
+      username: process.env.DEMO_LOGIN_USERNAME,
+      password: process.env.DEMO_LOGIN_PASSWORD,
+    }).then(({ ok, error }) => {
+      if (ok) {
+        router.push('/dashboard');
+      } else {
+        setLoggingIn(false);
+        dispatch(
+          alertActions.enqueueSnackbar({
+            message: error,
+            options: {
+              key: new Date().getTime() + Math.random(),
+              variant: 'error',
+            },
+          })
+        );
+      }
     });
   };
 
