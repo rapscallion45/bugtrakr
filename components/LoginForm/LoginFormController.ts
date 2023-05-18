@@ -1,11 +1,16 @@
 import { useState } from 'react';
-import { signIn, useSession } from 'next-auth/react';
+import { useDispatch } from 'react-redux';
+import { signIn } from 'next-auth/react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { useRouter } from 'next/router';
+import { alertActions } from '../../redux/actions';
 
 const useLoginFormController = () => {
+  const dispatch = useDispatch();
+  const router = useRouter();
   const [loggingIn, setLoggingIn] = useState(false);
-  const { data: session } = useSession();
+  const [demoLoggingIn, setDemoLoggingIn] = useState(false);
 
   const validationSchema = Yup.object().shape({
     username: Yup.string().required('Username or email is required'),
@@ -22,24 +27,52 @@ const useLoginFormController = () => {
     onSubmit: ({ username, password }) => {
       setLoggingIn(true);
       signIn('credentials', {
-        redirect: true,
+        redirect: false,
         username,
         password,
-        callbackUrl: '/dashboard',
+      }).then(({ ok, error }) => {
+        if (ok) {
+          router.push('/dashboard');
+        } else {
+          setLoggingIn(false);
+          dispatch(
+            alertActions.enqueueSnackbar({
+              message: error,
+              options: {
+                key: new Date().getTime() + Math.random(),
+                variant: 'error',
+              },
+            })
+          );
+        }
       });
     },
   });
 
   const handleDemoLogin = () => {
-    setLoggingIn(true);
+    setDemoLoggingIn(true);
     signIn('credentials', {
-      redirect: true,
+      redirect: false,
       username: process.env.DEMO_USERNAME,
       password: process.env.DEMO_PASSWORD,
-      callbackUrl: '/dashboard',
+    }).then(({ ok, error }) => {
+      if (ok) {
+        router.push('/dashboard');
+      } else {
+        setDemoLoggingIn(false);
+        dispatch(
+          alertActions.enqueueSnackbar({
+            message: error,
+            options: {
+              key: new Date().getTime() + Math.random(),
+              variant: 'error',
+            },
+          })
+        );
+      }
     });
   };
 
-  return { loggingIn, demo: session?.user.demo, formik, handleDemoLogin };
+  return { loggingIn, demoLoggingIn, formik, handleDemoLogin };
 };
 export default useLoginFormController;

@@ -31,6 +31,8 @@ export const authOptions = {
         /* call login API */
         const res = await loginUser(payload);
         const user = await res.json();
+
+        /* error detection */
         if (!res.ok) {
           throw new Error(user.message);
         }

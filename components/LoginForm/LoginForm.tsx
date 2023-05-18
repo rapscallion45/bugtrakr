@@ -24,7 +24,7 @@ interface LoginFormProps {
 const LoginForm: FC<LoginFormProps> = function LoginForm(props) {
   const { providers } = props;
   const [showPassword, setShowPassword] = useState(false);
-  const { loggingIn, demo, formik, handleDemoLogin } = useLoginFormController();
+  const { loggingIn, demoLoggingIn, formik, handleDemoLogin } = useLoginFormController();
 
   return (
     <Container maxWidth="xs">
@@ -105,22 +105,22 @@ const LoginForm: FC<LoginFormProps> = function LoginForm(props) {
           fullWidth
           variant="contained"
           color="primary"
-          disabled={loggingIn}
+          disabled={loggingIn || demoLoggingIn}
           sx={{ padding: '10px 0' }}
         >
-          {(!loggingIn || demo) && 'Submit'}
-          {loggingIn && !demo && <CircularProgress size={25} color="inherit" />}
+          {!loggingIn && 'Submit'}
+          {loggingIn && <CircularProgress size={25} color="inherit" />}
         </Button>
         <Button
           fullWidth
           variant="contained"
           color="secondary"
-          disabled={loggingIn}
+          disabled={loggingIn || demoLoggingIn}
           sx={{ marginTop: '8px', padding: '10px 0' }}
           onClick={handleDemoLogin}
         >
-          {(!loggingIn || !demo) && 'Demo Login'}
-          {loggingIn && demo && <CircularProgress size={25} color="inherit" />}
+          {!demoLoggingIn && 'Demo Login'}
+          {demoLoggingIn && <CircularProgress size={25} color="inherit" />}
         </Button>
       </form>
     </Container>
