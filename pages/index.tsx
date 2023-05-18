@@ -1,7 +1,5 @@
 import { useState } from 'react';
-import type { GetServerSidePropsContext } from 'next';
-import { signIn, getProviders } from 'next-auth/react';
-import { getServerSession } from 'next-auth/next';
+import { signIn, useSession } from 'next-auth/react';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
@@ -10,10 +8,10 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import Link from '../components/Link/Link';
-import { authOptions } from './api/auth/[...nextauth]';
 
 const Index = function Index() {
   const [loggingIn, setLoggingIn] = useState(false);
+  const { data: session } = useSession();
 
   const handleDemoLogin = () => {
     setLoggingIn(true);
@@ -43,19 +41,38 @@ const Index = function Index() {
                 developers!
               </Typography>
               <Stack sx={{ pt: 4 }} direction="row" spacing={2} justifyContent="center">
-                <Button disabled={loggingIn} variant="contained" component={Link} href="/register">
-                  Get Started
-                </Button>
-                <Button
-                  color="primary"
-                  variant="outlined"
-                  onClick={handleDemoLogin}
-                  disabled={loggingIn}
-                  sx={{ minWidth: '120px' }}
-                >
-                  {!loggingIn && 'Access Demo'}
-                  {loggingIn && <CircularProgress size={25} color="inherit" />}
-                </Button>
+                {session && (
+                  <Button
+                    disabled={loggingIn}
+                    variant="contained"
+                    component={Link}
+                    href="/dashboard"
+                  >
+                    Go To Dashboard
+                  </Button>
+                )}
+                {!session && (
+                  <>
+                    <Button
+                      disabled={loggingIn}
+                      variant="contained"
+                      component={Link}
+                      href="/register"
+                    >
+                      Get Started
+                    </Button>
+                    <Button
+                      color="primary"
+                      variant="outlined"
+                      onClick={handleDemoLogin}
+                      disabled={loggingIn}
+                      sx={{ minWidth: '120px' }}
+                    >
+                      {!loggingIn && 'Access Demo'}
+                      {loggingIn && <CircularProgress size={25} color="inherit" />}
+                    </Button>
+                  </>
+                )}
               </Stack>
             </Box>
           </Grid>
@@ -66,22 +83,3 @@ const Index = function Index() {
 };
 
 export default Index;
-
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getServerSession(context.req, context.res, authOptions);
-
-  /**
-   * If the user is already logged in, redirect.
-   * Note: Make sure not to redirect to the same page
-   * To avoid an infinite loop!
-   */
-  if (session) {
-    return { redirect: { destination: '/dashboard' } };
-  }
-
-  const providers = await getProviders();
-
-  return {
-    props: { providers: providers ?? [] },
-  };
-}
