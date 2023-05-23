@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     case 'GET':
       /* call api */
       try {
-        const response = await getProjects(session.user.accessToken);
+        const response = await getProjects(session.user.token);
         const data = await response.json();
 
         /* send back server response */
@@ -37,7 +37,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             .json({ message: 'Unproccesable request, no project ID provided.' });
         }
 
-        const response = await deleteProject(session.user.accessToken, body.id);
+        const response = await deleteProject(session.user.token, body.id);
 
         /* send back server response */
         if (response.status === 204) {
@@ -60,7 +60,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             .json({ message: 'Unproccesable request, project must have a name.' });
         }
 
-        const response = await createProject(session.user.accessToken, body);
+        const response = await createProject(session.user.token, body);
         const data = await response.json();
 
         /* send back server response */
@@ -84,7 +84,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             .json({ message: 'Unproccesable request, project name and ID not provided.' });
         }
 
-        const response = await updateProject(session.user.accessToken, body);
+        const response = await updateProject(session.user.token, body);
         const data = await response.json();
 
         /* send back server response */

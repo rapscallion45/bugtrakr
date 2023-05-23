@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     case 'POST':
       /* call api */
       try {
-        const response = await reopenBug(session.user.accessToken, query.projectId, query.id);
+        const response = await reopenBug(session.user.token, query.projectId, query.id);
         const data = await response.json();
 
         /* send back server response */

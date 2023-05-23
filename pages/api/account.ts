@@ -21,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     case 'POST':
       /* call api */
       try {
-        const response = await getUserById(session.user.accessToken, id);
+        const response = await getUserById(session.user.token, id);
         const data = await response.json();
 
         /* send back server response */
@@ -43,7 +43,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           return res.status(401).json({ message: 'Operation not authorized in demo mode.' });
         }
 
-        const response = await updateUserById(session.user.accessToken, id, user);
+        const response = await updateUserById(session.user.token, id, user);
         const data = await response.json();
 
         /* send back server response */

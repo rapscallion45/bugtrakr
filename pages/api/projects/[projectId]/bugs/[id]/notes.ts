@@ -20,12 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       /* call api */
       try {
-        const response = await createNote(
-          session.user.accessToken,
-          query.projectId,
-          query.id,
-          body
-        );
+        const response = await createNote(session.user.token, query.projectId, query.id, body);
         const data = await response.json();
 
         /* send back server response */

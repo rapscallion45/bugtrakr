@@ -20,6 +20,10 @@ interface IUser extends DefaultUser {
    * Demo mode account flag
    */
   demo: boolean;
+  /**
+   * User access token
+   */
+  token: string;
 }
 
 declare module 'next-auth' {

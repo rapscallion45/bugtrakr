@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             .json({ message: 'Unproccesable request, project must have a name.' });
         }
 
-        const response = await updateProjectMembers(session.user.accessToken, body);
+        const response = await updateProjectMembers(session.user.token, body);
         const data = await response.json();
 
         /* send back server response */
@@ -44,7 +44,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             .json({ message: 'Unproccesable request, no project or user ID provided.' });
         }
 
-        const response = await removeProjectMember(session.user.accessToken, body);
+        const response = await removeProjectMember(session.user.token, body);
 
         /* send back server response */
         if (response.status === 204) {

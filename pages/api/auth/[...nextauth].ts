@@ -1,11 +1,11 @@
-import NextAuth from 'next-auth';
+import NextAuth, { AuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import GitHubProvider from 'next-auth/providers/github';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { loginUser } from '../../../lib/api';
 import { ICredentialsPayload } from '../../../redux/types/types';
 
-export const authOptions = {
+export const authOptions: AuthOptions = {
   /* configure authentication provider(s) */
   providers: [
     GoogleProvider({
@@ -55,8 +55,7 @@ export const authOptions = {
       if (user) {
         return {
           ...token,
-          accessToken: user.token,
-          refreshToken: user.refreshToken,
+          token: user.token,
           uid: user.id,
           username: user.username,
         };
@@ -68,9 +67,7 @@ export const authOptions = {
     /* eslint-disable no-param-reassign */
     async session({ session, token }) {
       if (session) {
-        session.user.accessToken = token.accessToken;
-        session.user.refreshToken = token.refreshToken || null;
-        session.user.accessTokenExpires = token.accessTokenExpires || null;
+        session.user.token = token.token;
         session.user.username = token.username;
         session.user.uid = token.uid;
         session.user.demo = token.username === 'demo';

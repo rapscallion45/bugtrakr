@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     case 'DELETE':
       /* call api */
       try {
-        const response = await deleteBug(session.user.accessToken, query.projectId, query.id);
+        const response = await deleteBug(session.user.token, query.projectId, query.id);
 
         /* send back server response */
         if (response.status === 204) {
@@ -36,7 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     case 'PUT':
       /* call api */
       try {
-        const response = await updateBug(session.user.accessToken, query.projectId, query.id, body);
+        const response = await updateBug(session.user.token, query.projectId, query.id, body);
         const data = await response.json();
 
         /* send back server response */

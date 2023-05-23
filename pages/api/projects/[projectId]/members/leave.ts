@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     case 'POST':
       /* call api */
       try {
-        const response = await leaveProject(session.user.accessToken, body.id);
+        const response = await leaveProject(session.user.token, body.id);
 
         /* send back server response */
         if (response.status === 204) {

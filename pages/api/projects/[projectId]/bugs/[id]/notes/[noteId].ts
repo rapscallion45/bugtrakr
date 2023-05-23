@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       /* call api */
       try {
-        const response = await deleteNote(session.user.accessToken, query.projectId, query.noteId);
+        const response = await deleteNote(session.user.token, query.projectId, query.noteId);
 
         /* send back server response */
         if (response.status === 204) {
@@ -43,7 +43,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       /* call api */
       try {
-        const response = await updateNote(session.user.accessToken, query.projectId, query.noteId, body);
+        const response = await updateNote(session.user.token, query.projectId, query.noteId, body);
         const data = await response.json();
 
         /* send back server response */

@@ -18,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     case 'GET':
       /* call api */
       try {
-        const response = await getBugsByUser(session.user.accessToken, query.id);
+        const response = await getBugsByUser(session.user.token, query.id);
         const data = await response.json();
 
         /* send back server response */

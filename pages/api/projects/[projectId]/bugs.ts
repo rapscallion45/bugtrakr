@@ -18,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     case 'GET':
       /* call api */
       try {
-        const response = await getBugs(session.user.accessToken, query.projectId);
+        const response = await getBugs(session.user.token, query.projectId);
         const data = await response.json();
 
         /* send back server response */
@@ -35,7 +35,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     case 'POST':
       /* call api */
       try {
-        const response = await createBug(session.user.accessToken, query.projectId, body);
+        const response = await createBug(session.user.token, query.projectId, body);
         const data = await response.json();
 
         /* send back server response */
