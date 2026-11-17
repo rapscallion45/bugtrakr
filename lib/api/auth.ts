@@ -1,69 +1,64 @@
-import {
-  ICredentialsPayload,
-  IVerifyEmailPayload,
-  IChangePasswordPayload,
-  IResetPasswordPayload,
-  IValidateResetTokenPayload,
-} from '../../redux/types/types';
+import type { IAccount } from "../../redux/types/types"
+import { ICredentialsPayload, IVerifyEmailPayload, IChangePasswordPayload, IResetPasswordPayload, IValidateResetTokenPayload } from "../../redux/types/types"
 
-const { API_REST_URL } = process.env;
+const { API_REST_URL } = process.env
 
 export async function loginUser(payload: ICredentialsPayload) {
   const requestOptions = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
-  };
+  }
 
-  return fetch(`${API_REST_URL}/login`, requestOptions);
+  return fetch(`${API_REST_URL}/login`, requestOptions)
 }
 
-export async function registerUser(payload: any) {
+export async function registerUser(payload: IAccount) {
   const requestOptions = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
-  };
+  }
 
-  return fetch(`${API_REST_URL}/signup`, requestOptions);
+  return fetch(`${API_REST_URL}/signup`, requestOptions)
 }
 
 export async function verifyEmail(payload: IVerifyEmailPayload) {
   const requestOptions = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
-  };
+  }
 
-  return fetch(`${API_REST_URL}/verify-email`, requestOptions);
+  return fetch(`${API_REST_URL}/verify-email`, requestOptions)
 }
 
 export async function changePassword(payload: IChangePasswordPayload) {
   const requestOptions = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
-  };
+  }
 
-  return fetch(`${API_REST_URL}/change-password`, requestOptions);
+  return fetch(`${API_REST_URL}/change-password`, requestOptions)
 }
 
 export async function resetPassword(payload: IResetPasswordPayload) {
   const requestOptions = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
-  };
+  }
 
-  return fetch(`${API_REST_URL}/reset-password`, requestOptions);
+  return fetch(`${API_REST_URL}/reset-password`, requestOptions)
 }
 
 export async function validatePasswordReset(payload: IValidateResetTokenPayload) {
   const requestOptions = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
-  };
+  }
 
-  return fetch(`${API_REST_URL}/validate-reset-token`, requestOptions);
+  return fetch(`${API_REST_URL}/validate-reset-token`, requestOptions)
 }

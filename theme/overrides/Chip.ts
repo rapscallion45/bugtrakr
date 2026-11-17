@@ -3,15 +3,15 @@ export default function Chip() {
     MuiChip: {
       styleOverrides: {
         root: {
-          borderRadius: '6px',
+          borderRadius: "6px",
         },
         colorSecondary: {
-          color: 'inherit',
+          color: "inherit",
         },
         label: {
-          paddingTop: '1px',
+          paddingTop: "1px",
         },
       },
     },
-  };
+  }
 }

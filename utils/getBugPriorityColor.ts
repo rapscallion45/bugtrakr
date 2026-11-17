@@ -1,11 +1,11 @@
 const getBugPriorityColor = (priority: string) => {
   switch (priority) {
-    case 'medium':
-      return 'warning';
-    case 'high':
-      return 'error';
+    case "medium":
+      return "warning"
+    case "high":
+      return "error"
     default:
-      return 'success';
+      return "success"
   }
-};
-export default getBugPriorityColor;
+}
+export default getBugPriorityColor

@@ -1,119 +1,93 @@
-import { useState } from 'react';
-import {
-  Button,
-  IconButton,
-  MenuItem,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Typography,
-  Fab,
-  CircularProgress,
-} from '@mui/material';
-import HideOnScroll from '../HideOnScroll/HideOnScroll';
-import { TriggerButtonTypes } from '../types';
+import { useState } from "react"
+import { Button, IconButton, MenuItem, Dialog, DialogActions, DialogContent, DialogTitle, Typography, Fab, CircularProgress } from "@mui/material"
+import HideOnScroll from "../HideOnScroll/HideOnScroll"
+import { TriggerButtonTypes } from "../types"
 
 const ConfirmDialog: React.FC<{
-  title: string;
-  contentText: string;
-  actionBtnText: string;
-  triggerBtn: TriggerButtonTypes;
-  processing: boolean;
-  actionFunc: (closeDialog: () => void) => void;
-}> = function ConfirmDialog({
-  title,
-  contentText,
-  actionBtnText,
-  triggerBtn,
-  processing,
-  actionFunc,
-}) {
-  const [dialogOpen, setDialogOpen] = useState(false);
+  title: string
+  contentText: string
+  actionBtnText: string
+  triggerBtn: TriggerButtonTypes
+  processing: boolean
+  actionFunc: (closeDialog: () => void) => void
+}> = function ConfirmDialog({ title, contentText, actionBtnText, triggerBtn, processing, actionFunc }) {
+  const [dialogOpen, setDialogOpen] = useState(false)
 
   const handleDialogClose = () => {
-    setDialogOpen(false);
-  };
+    setDialogOpen(false)
+  }
 
   const handleDialogOpen = () => {
-    setDialogOpen(true);
-    if (triggerBtn.type === 'menu' && triggerBtn.closeMenu) triggerBtn.closeMenu();
-  };
+    setDialogOpen(true)
+    if (triggerBtn.type === "menu" && triggerBtn.closeMenu) triggerBtn.closeMenu()
+  }
 
   const handleConfirmedAction = () => {
-    actionFunc(handleDialogClose);
-  };
+    actionFunc(handleDialogClose)
+  }
 
   const triggerButton = () => {
-    if (triggerBtn.type === 'icon') {
+    if (triggerBtn.type === "icon") {
       return (
         <IconButton
-          color={triggerBtn.color || 'primary'}
+          color={triggerBtn.color || "primary"}
           onClick={handleDialogOpen}
-          size={triggerBtn.size || 'medium'}
+          size={triggerBtn.size || "medium"}
           className={triggerBtn.className}
-          style={triggerBtn.style}
-        >
-          <triggerBtn.icon fontSize={triggerBtn.iconSize || 'inherit'} />
+          style={triggerBtn.style}>
+          <triggerBtn.icon fontSize={triggerBtn.iconSize || "inherit"} />
         </IconButton>
-      );
+      )
     }
-    if (triggerBtn.type === 'menu') {
+    if (triggerBtn.type === "menu") {
       return (
         <MenuItem onClick={handleDialogOpen}>
           <triggerBtn.icon style={triggerBtn.iconStyle} />
           {triggerBtn.text}
         </MenuItem>
-      );
+      )
     }
-    if (triggerBtn.type === 'fab') {
+    if (triggerBtn.type === "fab") {
       return (
         <HideOnScroll>
-          <Fab
-            variant={triggerBtn.variant || 'circular'}
-            size={triggerBtn.size || 'medium'}
-            color={triggerBtn.color || 'primary'}
-            onClick={handleDialogOpen}
-          >
+          <Fab variant={triggerBtn.variant || "circular"} size={triggerBtn.size || "medium"} color={triggerBtn.color || "primary"} onClick={handleDialogOpen}>
             <triggerBtn.icon />
-            {triggerBtn.variant === 'extended' && triggerBtn.text}
+            {triggerBtn.variant === "extended" && triggerBtn.text}
           </Fab>
         </HideOnScroll>
-      );
+      )
     }
-    if (triggerBtn.type === 'round') {
+    if (triggerBtn.type === "round") {
       return (
         <Button
-          color={triggerBtn.color || 'primary'}
-          variant={triggerBtn.variant || 'contained'}
-          size={triggerBtn.size || 'medium'}
+          color={triggerBtn.color || "primary"}
+          variant={triggerBtn.variant || "contained"}
+          size={triggerBtn.size || "medium"}
           onClick={handleDialogOpen}
-          style={triggerBtn.style}
-        >
+          style={triggerBtn.style}>
           <triggerBtn.icon />
         </Button>
-      );
+      )
     }
     return (
       <Button
-        color={triggerBtn.color || 'primary'}
-        variant={triggerBtn.variant || 'contained'}
-        size={triggerBtn.size || 'medium'}
+        color={triggerBtn.color || "primary"}
+        variant={triggerBtn.variant || "contained"}
+        size={triggerBtn.size || "medium"}
         startIcon={<triggerBtn.icon />}
         onClick={handleDialogOpen}
-        style={triggerBtn.style}
-      >
+        style={triggerBtn.style}>
         {triggerBtn.text}
       </Button>
-    );
-  };
+    )
+  }
 
   return (
-    <div style={{ display: 'inline' }}>
+    <div style={{ display: "inline" }}>
       {triggerButton()}
-      <Dialog open={dialogOpen} onClose={handleDialogOpen}>
+      <Dialog open={dialogOpen} onClose={handleDialogClose}>
         <DialogTitle>
-          <Typography color="text.primary" variant="h6">
+          <Typography color={"text.primary"} variant={"h6"}>
             {title}
           </Typography>
         </DialogTitle>
@@ -121,29 +95,17 @@ const ConfirmDialog: React.FC<{
           <Typography>{contentText}</Typography>
         </DialogContent>
         <DialogActions>
-          <Button
-            onClick={handleDialogClose}
-            color="secondary"
-            variant="contained"
-            size="small"
-            disabled={processing}
-          >
+          <Button onClick={handleDialogClose} color={"secondary"} variant={"contained"} size={"small"} disabled={processing}>
             Cancel
           </Button>
-          <Button
-            onClick={handleConfirmedAction}
-            color="primary"
-            variant="contained"
-            size="small"
-            disabled={processing}
-          >
+          <Button onClick={handleConfirmedAction} color={"primary"} variant={"contained"} size={"small"} disabled={processing}>
             {!processing && actionBtnText}
-            {processing && <CircularProgress size={22} color="inherit" />}
+            {processing && <CircularProgress size={22} color={"inherit"} />}
           </Button>
         </DialogActions>
       </Dialog>
     </div>
-  );
-};
+  )
+}
 
-export default ConfirmDialog;
+export default ConfirmDialog

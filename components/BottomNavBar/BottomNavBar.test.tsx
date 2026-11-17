@@ -1,244 +1,30 @@
-import React from 'react';
-import { Provider } from 'react-redux';
-import { createStore } from 'redux';
-import { Session } from 'next-auth';
-import { SessionProvider } from 'next-auth/react';
-import { render, mount } from 'enzyme';
-import toJson from 'enzyme-to-json';
-import createEmotionCache from '../../utils/createEmotionCache';
-import ThemeConfig from '../../theme/ThemeConfig';
-import rootReducer from '../../redux/reducers';
-import BottomNavBar from './BottomNavBar';
-import routes from './routes';
+import { render, screen } from "@testing-library/react"
+import { useSession } from "next-auth/react"
+import useMediaQuery from "@mui/material/useMediaQuery"
+import BottomNavBar from "./BottomNavBar"
 
-let mockHideBottomBar = false;
-let mockRouteValue = '/';
-
-jest.mock(
-  '@mui/material/useMediaQuery',
-  () =>
-    function mock() {
-      return mockHideBottomBar;
-    }
-);
-
-jest.mock('next/router', () => ({
-  useRouter() {
-    return {
-      route: mockRouteValue,
-      pathname: mockRouteValue,
-      query: '',
-      asPath: '',
-      push: jest.fn(),
-      events: {
-        on: jest.fn(),
-        off: jest.fn(),
-      },
-      beforePopState: jest.fn(() => null),
-      prefetch: jest.fn(() => null),
-    };
-  },
-}));
-
-jest.mock(
-  'next/link',
-  () =>
-    ({ children }) =>
-      children
-);
-
-describe('Bottom Nav Bar', () => {
-  it('Renders correctly enzyme', () => {
-    /* Arrange */
-    const testStore = createStore(rootReducer, {});
-    const mockSession: Session = {
-      expires: '1',
-      user: { email: 'a', name: 'Delta', image: 'c', uid: '324efgvb', id: '324efgvb', demo: false },
-    };
-
-    /* Act */
-    const view = render(
-      <Provider store={testStore}>
-        <SessionProvider session={mockSession}>
-          <ThemeConfig emotionCache={createEmotionCache()}>
-            <BottomNavBar />
-          </ThemeConfig>
-        </SessionProvider>
-      </Provider>
-    );
-
-    /* Assert */
-    expect(toJson(view)).toMatchSnapshot();
-  });
-
-  describe('Show/Hide Bar', () => {
-    it('Should not render if show flag not set', () => {
-      /* Arrange */
-      const testStore = createStore(rootReducer, {});
-      const mockSession: Session = {
-        expires: '1',
-        user: {
-          email: 'a',
-          name: 'Delta',
-          image: 'c',
-          uid: '324efgvb',
-          id: '324efgvb',
-          demo: false,
-        },
-      };
-      mockHideBottomBar = true;
-
-      /* Act */
-      const view = mount(
-        <Provider store={testStore}>
-          <SessionProvider session={mockSession}>
-            <ThemeConfig emotionCache={createEmotionCache()}>
-              <BottomNavBar />
-            </ThemeConfig>
-          </SessionProvider>
-        </Provider>
-      );
-
-      /* Assert */
-      expect(view.find('ForwardRef(BottomNavigation)').length).toBe(0);
-    });
-
-    it('Should not render if user logged out', () => {
-      /* Arrange */
-      const testStore = createStore(rootReducer, {});
-      const mockSession = null;
-      mockHideBottomBar = false;
-
-      /* Act */
-      const view = mount(
-        <Provider store={testStore}>
-          <SessionProvider session={mockSession}>
-            <ThemeConfig emotionCache={createEmotionCache()}>
-              <BottomNavBar />
-            </ThemeConfig>
-          </SessionProvider>
-        </Provider>
-      );
-
-      /* Assert */
-      expect(view.find('ForwardRef(BottomNavigation)').length).toBe(0);
-    });
-  });
-
-  describe('Nav Routes', () => {
-    it('Should have correct number of passed nav items', () => {
-      /* Arrange */
-      const testStore = createStore(rootReducer, {});
-      const mockSession: Session = {
-        expires: '1',
-        user: {
-          email: 'a',
-          name: 'Delta',
-          image: 'c',
-          uid: '324efgvb',
-          id: '324efgvb',
-          demo: false,
-        },
-      };
-      mockHideBottomBar = false;
-
-      /* Act */
-      const view = render(
-        <Provider store={testStore}>
-          <SessionProvider session={mockSession}>
-            <ThemeConfig emotionCache={createEmotionCache()}>
-              <BottomNavBar />
-            </ThemeConfig>
-          </SessionProvider>
-        </Provider>
-      );
-
-      /* Assert */
-      expect(view.children().length).toBe(routes.length);
-    });
-
-    it('Should set nav item to active according to current route', () => {
-      /* Arrange */
-      const testStore = createStore(rootReducer, {});
-      const mockSession: Session = {
-        expires: '1',
-        user: {
-          email: 'a',
-          name: 'Delta',
-          image: 'c',
-          uid: '324efgvb',
-          id: '324efgvb',
-          demo: false,
-        },
-      };
-      mockRouteValue = '/articles';
-
-      /* Act */
-      const view = mount(
-        <Provider store={testStore}>
-          <SessionProvider session={mockSession}>
-            <ThemeConfig emotionCache={createEmotionCache()}>
-              <BottomNavBar />
-            </ThemeConfig>
-          </SessionProvider>
-        </Provider>
-      );
-
-      /* Assert */
-      expect(view.find('ForwardRef(BottomNavigation)').prop('value')).toBe(mockRouteValue);
-    });
-
-    it('Should change current app route when nav item clicked', () => {
-      /* Arrange */
-      const testStore = createStore(rootReducer, {});
-      const mockSession: Session = {
-        expires: '1',
-        user: {
-          email: 'a',
-          name: 'Delta',
-          image: 'c',
-          uid: '324efgvb',
-          id: '324efgvb',
-          demo: false,
-        },
-      };
-      let testRoute = '/dashboard/my-bugs';
-      mockRouteValue = '/articles';
-
-      /* Act */
-      const view = mount(
-        <Provider store={testStore}>
-          <SessionProvider session={mockSession}>
-            <ThemeConfig emotionCache={createEmotionCache()}>
-              <BottomNavBar />
-            </ThemeConfig>
-          </SessionProvider>
-        </Provider>
-      );
-
-      /* Assert */
-      expect(view.find('ForwardRef(BottomNavigation)').prop('value')).toBe(mockRouteValue);
-
-      /* Act */
-      view
-        .find(`a`)
-        .at(routes.map((route) => route.path).indexOf(testRoute))
-        .simulate('click');
-
-      /* Assert */
-      expect(view.find('ForwardRef(BottomNavigation)').prop('value')).toBe(testRoute);
-
-      /* Arrange */
-      testRoute = '/dashboard/my-account';
-
-      /* Act */
-      view
-        .find(`a`)
-        .at(routes.map((route) => route.path).indexOf(testRoute))
-        .simulate('click');
-
-      /* Assert */
-      expect(view.find('ForwardRef(BottomNavigation)').prop('value')).toBe(testRoute);
-    });
-  });
-});
+jest.mock("next-auth/react")
+jest.mock("@mui/material/useMediaQuery")
+jest.mock("next/router", () => ({ useRouter: () => ({ pathname: "/dashboard" }) }))
+function setup(authenticated: boolean, desktop = false) {
+  ;(useSession as jest.Mock).mockReturnValue({
+    data: authenticated ? { user: { uid: "1" } } : null,
+  })
+  ;(useMediaQuery as jest.Mock).mockImplementation((query) => (query.includes("width") ? desktop : true))
+  render(<BottomNavBar />)
+}
+test("hides navigation for signed-out visitors", () => {
+  setup(false)
+  expect(screen.queryByRole("link")).toBeNull()
+})
+test("hides bottom navigation on desktop", () => {
+  setup(true, true)
+  expect(screen.queryByRole("link")).toBeNull()
+})
+test("provides mobile dashboard routes and marks the active page", () => {
+  setup(true)
+  expect(screen.getAllByRole("link")).toHaveLength(3)
+  expect(screen.getByRole("link", { name: "All Projects" })).toHaveClass("Mui-selected")
+  expect(screen.getByRole("link", { name: "My Bugs" })).toHaveAttribute("href", "/dashboard/my-bugs")
+  expect(screen.getByRole("link", { name: "My Account" })).toHaveAttribute("href", "/dashboard/my-account")
+})

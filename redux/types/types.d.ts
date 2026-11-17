@@ -1,4 +1,6 @@
 export interface IAccount {
+  id?: string;
+  avatar?: { url: string };
   firstName?: string;
   lastName?: string;
   username?: string;
@@ -13,6 +15,7 @@ export interface IAccount {
 }
 
 export interface IAccountState {
+  updating?: boolean;
   loading?: boolean;
   loaded?: boolean;
   error?: string;
@@ -21,11 +24,12 @@ export interface IAccountState {
 
 export interface INotificationOptions {
   key?: number;
-  variant?: string;
+  variant?: import("@mui/material").AlertColor;
 }
 
 export interface INotification {
-  key?: string;
+  key?: import("notistack").SnackbarKey;
+  dismissed?: boolean;
   message?: string;
   options?: INotificationOptions;
 }
@@ -82,6 +86,9 @@ export interface IProjectState {
 export type BugPriority = 'low' | 'medium' | 'high';
 
 export interface IBugState {
+  creatingNote?: boolean;
+  updatingNote?: boolean;
+  deletingNote?: boolean;
   id: string;
   projectId: string;
   title: string;

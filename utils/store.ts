@@ -1,26 +1,24 @@
-import { useMemo } from 'react';
-import { createStore, applyMiddleware } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
-import thunkMiddleware from 'redux-thunk';
-import { createLogger } from 'redux-logger';
-import rootReducer from '../redux/reducers';
+import type { AppState } from "../redux/reducers"
+import type { Middleware } from "redux"
+import { useMemo } from "react"
+import { createStore, applyMiddleware } from "redux"
+import { composeWithDevTools } from "@redux-devtools/extension"
+import { thunk as thunkMiddleware } from "redux-thunk"
+import { createLogger } from "redux-logger"
+import rootReducer from "../redux/reducers"
 
-let currentStore;
+let currentStore
 
-let middleware = [thunkMiddleware];
-if (process.env.NODE_ENV !== 'production') {
+let middleware: Middleware[] = [thunkMiddleware]
+if (process.env.NODE_ENV !== "production") {
   /* only setup redux logger if we're in development */
-  middleware = [...middleware, createLogger()];
+  middleware = [...middleware, createLogger()]
 }
 
-const initStore = (initialState: any) => createStore(
-    rootReducer,
-    initialState,
-    composeWithDevTools(applyMiddleware(...middleware))
-  );
+const initStore = (initialState: Partial<AppState>) => createStore(rootReducer, initialState, composeWithDevTools(applyMiddleware(...middleware)))
 
-const initializeStore = (preloadedState: any) => {
-  let newStore = currentStore ?? initStore(preloadedState);
+const initializeStore = (preloadedState: Partial<AppState>) => {
+  let newStore = currentStore ?? initStore(preloadedState)
 
   /**
    * After navigating to a page with an initial Redux state, merge that state
@@ -30,21 +28,21 @@ const initializeStore = (preloadedState: any) => {
     newStore = initStore({
       ...currentStore.getState(),
       ...preloadedState,
-    });
+    })
     /* Reset the current store */
-    currentStore = undefined;
+    currentStore = undefined
   }
 
   /* For SSG and SSR always create a new store */
-  if (typeof window === 'undefined') return newStore;
+  if (typeof window === "undefined") return newStore
   /* Create the store once in the client */
-  if (!currentStore) currentStore = newStore;
+  if (!currentStore) currentStore = newStore
 
-  return newStore;
-};
+  return newStore
+}
 
-const useStore = (initialState: any) => {
-  const store = useMemo(() => initializeStore(initialState), [initialState]);
-  return store;
-};
-export default useStore;
+const useStore = (initialState: Partial<AppState>) => {
+  const store = useMemo(() => initializeStore(initialState), [initialState])
+  return store
+}
+export default useStore

@@ -1,26 +1,31 @@
-import { accountConstants } from '../constants';
+import { accountConstants } from "../constants"
 
-function validateResetToken(state: any = {}, action: any) {
+interface State {
+  error?: string
+  tokenValid?: "" | "Validating" | "Valid" | "Invalid"
+}
+
+function validateResetToken(state: State = {}, action: { type: string; error?: string; email?: string }): State {
   switch (action.type) {
     case accountConstants.VALIDATE_RESET_TOKEN_REQUEST:
       return {
-        tokenValid: 'Validating',
-      };
+        tokenValid: "Validating",
+      }
     case accountConstants.VALIDATE_RESET_TOKEN_SUCCESS:
       return {
-        tokenValid: 'Valid',
-      };
+        tokenValid: "Valid",
+      }
     case accountConstants.VALIDATE_RESET_TOKEN_FAILURE:
       return {
         error: action.error,
-        tokenValid: 'Invalid',
-      };
+        tokenValid: "Invalid",
+      }
     case accountConstants.VALIDATE_RESET_TOKEN_RESET:
       return {
-        tokenValid: '',
-      };
+        tokenValid: "",
+      }
     default:
-      return state;
+      return state
   }
 }
-export default validateResetToken;
+export default validateResetToken

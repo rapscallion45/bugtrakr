@@ -1,54 +1,54 @@
-import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import { projectActions } from '../../redux/actions';
-import { AppState } from '../../redux/reducers';
+import { useState } from "react"
+import { useSelector } from "react-redux"
+import { useFormik } from "formik"
+import * as Yup from "yup"
+import useAppDispatch from "../../hooks/useAppDispatch"
+import { projectActions } from "../../redux/actions"
+import { AppState } from "../../redux/reducers"
 
-const useProjectFormController = (
-  editMode,
-  projectId,
-  currentName,
-  currentMembers,
-  closeDialog
-) => {
-  const dispatch = useDispatch();
-  const [selectedMembers, setSelectedMembers] = useState<string[]>(currentMembers);
-  const { creating, updating } = useSelector((state: AppState) => state.projects);
+const useProjectFormController = (editMode, projectId, currentName, currentMembers, closeDialog) => {
+  const dispatch = useAppDispatch()
+  const [selectedMembers, setSelectedMembers] = useState<string[]>(editMode === "members" ? [] : currentMembers)
+  const { creating, updating } = useSelector((state: AppState) => state.projects)
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string()
-      .required('Project name is required')
-      .max(60, 'Project name must not exceed 60 characters'),
-  });
+    name: Yup.string().required("Project name is required").max(60, "Project name must not exceed 60 characters"),
+  })
 
   const handleSubmit = (name: string) => {
     switch (editMode) {
-      case 'members':
-        break;
-      case 'name':
-        dispatch(projectActions.updateProject(projectId, name, closeDialog));
-        break;
+      case "members":
+        break
+      case "name":
+        dispatch(projectActions.updateProject(projectId, name, closeDialog))
+        break
       default:
-        dispatch(projectActions.createProject({ name, members: selectedMembers }, closeDialog));
-        break;
+        dispatch(projectActions.createProject({ name, members: selectedMembers }, closeDialog))
+        break
     }
-  };
+  }
 
-  const formik = useFormik({
+  const formik = useFormik<{ name: string }>({
     initialValues: {
-      name: currentName || '',
+      name: currentName || "",
     },
     validationSchema,
     onSubmit: ({ name }) => {
-      handleSubmit(name);
+      handleSubmit(name)
     },
-  });
+  })
 
   const handleEditMembers = () => {
-    dispatch(projectActions.updateProjectMembers(projectId, selectedMembers, closeDialog));
-  };
+    dispatch(projectActions.updateProjectMembers(projectId, selectedMembers, closeDialog))
+  }
 
-  return { creating, updating, formik, setSelectedMembers, handleEditMembers };
-};
-export default useProjectFormController;
+  return {
+    creating,
+    updating,
+    formik,
+    canAddMembers: selectedMembers.length > 0,
+    setSelectedMembers,
+    handleEditMembers,
+  }
+}
+export default useProjectFormController

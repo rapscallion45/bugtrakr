@@ -1,18 +1,19 @@
-import { FC, forwardRef } from 'react';
-import { Box } from '@mui/material';
+import { FC, forwardRef } from "react"
+import { Box } from "@mui/material"
 
 export interface PageProps {
-  title?: string;
+  title?: string
+  children?: React.ReactNode
 }
 
 const Page: FC<PageProps> = forwardRef((props, ref) => {
-  const { title, children, ...other } = props;
+  const { title, children, ...other } = props
   return (
     <Box ref={ref} {...other}>
       <title>{title}</title>
       {children}
     </Box>
-  );
-});
+  )
+})
 
-export default Page;
+export default Page

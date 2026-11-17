@@ -3,8 +3,8 @@ export default function Button(theme) {
     MuiButton: {
       styleOverrides: {
         root: {
-          '&:hover': {
-            boxShadow: 'none',
+          "&:hover": {
+            boxShadow: "none",
           },
         },
         sizeLarge: {
@@ -13,36 +13,36 @@ export default function Button(theme) {
         containedInherit: {
           color: theme.palette.grey[800],
           boxShadow: theme.customShadows.z8,
-          '&:hover': {
+          "&:hover": {
             backgroundColor: theme.palette.grey[400],
           },
         },
         containedPrimary: {
-          '&:hover': {
+          "&:hover": {
             backgroundColor: theme.palette.primary.light,
           },
         },
         containedSecondary: {
-          border: '1px solid lightgray',
+          border: "1px solid lightgray",
           color: theme.palette.grey[900],
-          backgroundColor: 'white',
-          '&:hover': {
+          backgroundColor: "white",
+          "&:hover": {
             color: theme.palette.grey[900],
-            backgroundColor: 'white',
+            backgroundColor: "white",
           },
         },
         outlinedInherit: {
           border: `1px solid ${theme.palette.grey[500_32]}`,
-          '&:hover': {
+          "&:hover": {
             backgroundColor: theme.palette.action.hover,
           },
         },
         textInherit: {
-          '&:hover': {
+          "&:hover": {
             backgroundColor: theme.palette.action.hover,
           },
         },
       },
     },
-  };
+  }
 }

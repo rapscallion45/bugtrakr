@@ -1,266 +1,45 @@
-import React from 'react';
-import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
-import thunkMiddleware from 'redux-thunk';
-import { Session } from 'next-auth';
-import { SessionProvider } from 'next-auth/react';
-import { mount, render } from 'enzyme';
-import toJson from 'enzyme-to-json';
-import { waitFor } from '@testing-library/react';
-import rootReducer from '../../redux/reducers';
-import ChangePasswordRequestForm from './ChangePasswordRequestForm';
-import accountMock from '../../__mocks__/accountMock';
+import { fireEvent, render, screen, waitFor } from "@testing-library/react"
+import { Provider } from "react-redux"
+import { applyMiddleware, createStore } from "redux"
+import { thunk } from "redux-thunk"
+import { useSession } from "next-auth/react"
+import rootReducer from "../../redux/reducers"
+import ChangePasswordRequestForm from "./ChangePasswordRequestForm"
 
-const middleware = [thunkMiddleware];
-
-const mockRouteValue = '/dashboard/my-account';
-jest.mock('next/router', () => ({
-  useRouter() {
-    return {
-      route: mockRouteValue,
-      pathname: mockRouteValue,
-      query: '',
-      asPath: '',
-      push: jest.fn(),
-      events: {
-        on: jest.fn(),
-        off: jest.fn(),
-      },
-      beforePopState: jest.fn(() => null),
-      prefetch: jest.fn(() => null),
-    };
-  },
-}));
-
-describe('Change Password Request Form', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('Renders correctly enzyme', () => {
-    /* Arrange */
-    const testStore = createStore(
-      rootReducer,
-      {
-        account: {
-          user: {
-            email: accountMock.email,
-          },
-        },
-      },
-      applyMiddleware(...middleware)
-    );
-    const mockSession: Session = {
-      expires: '1',
-      user: {
-        email: accountMock.email,
-        name: 'Delta',
-        image: 'c',
-        uid: '324efgvb',
-        id: '324efgvb',
-        demo: false,
-      },
-    };
-
-    /* Act */
-    const view = render(
-      <Provider store={testStore}>
-        <SessionProvider session={mockSession}>
-          <ChangePasswordRequestForm />
-        </SessionProvider>
-      </Provider>
-    );
-
-    /* Assert */
-    expect(toJson(view)).toMatchSnapshot();
-  });
-
-  describe('Form Submission', () => {
-    it('Should be disabled and spinner should be rendered when change password API called', () => {
-      /* Arrange */
-      const testStore = createStore(
-        rootReducer,
-        {
-          account: {
-            user: {
-              email: accountMock.email,
-            },
-          },
-          changePassword: {
-            requestingPassword: true,
-          },
-        },
-        applyMiddleware(...middleware)
-      );
-      const mockSession: Session = {
-        expires: '1',
-        user: {
-          email: accountMock.email,
-          name: 'Delta',
-          image: 'c',
-          uid: '324efgvb',
-          id: '324efgvb',
-          demo: false,
-        },
-      };
-
-      /* Act */
-      const view = render(
-        <Provider store={testStore}>
-          <SessionProvider session={mockSession}>
-            <ChangePasswordRequestForm />
-          </SessionProvider>
-        </Provider>
-      );
-
-      /* Assert */
-      expect(view.find('button').prop('disabled')).toBe(true);
-      expect(view.find('circle').length).toBe(1);
-    });
-
-    it('Should be enabled with no spinner once change password API call completed', async () => {
-      /* Arrange */
-      const testStore = createStore(
-        rootReducer,
-        {
-          account: {
-            user: {
-              email: accountMock.email,
-            },
-          },
-        },
-        applyMiddleware(...middleware)
-      );
-      const mockSession: Session = {
-        expires: '1',
-        user: {
-          email: accountMock.email,
-          name: 'Delta',
-          image: 'c',
-          uid: '324efgvb',
-          id: '324efgvb',
-          demo: false,
-        },
-      };
-
-      /* Act */
-      const view = mount(
-        <Provider store={testStore}>
-          <SessionProvider session={mockSession}>
-            <ChangePasswordRequestForm />
-          </SessionProvider>
-        </Provider>
-      );
-      view.find('button').simulate('click');
-
-      /* Assert */
-      expect(view.find('button').prop('disabled')).toBe(true);
-      expect(view.find('circle').length).toBe(1);
-
-      await waitFor(() => {
-        view.update();
-        expect(view.find('button').prop('disabled')).toBe(false);
-      });
-      expect(view.find('circle').length).toBe(0);
-    });
-
-    it('Should be disabled, with no spinner, when in demo mode', () => {
-      /* Arrange */
-      const testStore = createStore(
-        rootReducer,
-        {
-          account: {
-            user: {
-              email: accountMock.email,
-            },
-          },
-          changePassword: {
-            requestingPassword: false,
-          },
-        },
-        applyMiddleware(...middleware)
-      );
-      const mockSession: Session = {
-        expires: '1',
-        user: {
-          email: accountMock.email,
-          name: 'Delta',
-          image: 'c',
-          uid: '324efgvb',
-          id: '324efgvb',
-          demo: true,
-        },
-      };
-
-      /* Act */
-      const view = render(
-        <Provider store={testStore}>
-          <SessionProvider session={mockSession}>
-            <ChangePasswordRequestForm />
-          </SessionProvider>
-        </Provider>
-      );
-
-      /* Assert */
-      expect(view.find('button').prop('disabled')).toBe(true);
-      expect(view.find('circle').length).toBe(0);
-    });
-  });
-
-  describe('Events', () => {
-    beforeAll(() => jest.spyOn(window, 'fetch'));
-
-    it('Should call change password API on button click, passing logged in user email', async () => {
-      /* Arrange */
-      const testStore = createStore(
-        rootReducer,
-        {
-          account: {
-            user: {
-              email: accountMock.email,
-            },
-          },
-        },
-        applyMiddleware(...middleware)
-      );
-      const mockSession: Session = {
-        expires: '1',
-        user: {
-          email: accountMock.email,
-          name: 'Delta',
-          image: 'c',
-          uid: '324efgvb',
-          id: '324efgvb',
-          demo: false,
-        },
-      };
-      const { email } = accountMock;
-
-      /* Act */
-      const view = mount(
-        <Provider store={testStore}>
-          <SessionProvider session={mockSession}>
-            <ChangePasswordRequestForm />
-          </SessionProvider>
-        </Provider>
-      );
-      view.find('button').simulate('click');
-
-      /* Assert */
-      expect(view.find('button').prop('disabled')).toBe(true);
-      expect(view.find('circle').length).toBe(1);
-
-      await waitFor(() => {
-        expect(window.fetch).toHaveBeenCalledTimes(1);
-      });
-      expect(window.fetch).toHaveBeenCalledWith(
-        '/api/change-password',
-        expect.objectContaining({
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email }),
-        })
-      );
-    });
-  });
-});
+const mockPush = jest.fn()
+jest.mock("next/router", () => ({ useRouter: () => ({ push: mockPush }) }))
+jest.mock("next-auth/react")
+function setup(demo: boolean) {
+  ;(useSession as jest.Mock).mockReturnValue({ data: { user: { demo } } })
+  const state = rootReducer(undefined, { type: "init" })
+  const store = createStore(rootReducer, { ...state, account: { user: { email: "user@example.test" } } }, applyMiddleware(thunk))
+  render(
+    <Provider store={store}>
+      <ChangePasswordRequestForm />
+    </Provider>,
+  )
+}
+test("demo users cannot request a reset", () => {
+  setup(true)
+  expect(screen.getByRole("button")).toBeDisabled()
+})
+test("submits the account email and shows progress until completion", async () => {
+  let finish: (response: unknown) => void
+  global.fetch = jest.fn(
+    () =>
+      new Promise((resolve) => {
+        finish = resolve
+      }),
+  ) as jest.Mock
+  setup(false)
+  fireEvent.click(screen.getByRole("button"))
+  expect(screen.getByRole("button")).toBeDisabled()
+  expect(screen.getByRole("progressbar")).toBeVisible()
+  expect(fetch).toHaveBeenCalledWith("/api/change-password", expect.objectContaining({ body: JSON.stringify({ email: "user@example.test" }) }))
+  finish({
+    ok: true,
+    text: async () => JSON.stringify({ email: "user@example.test", info: "Sent" }),
+  })
+  await waitFor(() => expect(mockPush).toHaveBeenCalledWith("/reset-password"))
+  expect(screen.getByRole("button")).toBeEnabled()
+})

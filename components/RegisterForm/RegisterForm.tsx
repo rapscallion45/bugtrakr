@@ -1,127 +1,125 @@
-import { FC, useState } from 'react';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import Divider from '@mui/material/Divider';
-import Typography from '@mui/material/Typography';
-import CircularProgress from '@mui/material/CircularProgress';
-import IconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import Link from '../Link/Link';
-import ValidatedCheckbox from '../ValidatedCheckbox/ValidatedCheckbox';
-import NextAuthBtns from '../NextAuthBtns/NextAuthBtns';
-import useRegisterFormController from './RegisterFormController';
+import type { ClientSafeProvider } from "next-auth/react"
+import { FC, useState } from "react"
+import Button from "@mui/material/Button"
+import TextField from "@mui/material/TextField"
+import Grid from "@mui/material/Grid"
+import Box from "@mui/material/Box"
+import Container from "@mui/material/Container"
+import Divider from "@mui/material/Divider"
+import Typography from "@mui/material/Typography"
+import CircularProgress from "@mui/material/CircularProgress"
+import IconButton from "@mui/material/IconButton"
+import InputAdornment from "@mui/material/InputAdornment"
+import VisibilityIcon from "@mui/icons-material/Visibility"
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff"
+import Link from "../Link/Link"
+import ValidatedCheckbox from "../ValidatedCheckbox/ValidatedCheckbox"
+import NextAuthBtns from "../NextAuthBtns/NextAuthBtns"
+import useRegisterFormController from "./RegisterFormController"
 
 interface RegisterFormProps {
-  providers: any;
+  providers: Record<string, ClientSafeProvider> | null
 }
 
 const RegisterForm: FC<RegisterFormProps> = function RegisterForm(props) {
-  const { providers } = props;
-  const [showPassword, setShowPassword] = useState(false);
-  const { registering, formik } = useRegisterFormController();
+  const { providers } = props
+  const [showPassword, setShowPassword] = useState(false)
+  const { registering, formik } = useRegisterFormController()
 
   return (
-    <Container maxWidth="md">
-      <Box mb={2} display="flex" justifyContent="center">
-        <Link href="/">
-          <Box width={50} component="img" src="/static/logo.png" />
+    <Container maxWidth={"md"}>
+      <Box mb={2} display={"flex"} justifyContent={"center"}>
+        <Link href={"/"}>
+          <Box width={50} component={"img"} src={"/static/logo.png"} />
         </Link>
       </Box>
-      <Typography variant="h4" component="h4" sx={{ textAlign: 'center' }}>
+      <Typography variant={"h4"} component={"h4"} sx={{ textAlign: "center" }}>
         Get started FREE with {process.env.APP_NAME}
       </Typography>
-      <Typography
-        variant="body2"
-        sx={{ textAlign: 'center', color: 'text.secondary', marginBottom: '20px' }}
-      >
+      <Typography variant={"body2"} sx={{ textAlign: "center", color: "text.secondary", marginBottom: "20px" }}>
         Sign up to our free plan. No credit card needed.
       </Typography>
       <form onSubmit={formik.handleSubmit}>
         <NextAuthBtns providers={providers} />
-        <Divider sx={{ color: 'lightgray' }}>Or</Divider>
+        <Divider sx={{ color: "lightgray" }}>Or</Divider>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
-              variant="outlined"
-              margin="normal"
-              id="firstName"
-              name="firstName"
-              label="First Name"
-              type="firstName"
+              variant={"outlined"}
+              margin={"normal"}
+              id={"firstName"}
+              name={"firstName"}
+              label={"First Name"}
+              type={"firstName"}
               value={formik.values.firstName}
               onChange={formik.handleChange}
               error={formik.touched.firstName && Boolean(formik.errors.firstName)}
               helperText={formik.touched.firstName && formik.errors.firstName}
-              autoComplete="on"
+              autoComplete={"on"}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
-              variant="outlined"
-              margin="normal"
-              id="lastName"
-              name="lastName"
-              label="Last Name"
-              type="lastName"
+              variant={"outlined"}
+              margin={"normal"}
+              id={"lastName"}
+              name={"lastName"}
+              label={"Last Name"}
+              type={"lastName"}
               value={formik.values.lastName}
               onChange={formik.handleChange}
               error={formik.touched.lastName && Boolean(formik.errors.lastName)}
               helperText={formik.touched.lastName && formik.errors.lastName}
-              autoComplete="on"
+              autoComplete={"on"}
             />
           </Grid>
           <Grid item xs={12}>
             <TextField
               fullWidth
-              variant="outlined"
-              margin="normal"
-              id="username"
-              name="username"
-              label="Username"
-              type="username"
+              variant={"outlined"}
+              margin={"normal"}
+              id={"username"}
+              name={"username"}
+              label={"Username"}
+              type={"username"}
               value={formik.values.username}
               onChange={formik.handleChange}
               error={formik.touched.username && Boolean(formik.errors.username)}
               helperText={formik.touched.username && formik.errors.username}
-              autoComplete="off"
+              autoComplete={"off"}
             />
           </Grid>
           <Grid item xs={12}>
             <TextField
               fullWidth
-              variant="outlined"
-              margin="normal"
-              id="email"
-              name="email"
-              label="Email"
-              type="email"
+              variant={"outlined"}
+              margin={"normal"}
+              id={"email"}
+              name={"email"}
+              label={"Email"}
+              type={"email"}
               value={formik.values.email}
               onChange={formik.handleChange}
               error={formik.touched.email && Boolean(formik.errors.email)}
               helperText={formik.touched.email && formik.errors.email}
-              autoComplete="on"
+              autoComplete={"on"}
             />
           </Grid>
           <Grid item xs={12}>
             <TextField
               fullWidth
-              variant="outlined"
-              margin="normal"
-              id="password"
-              name="password"
-              label="Password"
-              type={showPassword ? 'text' : 'password'}
+              variant={"outlined"}
+              margin={"normal"}
+              id={"password"}
+              name={"password"}
+              label={"Password"}
+              type={showPassword ? "text" : "password"}
               InputProps={{
                 endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton edge="end" onClick={() => setShowPassword((prev) => !prev)}>
+                  <InputAdornment position={"end"}>
+                    <IconButton edge={"end"} onClick={() => setShowPassword((prev) => !prev)}>
                       {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
                     </IconButton>
                   </InputAdornment>
@@ -131,22 +129,22 @@ const RegisterForm: FC<RegisterFormProps> = function RegisterForm(props) {
               onChange={formik.handleChange}
               error={formik.touched.password && Boolean(formik.errors.password)}
               helperText={formik.touched.password && formik.errors.password}
-              autoComplete="on"
+              autoComplete={"on"}
             />
           </Grid>
           <Grid item xs={12}>
             <TextField
               fullWidth
-              variant="outlined"
-              margin="normal"
-              id="confirmPassword"
-              name="confirmPassword"
-              label="Confirm Password"
-              type={showPassword ? 'text' : 'password'}
+              variant={"outlined"}
+              margin={"normal"}
+              id={"confirmPassword"}
+              name={"confirmPassword"}
+              label={"Confirm Password"}
+              type={showPassword ? "text" : "password"}
               InputProps={{
                 endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton edge="end" onClick={() => setShowPassword((prev) => !prev)}>
+                  <InputAdornment position={"end"}>
+                    <IconButton edge={"end"} onClick={() => setShowPassword((prev) => !prev)}>
                       {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
                     </IconButton>
                   </InputAdornment>
@@ -156,20 +154,19 @@ const RegisterForm: FC<RegisterFormProps> = function RegisterForm(props) {
               onChange={formik.handleChange}
               error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
               helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
-              autoComplete="off"
+              autoComplete={"off"}
             />
           </Grid>
           <Grid item xs={12}>
             <ValidatedCheckbox
-              checkboxName="acceptTerms"
-              checkboxId="acceptTerms"
+              checkboxName={"acceptTerms"}
+              checkboxId={"acceptTerms"}
               value={formik.values.acceptTerms}
               onChange={formik.handleChange}
               error={formik.touched.acceptTerms && Boolean(formik.errors.acceptTerms)}
               helperText={formik.touched.acceptTerms && formik.errors.acceptTerms}
-              /* eslint-disable react/jsx-wrap-multilines */
               label={
-                <Link href="/policy/terms" target="_blank" rel="noopener noreferrer">
+                <Link href={"/policy/terms"} target={"_blank"} rel={"noopener noreferrer"}>
                   {`I accept the `}
                   <b>Terms & Conditions</b>
                 </Link>
@@ -177,12 +174,12 @@ const RegisterForm: FC<RegisterFormProps> = function RegisterForm(props) {
             />
           </Grid>
         </Grid>
-        <Button type="submit" fullWidth variant="contained" color="primary" disabled={registering}>
-          {!registering && 'Submit'}
-          {registering && <CircularProgress size={25} color="inherit" />}
+        <Button type={"submit"} fullWidth variant={"contained"} color={"primary"} disabled={registering}>
+          {!registering && "Submit"}
+          {registering && <CircularProgress size={25} color={"inherit"} />}
         </Button>
       </form>
     </Container>
-  );
-};
-export default RegisterForm;
+  )
+}
+export default RegisterForm

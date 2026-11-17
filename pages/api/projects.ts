@@ -1,105 +1,96 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from './auth/[...nextauth]';
-import { getProjects, deleteProject, updateProject, createProject } from '../../lib/api';
+import withBackendIdentity from "../../lib/backendIdentity"
+import { getProjects, deleteProject, updateProject, createProject } from "../../lib/api"
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default withBackendIdentity(async (req, res, identity) => {
   /* get req params */
-  const { body, method } = req;
-  const session = await getServerSession(req, res, authOptions);
+  const { body, method } = req
 
   /* determine which request type this is */
   switch (method) {
-    case 'GET':
+    case "GET":
       /* call api */
       try {
-        const response = await getProjects(session.user.token);
-        const data = await response.json();
+        const response = await getProjects(identity.token)
+        const data = await response.json()
 
         /* send back server response */
         if (response.status === 200) {
-          return res.status(200).json(data);
+          return res.status(200).json(data)
         }
-        return res.status(400).json({ message: data.message });
+        return res.status(400).json({ message: data.message })
       } catch (error) {
         return res.status(501).json({
-          message: 'Oops, something went wrong with the request.',
+          message: "Oops, something went wrong with the request.",
           error,
-        });
+        })
       }
-    case 'DELETE':
+    case "DELETE":
       /* call api */
       try {
         if (!body.id) {
           /* no account id provided, return error */
-          return res
-            .status(422)
-            .json({ message: 'Unproccesable request, no project ID provided.' });
+          return res.status(422).json({ message: "Unproccesable request, no project ID provided." })
         }
 
-        const response = await deleteProject(session.user.token, body.id);
+        const response = await deleteProject(identity.token, body.id)
 
         /* send back server response */
         if (response.status === 204) {
-          return res.status(200).json({ message: 'Project deleted.' });
+          return res.status(200).json({ message: "Project deleted." })
         }
-        return res.status(400).json({ message: 'Failed to delete project.' });
+        return res.status(400).json({ message: "Failed to delete project." })
       } catch (error) {
         return res.status(501).json({
-          message: 'Oops, something went wrong with the request.',
+          message: "Oops, something went wrong with the request.",
           error,
-        });
+        })
       }
-    case 'POST':
+    case "POST":
       /* call api */
       try {
         if (!body.name) {
           /* no project name provided, return error */
-          return res
-            .status(422)
-            .json({ message: 'Unproccesable request, project must have a name.' });
+          return res.status(422).json({ message: "Unproccesable request, project must have a name." })
         }
 
-        const response = await createProject(session.user.token, body);
-        const data = await response.json();
+        const response = await createProject(identity.token, body)
+        const data = await response.json()
 
         /* send back server response */
         if (response.status === 201) {
-          return res.status(200).json(data);
+          return res.status(200).json(data)
         }
-        return res.status(400).json({ message: data.message });
+        return res.status(400).json({ message: data.message })
       } catch (error) {
         return res.status(501).json({
-          message: 'Oops, something went wrong with the request.',
+          message: "Oops, something went wrong with the request.",
           error,
-        });
+        })
       }
-    case 'PUT':
+    case "PUT":
       /* call api */
       try {
         if (!body.id || !body.name) {
           /* no project name or ID provided, return error */
-          return res
-            .status(422)
-            .json({ message: 'Unproccesable request, project name and ID not provided.' });
+          return res.status(422).json({ message: "Unproccesable request, project name and ID not provided." })
         }
 
-        const response = await updateProject(session.user.token, body);
-        const data = await response.json();
+        const response = await updateProject(identity.token, body)
+        const data = await response.json()
 
         /* send back server response */
         if (response.status === 200) {
-          return res.status(200).json(data);
+          return res.status(200).json(data)
         }
-        return res.status(400).json({ message: data.message });
+        return res.status(400).json({ message: data.message })
       } catch (error) {
         return res.status(501).json({
-          message: 'Oops, something went wrong with the request.',
+          message: "Oops, something went wrong with the request.",
           error,
-        });
+        })
       }
     default:
       /* Return 404 if someone pings the API with an unsupported method */
-      return res.status(404).send('Not found');
+      return res.status(404).send("Not found")
   }
-}
+})

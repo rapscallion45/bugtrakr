@@ -1,0 +1,21 @@
+# Public
+public/static
+
+# Yarn
+.yarn
+yarn.lock
+build
+
+# Misc
+README.md
+.env
+*.d.ts
+
+mockServiceWorker.js
+
+# Next.js and npm generated output
+.next
+out
+coverage
+package-lock.json
+.vercel

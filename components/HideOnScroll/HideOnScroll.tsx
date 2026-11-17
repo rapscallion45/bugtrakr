@@ -1,15 +1,13 @@
-import { useScrollTrigger, Slide } from '@mui/material';
+import { useScrollTrigger, Slide } from "@mui/material"
 
-const HideOnScroll: React.FC<{ children: React.ReactElement<any, any> }> = function HideOnScroll({
-  children,
-}) {
-  const trigger = useScrollTrigger();
+const HideOnScroll: React.FC<{ children: React.ReactElement }> = function HideOnScroll({ children }) {
+  const trigger = useScrollTrigger()
 
   return (
-    <Slide appear direction="up" in={!trigger}>
+    <Slide appear direction={"up"} in={!trigger}>
       {children}
     </Slide>
-  );
-};
+  )
+}
 
-export default HideOnScroll;
+export default HideOnScroll

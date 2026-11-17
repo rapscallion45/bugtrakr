@@ -1,70 +1,67 @@
-import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
-import { getProviders } from 'next-auth/react';
-import { getServerSession } from 'next-auth/next';
-import { styled } from '@mui/material/styles';
-import { Card, Link as MuiLink, Container, Typography, Box } from '@mui/material';
-import Link from '../components/Link/Link';
-import AuthLayout from '../layouts/AuthLayout/AuthLayout';
-import MHidden from '../components/@MUI-Extended/MHidden';
-import RegisterForm from '../components/RegisterForm/RegisterForm';
-import ScrollBar from '../components/ScrollBar/ScrollBar';
-import { authOptions } from './api/auth/[...nextauth]';
+import type { GetServerSidePropsContext, InferGetServerSidePropsType } from "next"
+import { getProviders } from "next-auth/react"
+import { getServerSession } from "next-auth/next"
+import { styled } from "@mui/material/styles"
+import { Card, Link as MuiLink, Container, Typography, Box } from "@mui/material"
+import Link from "../components/Link/Link"
+import AuthLayout from "../layouts/AuthLayout/AuthLayout"
+import MHidden from "../components/@MUI-Extended/MHidden"
+import RegisterForm from "../components/RegisterForm/RegisterForm"
+import ScrollBar from "../components/ScrollBar/ScrollBar"
+import { authOptions } from "./api/auth/[...nextauth]"
 
 const SectionStyle = styled(Card)(({ theme }) => ({
-  width: '100%',
+  width: "100%",
   maxWidth: 464,
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
   margin: theme.spacing(2, 0, 2, 2),
-}));
+}))
 
-const ContentStyle = styled('div')(({ theme }) => ({
+const ContentStyle = styled("div")(({ theme }) => ({
   maxWidth: 600,
-  margin: 'auto',
-  display: 'flex',
-  height: '100vh',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'top',
+  margin: "auto",
+  display: "flex",
+  height: "100vh",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "top",
   padding: theme.spacing(12, 0, 6, 0),
-  overflowY: 'auto',
-  [theme.breakpoints.up('md')]: {
+  overflowY: "auto",
+  [theme.breakpoints.up("md")]: {
     padding: theme.spacing(6, 0, 6, 0),
   },
-}));
+}))
 
-const Register = function Register({
-  providers,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+const Register = function Register({ providers }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <>
-      <MHidden width="mdDown">
+      <MHidden width={"mdDown"}>
         <SectionStyle>
-          <Typography variant="h3" sx={{ px: 10, mt: 10, mb: 5 }}>
+          <Typography variant={"h3"} sx={{ px: 10, mt: 10, mb: 5 }}>
             Sign up to gain access to FREE bug tracking tools!
           </Typography>
         </SectionStyle>
 
-        <Container maxWidth="md">
+        <Container maxWidth={"md"}>
           <ContentStyle>
             <ScrollBar
               sx={{
-                height: '100%',
-                overflowY: 'auto',
-                '& .simplebar-content': {
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  paddingTop: '20px !important',
+                height: "100%",
+                overflowY: "auto",
+                "& .simplebar-content": {
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  paddingTop: "20px !important",
                 },
-              }}
-            >
+              }}>
               <RegisterForm providers={providers} />
 
-              <Typography variant="body2" align="center" sx={{ mt: 3 }}>
+              <Typography variant={"body2"} align={"center"} sx={{ mt: 3 }}>
                 Already have an account?&nbsp;
-                <MuiLink variant="subtitle2" component={Link} href="/login">
+                <MuiLink variant={"subtitle2"} component={Link} href={"/login"}>
                   Login
                 </MuiLink>
               </Typography>
@@ -73,14 +70,14 @@ const Register = function Register({
         </Container>
       </MHidden>
 
-      <MHidden width="mdUp">
-        <Container maxWidth="md">
+      <MHidden width={"mdUp"}>
+        <Container maxWidth={"md"}>
           <Box sx={{ py: 5 }}>
             <RegisterForm providers={providers} />
 
-            <Typography variant="body2" align="center" sx={{ mt: 3 }}>
+            <Typography variant={"body2"} align={"center"} sx={{ mt: 3 }}>
               Already have an account?&nbsp;
-              <MuiLink variant="subtitle2" component={Link} href="/login">
+              <MuiLink variant={"subtitle2"} component={Link} href={"/login"}>
                 Login
               </MuiLink>
             </Typography>
@@ -88,15 +85,15 @@ const Register = function Register({
         </Container>
       </MHidden>
     </>
-  );
-};
+  )
+}
 
-Register.Layout = AuthLayout;
+Register.Layout = AuthLayout
 
-export default Register;
+export default Register
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getServerSession(context.req, context.res, authOptions);
+  const session = await getServerSession(context.req, context.res, authOptions)
 
   /**
    * If the user is already logged in, redirect.
@@ -104,12 +101,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
    * To avoid an infinite loop!
    */
   if (session) {
-    return { redirect: { destination: '/dashboard' } };
+    return { redirect: { destination: "/dashboard" } }
   }
 
-  const providers = await getProviders();
+  const providers = await getProviders()
 
   return {
-    props: { providers: providers ?? [] },
-  };
+    props: { providers: providers ?? {} },
+  }
 }

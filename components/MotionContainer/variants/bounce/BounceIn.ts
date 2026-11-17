@@ -1,20 +1,14 @@
-import {
-  varBounceOut,
-  varBounceOutUp,
-  varBounceOutDown,
-  varBounceOutLeft,
-  varBounceOutRight,
-} from './BounceOut';
+import { varBounceOut, varBounceOutUp, varBounceOutDown, varBounceOutLeft, varBounceOutRight } from "./BounceOut"
 
 const TRANSITION_ENTER = {
   duration: 0.72,
-  ease: [0.43, 0.13, 0.23, 0.96],
-};
+  ease: [0.43, 0.13, 0.23, 0.96] as const,
+}
 
 const TRANSITION_EXIT = {
   duration: 0.48,
-  ease: [0.43, 0.13, 0.23, 0.96],
-};
+  ease: [0.43, 0.13, 0.23, 0.96] as const,
+}
 
 export const varBounceIn = {
   animate: {
@@ -23,7 +17,7 @@ export const varBounceIn = {
     transition: TRANSITION_ENTER,
   },
   exit: varBounceOut.animate,
-};
+}
 
 export const varBounceInUp = {
   animate: {
@@ -33,7 +27,7 @@ export const varBounceInUp = {
     transition: { ...TRANSITION_ENTER },
   },
   exit: { ...varBounceOutDown.animate, transition: TRANSITION_EXIT },
-};
+}
 
 export const varBounceInDown = {
   animate: {
@@ -43,7 +37,7 @@ export const varBounceInDown = {
     transition: TRANSITION_ENTER,
   },
   exit: { ...varBounceOutUp.animate, transition: TRANSITION_EXIT },
-};
+}
 
 export const varBounceInLeft = {
   animate: {
@@ -53,7 +47,7 @@ export const varBounceInLeft = {
     transition: TRANSITION_ENTER,
   },
   exit: { ...varBounceOutLeft.animate, transition: TRANSITION_EXIT },
-};
+}
 
 export const varBounceInRight = {
   animate: {
@@ -63,4 +57,4 @@ export const varBounceInRight = {
     transition: TRANSITION_ENTER,
   },
   exit: { ...varBounceOutRight.animate, transition: TRANSITION_EXIT },
-};
+}

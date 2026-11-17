@@ -1,57 +1,51 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useSnackbar } from 'notistack';
-import { alertActions } from '../redux/actions';
-import { AppState } from '../redux/reducers';
+import { useEffect } from "react"
+import { useSelector } from "react-redux"
+import { useSnackbar } from "notistack"
+import useAppDispatch from "./useAppDispatch"
+import { alertActions } from "../redux/actions"
+import { AppState } from "../redux/reducers"
 
-let displayed = [];
+let displayed = []
 
 const useNotifier = () => {
-  const dispatch = useDispatch();
-  const notifications = useSelector((state: AppState) => state.alert?.notifications || []);
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const dispatch = useAppDispatch()
+  const notifications = useSelector((state: AppState) => state.alert?.notifications || [])
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
 
   const storeDisplayed = (id) => {
-    displayed = [...displayed, id];
-  };
+    displayed = [...displayed, id]
+  }
 
   const removeDisplayed = (id) => {
-    displayed = [...displayed.filter((key) => id !== key)];
-  };
+    displayed = [...displayed.filter((key) => id !== key)]
+  }
 
   useEffect(() => {
     notifications.forEach(({ key, message, options = {}, dismissed = false }) => {
       if (dismissed) {
         /* dismiss snackbar using notistack */
-        closeSnackbar(key);
-        return;
+        closeSnackbar(key)
+        return
       }
 
       /* do nothing if snackbar is already displayed */
-      if (displayed.includes(key)) return;
+      if (displayed.includes(key)) return
 
       /* display snackbar using notistack */
       enqueueSnackbar(message, {
         key,
         ...options,
-        onClose: (event, reason, myKey) => {
-          // @ts-ignore
-          if (options.onClose) {
-            // @ts-ignore
-            options.onClose(event, reason, myKey);
-          }
-        },
         onExited: (event, myKey) => {
           /* remove this snackbar from redux store */
-          dispatch(alertActions.removeSnackbar(myKey));
-          removeDisplayed(myKey);
+          dispatch(alertActions.removeSnackbar(myKey))
+          removeDisplayed(myKey)
         },
-      });
+      })
 
       /* keep track of snackbars that we've displayed */
-      storeDisplayed(key);
-    });
-  }, [notifications, closeSnackbar, enqueueSnackbar, dispatch]);
-};
+      storeDisplayed(key)
+    })
+  }, [notifications, closeSnackbar, enqueueSnackbar, dispatch])
+}
 
-export default useNotifier;
+export default useNotifier

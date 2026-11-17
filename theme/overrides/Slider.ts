@@ -3,12 +3,12 @@ export default function Slider() {
     MuiSlider: {
       styleOverrides: {
         root: {
-          padding: '13px 0 !important',
+          padding: "13px 0 !important",
         },
         markLabel: {
-          top: '25px !important',
+          top: "25px !important",
         },
       },
     },
-  };
+  }
 }

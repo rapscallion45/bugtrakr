@@ -1,38 +1,59 @@
-import { FC, useState } from 'react';
-import { styled } from '@mui/material/styles';
-import NavBar from '../../components/NavBar/NavBar';
-import NavSideBar from '../../components/NavSideBar/NavSideBar';
-import useNotifier from '../../hooks/useNotifier';
+import { FC, useState, useEffect } from "react"
+import { styled } from "@mui/material/styles"
+import { useRouter } from "next/router"
+import { useSession } from "next-auth/react"
+import useAppDispatch from "../../hooks/useAppDispatch"
+import { accountActions, usersActions } from "../../redux/actions"
+import NavBar from "../../components/NavBar/NavBar"
+import NavSideBar from "../../components/NavSideBar/NavSideBar"
+import useNotifier from "../../hooks/useNotifier"
 
-const APP_BAR_MOBILE = 64;
-const APP_BAR_DESKTOP = 92;
+const APP_BAR_MOBILE = 64
+const APP_BAR_DESKTOP = 92
 
-const RootStyle = styled('div')({
-  display: 'flex',
-  minHeight: '100%',
-  overflow: 'hidden',
-});
+const RootStyle = styled("div")({
+  display: "flex",
+  minHeight: "100%",
+  overflow: "hidden",
+})
 
-const MainStyle = styled('div')(({ theme }) => ({
+const MainStyle = styled("div")(({ theme }) => ({
   flexGrow: 1,
-  overflow: 'auto',
-  minHeight: '100%',
+  overflow: "auto",
+  minHeight: "100%",
   paddingTop: APP_BAR_MOBILE + 24,
   paddingBottom: theme.spacing(12),
-  [theme.breakpoints.up('lg')]: {
+  [theme.breakpoints.up("lg")]: {
     paddingTop: APP_BAR_DESKTOP + 24,
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
   },
-}));
+}))
 
 interface DashboardLayoutProps {
-  children?: any;
+  children?: React.ReactNode
 }
 
 const DashboardLayout: FC<DashboardLayoutProps> = function DashboardLayout({ children }) {
-  const [open, setOpen] = useState(false);
-  useNotifier();
+  const [open, setOpen] = useState(false)
+  const router = useRouter()
+  const dispatch = useAppDispatch()
+  const { data: session, status } = useSession()
+  const uid = session?.user?.uid
+  useNotifier()
+
+  useEffect(() => {
+    if (status === "unauthenticated") router.replace("/login")
+  }, [status, router])
+
+  useEffect(() => {
+    if (uid) {
+      dispatch(accountActions.get(uid))
+      dispatch(usersActions.getUsers())
+    }
+  }, [dispatch, uid])
+
+  if (!uid) return null
 
   return (
     <RootStyle>
@@ -40,7 +61,7 @@ const DashboardLayout: FC<DashboardLayoutProps> = function DashboardLayout({ chi
       <NavSideBar isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
       <MainStyle>{children}</MainStyle>
     </RootStyle>
-  );
-};
+  )
+}
 
-export default DashboardLayout;
+export default DashboardLayout

@@ -1,40 +1,41 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import { accountActions } from '../../redux/actions';
-import { AppState } from '../../redux/reducers';
+import { useSelector } from "react-redux"
+import { useFormik } from "formik"
+import * as Yup from "yup"
+import useAppDispatch from "../../hooks/useAppDispatch"
+import { accountActions } from "../../redux/actions"
+import { AppState } from "../../redux/reducers"
 
 const useUserProfileFormController = () => {
-  const { updating, user } = useSelector((state: AppState) => state.account);
-  const userFirstName = user?.firstName;
-  const userAvatarSrc = user?.avatar?.url;
-  const dispatch = useDispatch();
+  const { updating, user } = useSelector((state: AppState) => state.account)
+  const userFirstName = user?.firstName
+  const userAvatarSrc = user?.avatar?.url
+  const dispatch = useAppDispatch()
 
   const validationSchema = Yup.object().shape({
-    username: Yup.string().required('Username is required'),
-    email: Yup.string().email('Email is invalid').required('Email is required'),
+    username: Yup.string().required("Username is required"),
+    email: Yup.string().email("Email is invalid").required("Email is required"),
     firstName: Yup.string(),
     lastName: Yup.string(),
-  });
+  })
 
-  const formik = useFormik({
+  const formik = useFormik<{ username: string; email: string; firstName: string; lastName: string }>({
     initialValues: {
-      username: user.username || '',
-      email: user.email || '',
-      firstName: user.firstName || '',
-      lastName: user.lastName || '',
+      username: user.username || "",
+      email: user.email || "",
+      firstName: user.firstName || "",
+      lastName: user.lastName || "",
     },
     validationSchema,
     onSubmit: (fields) => {
-      dispatch(accountActions.update(user?.id, fields));
+      dispatch(accountActions.update(user?.id, fields))
     },
-  });
+  })
 
   return {
     userFirstName,
     userAvatarSrc,
     formik,
     updating,
-  };
-};
-export default useUserProfileFormController;
+  }
+}
+export default useUserProfileFormController

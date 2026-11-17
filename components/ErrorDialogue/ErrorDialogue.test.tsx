@@ -1,28 +1,7 @@
-import React from 'react';
-import { mount, render } from 'enzyme';
-import toJson from 'enzyme-to-json';
-import ErrorDialogue from './ErrorDialogue';
+import { render, screen } from "@testing-library/react"
+import ErrorDialogue from "./ErrorDialogue"
 
-const testText = 'This is the test error message.';
-
-describe('Error Dialogue', () => {
-  it('Renders correctly enzyme', () => {
-    /* Arrange */
-    /* Act */
-    const view = render(<ErrorDialogue displayText={testText} />);
-
-    /* Assert */
-    expect(toJson(view)).toMatchSnapshot();
-  });
-
-  describe('Input Text', () => {
-    it('Should render the passed input text', () => {
-      /* Arrange */
-      /* Act */
-      const view = mount(<ErrorDialogue displayText={testText} />);
-
-      /* Assert */
-      expect(view.find('h6').text()).toEqual(testText);
-    });
-  });
-});
+test("renders the error message supplied by the page", () => {
+  render(<ErrorDialogue displayText={"Could not load bugs"} />)
+  expect(screen.getByRole("heading", { name: "Could not load bugs" })).toBeVisible()
+})

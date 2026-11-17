@@ -1,16 +1,26 @@
-import { FC, useMemo } from 'react';
-import { CacheProvider } from '@emotion/react';
-import { CssBaseline } from '@mui/material';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import shape from './shape';
-import palette from './palette';
-import typography from './typography';
-import componentsOverride from './overrides';
-import shadows, { customShadows } from './shadows';
+import type { EmotionCache } from "@emotion/cache"
+import { FC, useMemo } from "react"
+import { CacheProvider } from "@emotion/react"
+import { CssBaseline } from "@mui/material"
+import { ThemeProvider, createTheme } from "@mui/material/styles"
+import shape from "./shape"
+import palette from "./palette"
+import typography from "./typography"
+import componentsOverride from "./overrides"
+import shadows, { customShadows } from "./shadows"
+
+declare module "@mui/material/styles" {
+  interface Theme {
+    customShadows: typeof customShadows
+  }
+  interface ThemeOptions {
+    customShadows?: typeof customShadows
+  }
+}
 
 interface ThemeConfigProps {
-  emotionCache?: any;
-  children?: any;
+  emotionCache?: EmotionCache
+  children?: React.ReactNode
 }
 
 const ThemeConfig: FC<ThemeConfigProps> = function ThemeConfig({ emotionCache, children }) {
@@ -22,12 +32,11 @@ const ThemeConfig: FC<ThemeConfigProps> = function ThemeConfig({ emotionCache, c
       shadows,
       customShadows,
     }),
-    []
-  );
+    [],
+  )
 
-  // @ts-ignore
-  const theme = createTheme(themeOptions);
-  theme.components = componentsOverride(theme);
+  const theme = createTheme(themeOptions)
+  theme.components = componentsOverride(theme)
 
   return (
     <CacheProvider value={emotionCache}>
@@ -36,7 +45,7 @@ const ThemeConfig: FC<ThemeConfigProps> = function ThemeConfig({ emotionCache, c
         {children}
       </ThemeProvider>
     </CacheProvider>
-  );
-};
+  )
+}
 
-export default ThemeConfig;
+export default ThemeConfig

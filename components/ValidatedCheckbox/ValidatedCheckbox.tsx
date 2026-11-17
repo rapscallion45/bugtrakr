@@ -1,61 +1,44 @@
-import { FC } from 'react';
-import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import Typography from '@mui/material/Typography';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import { FC } from "react"
+import { styled } from "@mui/material/styles"
+import Box from "@mui/material/Box"
+import Checkbox from "@mui/material/Checkbox"
+import Typography from "@mui/material/Typography"
+import FormControlLabel from "@mui/material/FormControlLabel"
 
-const HelperStyle = styled('span')(({ theme }) => ({
-  position: 'relative',
-  top: '-20px',
+const HelperStyle = styled("span")(({ theme }) => ({
+  position: "relative",
+  top: "-20px",
   color: theme.palette.error.main,
-  fontSize: '0.75rem',
-  paddingLeft: '15px',
-  marginBottom: '10px',
-}));
+  fontSize: "0.75rem",
+  paddingLeft: "15px",
+  marginBottom: "10px",
+}))
 
 interface ValidatedCheckboxProps {
-  onChange?: (e: any) => void;
-  checkboxId?: string;
-  checkboxName?: string;
-  label?: any;
-  value?: any;
-  error?: any;
-  helperText?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
+  checkboxId?: string
+  checkboxName?: string
+  label?: React.ReactNode
+  value?: boolean | string
+  error?: boolean
+  helperText?: string
 }
 
-const ValidatedCheckbox: FC<ValidatedCheckboxProps> = function ValidatedCheckbox({
-  onChange,
-  checkboxId,
-  checkboxName,
-  label,
-  value,
-  error,
-  helperText,
-}) {
+const ValidatedCheckbox: FC<ValidatedCheckboxProps> = function ValidatedCheckbox({ onChange, checkboxId, checkboxName, label, value, error, helperText }) {
   return (
     <>
       <FormControlLabel
-        /* eslint-disable react/jsx-wrap-multilines */
-        control={
-          <Checkbox
-            value={value}
-            id={checkboxId}
-            name={checkboxName}
-            onChange={onChange}
-            color="primary"
-          />
-        }
+        control={<Checkbox value={value} id={checkboxId} name={checkboxName} onChange={onChange} color={"primary"} />}
         label={
-          <Typography variant="body2" sx={{ mt: '3px' }}>
+          <Typography variant={"body2"} sx={{ mt: "3px" }}>
             {label}
           </Typography>
         }
-        sx={{ marginBottom: '10px' }}
+        sx={{ marginBottom: "10px" }}
       />
       <Box>{error && <HelperStyle>{helperText}</HelperStyle>}</Box>
     </>
-  );
-};
+  )
+}
 
-export default ValidatedCheckbox;
+export default ValidatedCheckbox

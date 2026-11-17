@@ -1,16 +1,16 @@
-import { FC } from 'react';
-import Grid from '@mui/material/Grid';
-import Card from '@mui/material/Card';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import CheckIcon from '@mui/icons-material/Check';
-import DoNotDisturbAltIcon from '@mui/icons-material/DoNotDisturbAlt';
-import Typography from '@mui/material/Typography';
+import { FC } from "react"
+import Grid from "@mui/material/Grid"
+import Card from "@mui/material/Card"
+import Box from "@mui/material/Box"
+import Button from "@mui/material/Button"
+import List from "@mui/material/List"
+import ListItem from "@mui/material/ListItem"
+import ListItemButton from "@mui/material/ListItemButton"
+import ListItemIcon from "@mui/material/ListItemIcon"
+import ListItemText from "@mui/material/ListItemText"
+import CheckIcon from "@mui/icons-material/Check"
+import DoNotDisturbAltIcon from "@mui/icons-material/DoNotDisturbAlt"
+import Typography from "@mui/material/Typography"
 
 const UserMemerbershipForm: FC = function UserMemerbershipForm() {
   return (
@@ -19,51 +19,37 @@ const UserMemerbershipForm: FC = function UserMemerbershipForm() {
         <Grid item xs={12} md={4}>
           <Card
             sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: '20px',
-            }}
-          >
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: "20px",
+            }}>
             <Box
               sx={{
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                padding: '30px',
-              }}
-            >
-              <Typography
-                variant="body2"
-                component="h4"
-                color="text.secondary"
-                sx={{ textAlign: 'center', textTransform: 'uppercase' }}
-                py={1}
-              >
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                padding: "30px",
+              }}>
+              <Typography variant={"body2"} component={"h4"} color={"text.secondary"} sx={{ textAlign: "center", textTransform: "uppercase" }} py={1}>
                 Basic
               </Typography>
-              <Typography variant="h1" component="h4" sx={{ textAlign: 'center' }} py={2}>
+              <Typography variant={"h1"} component={"h4"} sx={{ textAlign: "center" }} py={2}>
                 FREE
               </Typography>
-              <Typography
-                variant="body2"
-                component="h4"
-                color="primary"
-                sx={{ textAlign: 'center' }}
-                py={2}
-              >
+              <Typography variant={"body2"} component={"h4"} color={"primary"} sx={{ textAlign: "center" }} py={2}>
                 Forever
               </Typography>
-              <Box pb={2} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-                <nav aria-label="main mailbox folders">
+              <Box pb={2} sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
+                <nav aria-label={"main mailbox folders"}>
                   <List>
                     <ListItem disablePadding>
                       <ListItemButton>
                         <ListItemIcon>
                           <CheckIcon />
                         </ListItemIcon>
-                        <ListItemText primary="Unlimited personal projects" />
+                        <ListItemText primary={"Unlimited personal projects"} />
                       </ListItemButton>
                     </ListItem>
                     <ListItem disablePadding>
@@ -71,17 +57,17 @@ const UserMemerbershipForm: FC = function UserMemerbershipForm() {
                         <ListItemIcon>
                           <CheckIcon />
                         </ListItemIcon>
-                        <ListItemText primary="Unlimited personal bugs" />
+                        <ListItemText primary={"Unlimited personal bugs"} />
                       </ListItemButton>
                     </ListItem>
                     <ListItem disablePadding>
                       <ListItemButton>
                         <ListItemIcon>
-                          <DoNotDisturbAltIcon color="disabled" />
+                          <DoNotDisturbAltIcon color={"disabled"} />
                         </ListItemIcon>
                         <ListItemText
                           primary={
-                            <Typography variant="body1" color="text.secondary">
+                            <Typography variant={"body1"} color={"text.secondary"}>
                               Team member bug assignment
                             </Typography>
                           }
@@ -91,11 +77,11 @@ const UserMemerbershipForm: FC = function UserMemerbershipForm() {
                     <ListItem disablePadding>
                       <ListItemButton>
                         <ListItemIcon>
-                          <DoNotDisturbAltIcon color="disabled" />
+                          <DoNotDisturbAltIcon color={"disabled"} />
                         </ListItemIcon>
                         <ListItemText
                           primary={
-                            <Typography variant="body1" color="text.secondary">
+                            <Typography variant={"body1"} color={"text.secondary"}>
                               Bug/project push notifications
                             </Typography>
                           }
@@ -105,7 +91,7 @@ const UserMemerbershipForm: FC = function UserMemerbershipForm() {
                   </List>
                 </nav>
               </Box>
-              <Button type="submit" fullWidth variant="contained" color="primary" disabled>
+              <Button type={"submit"} fullWidth variant={"contained"} color={"primary"} disabled>
                 Current Plan
               </Button>
             </Box>
@@ -114,51 +100,37 @@ const UserMemerbershipForm: FC = function UserMemerbershipForm() {
         <Grid item xs={12} md={4}>
           <Card
             sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: '20px',
-            }}
-          >
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: "20px",
+            }}>
             <Box
               sx={{
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                padding: '30px',
-              }}
-            >
-              <Typography
-                variant="body2"
-                component="h4"
-                color="text.secondary"
-                sx={{ textAlign: 'center', textTransform: 'uppercase' }}
-                py={1}
-              >
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                padding: "30px",
+              }}>
+              <Typography variant={"body2"} component={"h4"} color={"text.secondary"} sx={{ textAlign: "center", textTransform: "uppercase" }} py={1}>
                 Standard
               </Typography>
-              <Typography variant="h1" component="h4" sx={{ textAlign: 'center' }} py={2}>
+              <Typography variant={"h1"} component={"h4"} sx={{ textAlign: "center" }} py={2}>
                 $4.99
               </Typography>
-              <Typography
-                variant="body2"
-                component="h4"
-                color="primary"
-                sx={{ textAlign: 'center' }}
-                py={2}
-              >
+              <Typography variant={"body2"} component={"h4"} color={"primary"} sx={{ textAlign: "center" }} py={2}>
                 Monthly
               </Typography>
-              <Box pb={2} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-                <nav aria-label="main mailbox folders">
+              <Box pb={2} sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
+                <nav aria-label={"main mailbox folders"}>
                   <List>
                     <ListItem disablePadding>
                       <ListItemButton>
                         <ListItemIcon>
                           <CheckIcon />
                         </ListItemIcon>
-                        <ListItemText primary="Unlimited personal projects" />
+                        <ListItemText primary={"Unlimited personal projects"} />
                       </ListItemButton>
                     </ListItem>
                     <ListItem disablePadding>
@@ -166,7 +138,7 @@ const UserMemerbershipForm: FC = function UserMemerbershipForm() {
                         <ListItemIcon>
                           <CheckIcon />
                         </ListItemIcon>
-                        <ListItemText primary="Unlimited personal bugs" />
+                        <ListItemText primary={"Unlimited personal bugs"} />
                       </ListItemButton>
                     </ListItem>
                     <ListItem disablePadding>
@@ -174,7 +146,7 @@ const UserMemerbershipForm: FC = function UserMemerbershipForm() {
                         <ListItemIcon>
                           <CheckIcon />
                         </ListItemIcon>
-                        <ListItemText primary="Team member bug assignment" />
+                        <ListItemText primary={"Team member bug assignment"} />
                       </ListItemButton>
                     </ListItem>
                     <ListItem disablePadding>
@@ -182,13 +154,13 @@ const UserMemerbershipForm: FC = function UserMemerbershipForm() {
                         <ListItemIcon>
                           <CheckIcon />
                         </ListItemIcon>
-                        <ListItemText primary="Bug/project push notifications" />
+                        <ListItemText primary={"Bug/project push notifications"} />
                       </ListItemButton>
                     </ListItem>
                   </List>
                 </nav>
               </Box>
-              <Button type="submit" fullWidth variant="contained" color="primary" disabled>
+              <Button type={"submit"} fullWidth variant={"contained"} color={"primary"} disabled>
                 Coming Soon!
               </Button>
             </Box>
@@ -196,6 +168,6 @@ const UserMemerbershipForm: FC = function UserMemerbershipForm() {
         </Grid>
       </Grid>
     </Box>
-  );
-};
-export default UserMemerbershipForm;
+  )
+}
+export default UserMemerbershipForm

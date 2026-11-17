@@ -1,110 +1,102 @@
-import { useSelector } from 'react-redux';
-import {
-  TextField,
-  Button,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Avatar,
-  Chip,
-  InputAdornment,
-  Autocomplete,
-  CircularProgress,
-} from '@mui/material';
-import LabelImportantIcon from '@mui/icons-material/LabelImportant';
-import GroupIcon from '@mui/icons-material/Group';
-import useProjectFormController from './ProjectFormController';
-import { AppState } from '../../redux/reducers';
+import type { IUser } from "../../redux/types/types"
+import { useSelector } from "react-redux"
+import { TextField, Button, ListItem, ListItemAvatar, ListItemText, Avatar, Chip, InputAdornment, Autocomplete, CircularProgress } from "@mui/material"
+import LabelImportantIcon from "@mui/icons-material/LabelImportant"
+import GroupIcon from "@mui/icons-material/Group"
+import { usersActions } from "../../redux/actions"
+import useAppDispatch from "../../hooks/useAppDispatch"
+import useProjectFormController from "./ProjectFormController"
+import { AppState } from "../../redux/reducers"
 
 interface BaseType {
-  closeDialog?: () => void;
+  closeDialog?: () => void
 }
 
 interface CreateProject extends BaseType {
-  editMode: null;
-  currentName?: string;
-  currentMembers?: string[];
-  projectId?: string;
+  editMode: null
+  currentName?: string
+  currentMembers?: string[]
+  projectId?: string
 }
 
 interface EditProjectName extends BaseType {
-  editMode: 'name';
-  currentName: string;
-  projectId: string;
-  currentMembers?: string[];
+  editMode: "name"
+  currentName: string
+  projectId: string
+  currentMembers?: string[]
 }
 
 interface AddProjectMembers extends BaseType {
-  editMode: 'members';
-  currentMembers: string[];
-  projectId: string;
-  currentName?: string;
+  editMode: "members"
+  currentMembers: string[]
+  projectId: string
+  currentName?: string
 }
 
-type ProjectFormProps = CreateProject | EditProjectName | AddProjectMembers;
+type ProjectFormProps = CreateProject | EditProjectName | AddProjectMembers
 
-const ProjectForm: React.FC<ProjectFormProps> = function ProjectForm({
-  closeDialog,
-  editMode,
-  currentName,
-  currentMembers = [],
-  projectId,
-}) {
-  const { data: users } = useSelector((state: AppState) => state.users);
-  const { creating, updating, formik, setSelectedMembers, handleEditMembers } =
-    useProjectFormController(editMode, projectId, currentName, currentMembers, closeDialog);
+const ProjectForm: React.FC<ProjectFormProps> = function ProjectForm({ closeDialog, editMode, currentName, currentMembers = [], projectId }) {
+  const dispatch = useAppDispatch()
+  const { data: users = [], loading, error } = useSelector((state: AppState) => state.users)
+  const { creating, updating, formik, canAddMembers, setSelectedMembers, handleEditMembers } = useProjectFormController(
+    editMode,
+    projectId,
+    currentName,
+    currentMembers,
+    closeDialog,
+  )
 
-  const selectMembersOnChange = (e: any, selectedOption: any[]) => {
-    setSelectedMembers(selectedOption.map((user) => user.id));
-  };
+  const selectMembersOnChange = (_event: React.SyntheticEvent, selectedOption: IUser[]) => {
+    setSelectedMembers(selectedOption.map((user) => user.id))
+  }
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      {editMode !== 'members' && (
+      {editMode !== "members" && (
         <TextField
           fullWidth
-          variant="outlined"
-          margin="normal"
-          id="name"
-          name="name"
-          label="Project Name"
-          type="name"
+          variant={"outlined"}
+          margin={"normal"}
+          id={"name"}
+          name={"name"}
+          label={"Project Name"}
+          type={"name"}
           value={formik.values.name}
           onChange={formik.handleChange}
           error={formik.touched.name && Boolean(formik.errors.name)}
           helperText={formik.touched.name && formik.errors.name}
-          autoComplete="on"
+          autoComplete={"on"}
           InputProps={{
             startAdornment: (
-              <InputAdornment position="start">
-                <LabelImportantIcon color="primary" />
+              <InputAdornment position={"start"}>
+                <LabelImportantIcon color={"primary"} />
               </InputAdornment>
             ),
           }}
         />
       )}
-      {editMode !== 'name' && (
+      {editMode !== "name" && (
         <Autocomplete
-          style={{ marginTop: '1.5em' }}
+          style={{ marginTop: "1.5em" }}
+          loading={Boolean(loading)}
+          noOptionsText={error ? "Could not load project users." : "No users available"}
           multiple
           filterSelectedOptions
           onChange={selectMembersOnChange}
-          options={
-            editMode !== 'members' ? users : users.filter((u) => !currentMembers?.includes(u.id))
-          }
+          options={editMode !== "members" ? users : users.filter((u) => !currentMembers?.includes(u.id))}
           getOptionLabel={(option) => option.username}
           renderInput={(params) => (
             <TextField
               {...params}
-              variant="outlined"
-              required={editMode === 'members'}
-              label="Select Users"
+              variant={"outlined"}
+              required={editMode === "members" && !canAddMembers}
+              label={"Select Users"}
               InputProps={{
                 ...params.InputProps,
                 startAdornment: (
                   <>
-                    <InputAdornment position="start" style={{ paddingLeft: '0.4em' }}>
-                      <GroupIcon color="primary" />
+                    <InputAdornment position={"start"} style={{ paddingLeft: "0.4em" }}>
+                      <GroupIcon color={"primary"} />
                     </InputAdornment>
                     {params.InputProps.startAdornment}
                   </>
@@ -120,64 +112,45 @@ const ProjectForm: React.FC<ProjectFormProps> = function ProjectForm({
               <ListItemText
                 primary={option.username}
                 primaryTypographyProps={{
-                  variant: 'h6',
+                  variant: "h6",
                 }}
               />
             </ListItem>
           )}
           renderTags={(value, getTagProps) =>
             value.map((option, index) => (
-              <Chip
-                avatar={<Avatar>{option.username.slice(0, 1)}</Avatar>}
-                variant="outlined"
-                label={option.username}
-                {...getTagProps({ index })}
-              />
+              <Chip avatar={<Avatar>{option.username.slice(0, 1)}</Avatar>} variant={"outlined"} label={option.username} {...getTagProps({ index })} />
             ))
           }
         />
       )}
-      {editMode === 'members' && (
+      {editMode !== "name" && error && <Button onClick={() => dispatch(usersActions.getUsers())}>Retry loading users</Button>}
+      {editMode === "members" && (
         <Button
           fullWidth
-          variant="contained"
-          color="primary"
-          disabled={updating}
-          sx={{ padding: '10px 0', marginTop: '20px' }}
-          onClick={handleEditMembers}
-        >
-          {!updating && 'Submit'}
-          {updating && <CircularProgress size={25} color="inherit" />}
+          variant={"contained"}
+          color={"primary"}
+          disabled={updating || loading || Boolean(error) || !canAddMembers}
+          sx={{ padding: "10px 0", marginTop: "20px" }}
+          onClick={handleEditMembers}>
+          {!updating && "Submit"}
+          {updating && <CircularProgress size={25} color={"inherit"} />}
         </Button>
       )}
-      {editMode === 'name' && (
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="primary"
-          disabled={updating}
-          sx={{ padding: '10px 0', marginTop: '20px' }}
-        >
-          {!updating && 'Submit'}
-          {updating && <CircularProgress size={25} color="inherit" />}
+      {editMode === "name" && (
+        <Button type={"submit"} fullWidth variant={"contained"} color={"primary"} disabled={updating} sx={{ padding: "10px 0", marginTop: "20px" }}>
+          {!updating && "Submit"}
+          {updating && <CircularProgress size={25} color={"inherit"} />}
         </Button>
       )}
       {!editMode && (
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="primary"
-          disabled={creating}
-          sx={{ padding: '10px 0', marginTop: '20px' }}
-        >
-          {!creating && 'Create Project'}
-          {creating && <CircularProgress size={25} color="inherit" />}
+        <Button type={"submit"} fullWidth variant={"contained"} color={"primary"} disabled={creating} sx={{ padding: "10px 0", marginTop: "20px" }}>
+          {!creating && "Create Project"}
+          {creating && <CircularProgress size={25} color={"inherit"} />}
         </Button>
       )}
     </form>
-  );
-};
+  )
+}
 
-export default ProjectForm;
+export default ProjectForm

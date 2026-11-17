@@ -1,0 +1,7 @@
+semi: false
+endOfLine: lf
+printWidth: 160
+tabWidth: 2
+arrowParens: "always"
+bracketSameLine: true
+bracketSpacing: true

@@ -1,187 +1,173 @@
-import { FC, useState } from 'react';
-import { useRouter } from 'next/router';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { alpha, useTheme, styled } from '@mui/material/styles';
-import {
-  Box,
-  List,
-  Collapse,
-  ListSubheader,
-  ListItemText,
-  ListItemIcon,
-  ListItemButton,
-} from '@mui/material';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import Link from '../Link/Link';
+import { FC, useState } from "react"
+import { useRouter } from "next/router"
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown"
+import { alpha, useTheme, styled } from "@mui/material/styles"
+import { Box, List, Collapse, ListSubheader, ListItemText, ListItemIcon, ListItemButton } from "@mui/material"
+import OpenInNewIcon from "@mui/icons-material/OpenInNew"
+import Link from "../Link/Link"
 
-const ListItemStyle = styled((props) => <ListItemButton disableGutters {...props} />)(
-  ({ theme }) => ({
-    ...theme.typography.body2,
-    height: 48,
-    position: 'relative',
-    textTransform: 'capitalize',
-    paddingLeft: theme.spacing(5),
-    paddingRight: theme.spacing(2.5),
-    color: theme.palette.text.secondary,
-    '&:before': {
-      top: 0,
-      right: 0,
-      width: 3,
-      bottom: 0,
-      content: "''",
-      display: 'none',
-      position: 'absolute',
-      borderTopLeftRadius: 4,
-      borderBottomLeftRadius: 4,
-      backgroundColor: theme.palette.primary.main,
-    },
-  })
-);
+const ListItemStyle = styled(ListItemButton)<{ component?: typeof Link; href?: string; target?: string }>(({ theme }) => ({
+  ...theme.typography.body2,
+  height: 48,
+  position: "relative",
+  textTransform: "capitalize",
+  paddingLeft: theme.spacing(5),
+  paddingRight: theme.spacing(2.5),
+  color: theme.palette.text.secondary,
+  "&:before": {
+    top: 0,
+    right: 0,
+    width: 3,
+    bottom: 0,
+    content: "''",
+    display: "none",
+    position: "absolute",
+    borderTopLeftRadius: 4,
+    borderBottomLeftRadius: 4,
+    backgroundColor: theme.palette.primary.main,
+  },
+}))
 
 const ListItemIconStyle = styled(ListItemIcon)({
   width: 22,
   height: 22,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-});
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+})
 
 const ListSubheaderStyle = styled(ListSubheader)({
-  paddingLeft: '40px',
-  textTransform: 'uppercase',
-  boxSizing: 'border-box',
-  listStyle: 'none',
+  paddingLeft: "40px",
+  textTransform: "uppercase",
+  boxSizing: "border-box",
+  listStyle: "none",
   fontWeight: 700,
   lineHeight: 1.5,
-  fontSize: '0.75rem',
-  letterSpacing: '1.1px',
-  color: 'rgb(33, 43, 54)',
-  marginTop: '24px',
-  marginBottom: '16px',
-});
+  fontSize: "0.75rem",
+  letterSpacing: "1.1px",
+  color: "rgb(33, 43, 54)",
+  marginTop: "24px",
+  marginBottom: "16px",
+})
 
 interface ISidebarConfig {
-  title: string;
-  path?: string;
-  icon?: any;
-  newTab?: boolean;
-  children?: any;
+  title: string
+  path?: string
+  icon?: typeof OpenInNewIcon
+  newTab?: boolean
+  children?: ISidebarConfig[]
 }
 
 interface NavItemProps {
-  item: ISidebarConfig;
-  active: (path: any) => boolean;
+  item: ISidebarConfig
+  active: (path?: string) => boolean
 }
 
 const NavItem: FC<NavItemProps> = function NavItem({ item, active }) {
-  const theme = useTheme();
-  const isActiveRoot = active(item.path);
-  const { title, path, icon, children } = item;
-  const [open, setOpen] = useState(isActiveRoot);
+  const theme = useTheme()
+  const isActiveRoot = active(item.path)
+  const { title, path, icon, children } = item
+  const [open, setOpen] = useState(isActiveRoot)
 
   const handleOpen = () => {
-    setOpen((prev) => !prev);
-  };
+    setOpen((prev) => !prev)
+  }
 
   const activeRootStyle = {
-    color: 'black',
-    fontWeight: 'fontWeightMedium',
+    color: "black",
+    fontWeight: "fontWeightMedium",
     bgcolor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
-    '&:before': { display: 'block' },
-  };
+    "&:before": { display: "block" },
+  }
 
   const activeSubStyle = {
-    color: 'text.primary',
-    fontWeight: 'fontWeightMedium',
-  };
+    color: "text.primary",
+    fontWeight: "fontWeightMedium",
+  }
 
   if (children) {
     return (
       <>
         <ListItemStyle
-          // @ts-ignore
+          disableGutters
           onClick={handleOpen}
           sx={{
             ...(isActiveRoot && activeRootStyle),
-          }}
-        >
-          {icon && <item.icon sx={{ marginRight: '15px' }} />}
+          }}>
+          {icon && <item.icon sx={{ marginRight: "15px" }} />}
           <ListItemText disableTypography primary={title} />
           {open && <KeyboardArrowDownIcon />}
-          {!open && <KeyboardArrowDownIcon sx={{ transform: 'rotate(-90deg)' }} />}
+          {!open && <KeyboardArrowDownIcon sx={{ transform: "rotate(-90deg)" }} />}
         </ListItemStyle>
 
-        <Collapse in={open} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
+        <Collapse in={open} timeout={"auto"} unmountOnExit>
+          <List component={"div"} disablePadding>
             {children.map((childItem) => {
-              const isActiveSub = active(childItem.path);
+              const isActiveSub = active(childItem.path)
 
               return (
                 <ListItemStyle
+                  disableGutters
                   key={childItem.title}
-                  // @ts-ignore
                   component={Link}
                   href={childItem.path}
                   sx={{
                     ...(isActiveSub && activeSubStyle),
-                  }}
-                >
+                  }}>
                   <ListItemIconStyle>
                     <Box
-                      component="span"
+                      component={"span"}
                       sx={{
                         width: 4,
                         height: 4,
-                        display: 'flex',
-                        borderRadius: '50%',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        bgcolor: 'text.disabled',
-                        transition: () => theme.transitions.create('transform'),
+                        display: "flex",
+                        borderRadius: "50%",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        bgcolor: "text.disabled",
+                        transition: () => theme.transitions.create("transform"),
                         ...(isActiveSub && {
-                          transform: 'scale(2)',
-                          bgcolor: 'primary.main',
+                          transform: "scale(2)",
+                          bgcolor: "primary.main",
                         }),
                       }}
                     />
                   </ListItemIconStyle>
                   <ListItemText disableTypography primary={childItem.title} />
                 </ListItemStyle>
-              );
+              )
             })}
           </List>
         </Collapse>
       </>
-    );
+    )
   }
 
   return path ? (
     <ListItemStyle
-      // @ts-ignore
+      disableGutters
       component={Link}
       href={path}
-      target={item.newTab ? '_blank' : ''}
+      target={item.newTab ? "_blank" : ""}
       sx={{
         ...(isActiveRoot && activeRootStyle),
-      }}
-    >
-      {icon && <item.icon sx={{ marginRight: '15px' }} />}
+      }}>
+      {icon && <item.icon sx={{ marginRight: "15px" }} />}
       <ListItemText disableTypography primary={title} />
       {item.newTab && <OpenInNewIcon />}
     </ListItemStyle>
   ) : (
     <ListSubheaderStyle>{title}</ListSubheaderStyle>
-  );
-};
+  )
+}
 
 interface NavSectionProps {
-  navConfig: ISidebarConfig[];
-  other?: any;
+  navConfig: ISidebarConfig[]
 }
 
 const NavSection: FC<NavSectionProps> = function NavSection({ navConfig, ...other }) {
-  const { pathname } = useRouter();
-  const match = (path) => path && path === pathname;
+  const { pathname } = useRouter()
+  const match = (path) => path && path === pathname
 
   return (
     <Box {...other}>
@@ -191,7 +177,7 @@ const NavSection: FC<NavSectionProps> = function NavSection({ navConfig, ...othe
         ))}
       </List>
     </Box>
-  );
-};
+  )
+}
 
-export default NavSection;
+export default NavSection

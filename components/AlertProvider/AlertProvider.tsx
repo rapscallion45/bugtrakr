@@ -1,64 +1,53 @@
-import { FC, createRef, forwardRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { SnackbarProvider } from 'notistack';
-import MuiAlert from '@mui/material/Alert';
-import Slide from '@mui/material/Slide';
-import { alertActions } from '../../redux/actions';
-import { AppState } from '../../redux/reducers';
+import type { SnackbarKey } from "notistack"
+import { FC, forwardRef, ReactNode } from "react"
+import { useSelector } from "react-redux"
+import { SnackbarProvider } from "notistack"
+import MuiAlert from "@mui/material/Alert"
+import useAppDispatch from "../../hooks/useAppDispatch"
+import { alertActions } from "../../redux/actions"
+import { AppState } from "../../redux/reducers"
 
 interface AlertProps {
-  id?: any;
+  children?: ReactNode
+  id?: SnackbarKey
 }
 
-const Alert: FC<AlertProps> = forwardRef((props, ref) => {
-  const dispatch = useDispatch();
-  const { id } = props;
+const Alert = forwardRef<HTMLDivElement, AlertProps>((props, ref) => {
+  const dispatch = useAppDispatch()
+  const { id, children, ...other } = props
 
   /* close alert callback */
   const handleClose = () => {
-    dispatch(alertActions.closeSnackbar(id));
-  };
+    dispatch(alertActions.closeSnackbar(id))
+  }
 
   /* find this alert in state and get variant */
-  const { notifications } = useSelector((state: AppState) => state.alert);
-  const variant = notifications.find((notification) => notification.key === id)?.options?.variant;
+  const { notifications } = useSelector((state: AppState) => state.alert)
+  const variant = notifications.find((notification) => notification.key === id)?.options?.variant
 
   return (
-    <MuiAlert
-      // @ts-ignore
-      ref={ref}
-      elevation={6}
-      variant="filled"
-      severity={variant}
-      onClose={handleClose}
-      {...props}
-    />
-  );
-});
+    <MuiAlert ref={ref} elevation={6} variant={"filled"} severity={variant} onClose={handleClose} {...other}>
+      {children}
+    </MuiAlert>
+  )
+})
 
 export interface AlertProviderProps {
-  children?: any;
+  children?: React.ReactNode
 }
 
 const AlertProvider: FC<AlertProviderProps> = function AlertProvider({ children = null }) {
-  const notistackRef = createRef();
-
   return (
     <SnackbarProvider
-      // @ts-ignore
-      ref={notistackRef}
       maxSnack={5}
       anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'center',
+        vertical: "bottom",
+        horizontal: "center",
       }}
-      TransitionComponent={Slide}
-      /* eslint-disable react/no-unstable-nested-components */
-      content={(key, message) => <Alert id={key}>{message}</Alert>}
-    >
+      content={(key, message) => <Alert id={key}>{message}</Alert>}>
       {children}
     </SnackbarProvider>
-  );
-};
+  )
+}
 
-export default AlertProvider;
+export default AlertProvider
